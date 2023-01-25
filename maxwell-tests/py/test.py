@@ -12,6 +12,8 @@ from pythonosc import osc_packet
 from pythonosc import osc_message
 import socket
 
+from SuperColliderUDPClient import *
+
 
 def decode_response(packet: osc_message.OscMessage):
 
@@ -31,6 +33,14 @@ def decode_response(packet: osc_message.OscMessage):
             )}
 
 
+class Server:
+    def __init__(self) -> None:
+
+        ip = "127.0.0.1"
+        port = 57117
+        self.client = SuperColliderUPDClient(ip, port)
+
+
 if __name__ == "__main__":
     # https://doc.sccode.org/Reference/Server-Architecture.html
     # https://doc.sccode.org/Reference/Server-Command-Reference.html
@@ -41,22 +51,20 @@ if __name__ == "__main__":
     ip = "127.0.0.1"
     port = 57117
 
-    client = udp_client.SimpleUDPClient(ip, port)
+    client = SuperColliderUPDClient(ip, port)
 
-    client.send_message("/s_new", ["sine",  1000, 1, 0])
-    time.sleep(1)
+    while True:
+        print("enter synthdef")
+        d = input()
+        client.s_new(d,  1000, AddAction.groupTail, 0)
 
-    client.send_message("/status", [])
-    try:
-        while True:
-            try:
-                x = client._sock.recv(1024)
-                break
-            except socket.error:
-                continue
-
-        packet = osc_packet.OscPacket(x)
-        print([decode_response(x.message) for x in packet.messages])
         time.sleep(1)
-    finally:
-        client.send_message("/n_free", [1000])
+
+        print("freeing synth:")
+        client.n_free(1000)
+
+        print("reloading synthdef:")
+
+        client.d_free(d)
+        with open(f"synthdefs/{d}.scsyndef", "rb") as f:  # opening for [r]eading as [b]inary
+            print(client.d_recv(f.read()))

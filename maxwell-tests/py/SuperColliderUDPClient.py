@@ -41,6 +41,8 @@ class SuperColliderUPDClient(UDPClient):
         super().__init__(address, port, allow_broadcast, family)
 
         self.incoming = queue.Queue()
+        self._notify = False
+        self.ids = set()
 
         threading.Thread(target=self.resv_loop).start()
 
@@ -49,11 +51,12 @@ class SuperColliderUPDClient(UDPClient):
             try:
                 x = self._sock.recv(1024)
 
-                packet = osc_packet.OscPacket(x).messages[0].message
+                packet = osc_packet.OscPacket(x)
+                msg = packet.messages[0].message
 
-                # print(f"received {packet}")
+                print(f"received {msg.address} {msg.params}")
 
-                self.incoming.put(packet)
+                self.incoming.put(msg)
 
             except socket.error:
                 time.sleep(0.1)
@@ -78,12 +81,14 @@ class SuperColliderUPDClient(UDPClient):
         msg = builder.build()
         self.send(msg)
 
-    def receive_message(self):
+    def receive_message(self, fail_type: str = None):
         p = None
         while p == None or p.address == "/fail":
             while self.incoming.empty():
                 time.sleep(0.1)
             p = self.incoming.get()
+            if p.address == "/fail" and p.params[0] == fail_type:
+                return p
 
         return p
 
@@ -91,6 +96,24 @@ class SuperColliderUPDClient(UDPClient):
         self.send_message("/status", None)
 
         return self.receive_message()
+
+    @property
+    def notify(self) -> bool:
+        return self._notify
+
+    @notify.setter
+    def notify(self, value: bool):
+        if self._notify != value:
+            self._notify = value
+            self.send_message("/notify", 1 if value else 0)
+
+            self.receive_message()
+
+    def n_query(self, *id: int):
+        self.send_message("/n_query", id)
+
+        if self._notify:
+            return self.receive_message("/n_query")
 
     def n_map(self, nodeID: int, *N: tuple[int | str, int]):
         """ Map a node's controls to read from a bus.
@@ -102,18 +125,37 @@ class SuperColliderUPDClient(UDPClient):
 
         self.send_message("/n_map", [nodeID, *N])
 
-    def n_free(self, *nodeID: int):
-        """
-        Map a node's controls to read from a bus.
-        Takes a list of pairs of control names or indices and bus indices and causes
-        those controls to be read continuously from a global control bus.
-        If the node is a group, then it maps the controls of every node in the group.
-        If the control bus index is -1 then any current mapping is undone.
-        Any `n_set`, `n_setn` and `n_fill` command will also unmap the control.
-        """
-        self.send_message("/n_free", nodeID)
+    def n_set(self, nodeID: int, *N: tuple[int | str, float | int]):
+        """Set a node's control value(s).
 
-    def s_new(self,  synth: str, id: int, add_action: AddAction, targetID: int, *N: tuple[int | str, float | int | str]):
+        ```
+        int or string	a control index or name
+        float or int	a control value
+        ```
+
+        Takes a list of pairs of control indices and values and sets the controls to those values. 
+        If the node is a group, then it sets the controls of every node in the group.
+
+        This message now supports array type tags ($[ and $]) in the control/value component of the OSC message. 
+        Arrayed control values are applied in the manner of n_setn (i.e., sequentially starting at the indexed or named control).
+        """
+
+        self.send_message("/n_set", [nodeID, *[n for p in N for n in p]])
+
+    def s_get(self, nodeID: int, *N: int | str):
+        """
+        Get control value(s).
+
+        int	synth ID
+        N * int or string	a control index or name
+
+        Replies to sender with the corresponding /n_set command.
+        """
+        self.send_message("/s_get", [nodeID, *N])
+
+        return self.receive_message(fail_type="/s_get")
+
+    def s_new(self,  synth: str, id: int, add_action: AddAction, targetID: int, *control_values: tuple[int | str, float | int | str]):
         """
         Create a new synth.
         string	synth definition name
@@ -141,17 +183,25 @@ class SuperColliderUPDClient(UDPClient):
         Arrayed control values are applied in the manner of `n_setn` (i.e., sequentially starting at the indexed or named control). 
         See the Node Messaging helpfile.
         """
-        self.send_message("/s_new", [synth,  id, add_action.value, targetID, *N])
+        if id in self.ids:
+            print("not adding duplicate ID")
+            return
+        self.ids.add(id)
 
-    def s_get(self, id: int, *values: int | str):
+        control = [n for p in control_values for n in p]
 
-        self.send_message("/s_get", [id, *values])
-
-        return self.receive_message()
+        self.send_message("/s_new", [synth,  id, add_action.value, targetID, *control])
 
     def n_free(self, *ids: int):
 
-        self.send_message("/n_free", [*ids])
+        if not self.ids.issuperset(ids):
+            print("Warning; not all IDS registered")
+
+        self.send_message("/n_free", ids)
+
+    def n_run(self, id: int, on: int):
+
+        self.send_message("/n_run", [id, on])
 
     def d_recv(self, buffer: bytes, onComplete: osc_message.OscMessage = None):
         """Receive a synth definition file.

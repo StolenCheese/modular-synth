@@ -169,7 +169,8 @@ class SuperColliderUPDClient(UDPClient):
         """
         self.send_message("/s_get", [nodeID, *N])
 
-        return self.receive_message(fail_type="/s_get")
+        msg = self.receive_message(desired="/n_set", fail_type="/s_get")
+        return {param: value for (param, value) in zip(msg.params[1::2], msg.params[2::2])}
 
     def s_new(self,  synth: str, id: int, add_action: AddAction, targetID: int, *control_values: tuple[int | str, float | int | str]):
         """

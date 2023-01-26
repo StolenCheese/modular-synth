@@ -112,5 +112,7 @@ notes = {
 
 def note(arg):
     if isinstance(arg, str):
+        if arg.startswith("bus"):
+            return 'c' + arg[2:]
         return notes.get(arg.lower())
     return arg

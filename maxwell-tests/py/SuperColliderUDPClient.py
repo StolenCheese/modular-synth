@@ -40,7 +40,7 @@ class SuperColliderUPDClient(UDPClient):
     def __init__(self, address: str, port: int, allow_broadcast: bool = False, family: socket.AddressFamily = socket.AF_UNSPEC) -> None:
         super().__init__(address, port, allow_broadcast, family)
 
-        self.incoming = queue.Queue()
+        self.incoming: queue.Queue[osc_message.OscMessage] = queue.Queue()
         self._notify = False
         self.ids = set()
 
@@ -54,7 +54,7 @@ class SuperColliderUPDClient(UDPClient):
                 packet = osc_packet.OscPacket(x)
                 msg = packet.messages[0].message
 
-                print(f"received {msg.address} {msg.params}")
+                print(f"received {msg.address}")
 
                 self.incoming.put(msg)
 
@@ -81,12 +81,13 @@ class SuperColliderUPDClient(UDPClient):
         msg = builder.build()
         self.send(msg)
 
-    def receive_message(self, fail_type: str = None):
+    def receive_message(self, desired: str = None, fail_type: str = None):
         p = None
-        while p == None or p.address == "/fail":
+        while p == None or p.address == "/fail" or (desired and p.address != desired):
             while self.incoming.empty():
                 time.sleep(0.1)
             p = self.incoming.get()
+
             if p.address == "/fail" and p.params[0] == fail_type:
                 return p
 
@@ -109,11 +110,13 @@ class SuperColliderUPDClient(UDPClient):
 
             self.receive_message()
 
+ # NODES ----------------
+
     def n_query(self, *id: int):
         self.send_message("/n_query", id)
 
         if self._notify:
-            return self.receive_message("/n_query")
+            return self.receive_message(fail_type="/n_query")
 
     def n_map(self, nodeID: int, *N: tuple[int | str, int]):
         """ Map a node's controls to read from a bus.
@@ -122,8 +125,9 @@ class SuperColliderUPDClient(UDPClient):
          If the node is a group, then it maps the controls of every node in the group.
          If the control bus index is -1 then any current mapping is undone.
          Any `n_set`, `n_setn` and `n_fill` command will also unmap the control."""
-
-        self.send_message("/n_map", [nodeID, *N])
+        data = [nodeID, *[n for p in N for n in [*p, 1]]]
+        print(f"Sending map {data}")
+        self.send_message("/n_mapn", data)
 
     def n_set(self, nodeID: int, *N: tuple[int | str, float | int]):
         """Set a node's control value(s).
@@ -141,6 +145,18 @@ class SuperColliderUPDClient(UDPClient):
         """
 
         self.send_message("/n_set", [nodeID, *[n for p in N for n in p]])
+
+    def n_free(self, *ids: int):
+
+        if not self.ids.issuperset(ids):
+            print("Warning; not all IDS registered")
+
+        self.send_message("/n_free", ids)
+
+    def n_run(self, id: int, on: int):
+
+        self.send_message("/n_run", [id, on])
+# SYNTHS ------------------------
 
     def s_get(self, nodeID: int, *N: int | str):
         """
@@ -192,16 +208,7 @@ class SuperColliderUPDClient(UDPClient):
 
         self.send_message("/s_new", [synth,  id, add_action.value, targetID, *control])
 
-    def n_free(self, *ids: int):
-
-        if not self.ids.issuperset(ids):
-            print("Warning; not all IDS registered")
-
-        self.send_message("/n_free", ids)
-
-    def n_run(self, id: int, on: int):
-
-        self.send_message("/n_run", [id, on])
+    # DEFINITIONS (OF SYNTHS) ------------------------
 
     def d_recv(self, buffer: bytes, onComplete: osc_message.OscMessage = None):
         """Receive a synth definition file.
@@ -220,7 +227,7 @@ class SuperColliderUPDClient(UDPClient):
         else:
             self.send_message("/d_recv", [buffer, onComplete.dgram])
 
-        return self.receive_message()
+        return self.receive_message(desired="/done")
 
     def d_free(self, *name: str):
         """
@@ -230,3 +237,142 @@ class SuperColliderUPDClient(UDPClient):
         Removes a synth definition. The definition is removed immediately, and does not wait for synth nodes based on that definition to end.
         """
         self.send_message("/d_free", name)
+
+    # BUSSES ------------
+
+    def c_set(self, *t: tuple[int, list[float | int]]):
+        """Set bus value(s).
+
+        ```
+        N *	
+        int	         | a bus index
+        float or int	| a control value
+        ``` 
+
+        Takes a list of pairs of bus indices and values and sets the buses to those values."""
+
+        self.send_message("/c_set",  [n for p in t for n in p])
+
+    def c_setn(self, *t: tuple[int, list[float | int]]):
+        """    Set ranges of bus value(s).
+        N *	
+        int	starting bus index
+        int	number of sequential buses to change (M)
+        M *	
+        float or int	a control value
+
+        Set contiguous ranges of buses to sets of values. For each range, the starting bus index is given followed by the number of channels to change, followed by the values.
+        """
+        self.send_message("/c_fill", [n for (b, values) in t for n in [b, len(values), *values]])
+
+    def c_fill(self, *t: tuple[int, int, float | int]):
+        """    Fill ranges of bus value(s).
+        N *	
+        int	starting bus index
+        int	number of buses to fill (M)
+        float or int value
+
+        Set contiguous ranges of buses to single values. For each range, the starting sample index is given followed by the number of buses to change, followed by the value to fill.
+        """
+        self.send_message("/c_fill", [n for p in t for n in p])
+
+    def c_get(self, *indexes: int):
+        """Get bus value(s).
+        N * int	a bus index
+
+        Takes a list of buses and replies to sender with the corresponding /c_set command."""
+
+        self.send_message("/c_get", indexes)
+
+        return self.receive_message(desired="/c_set").params
+
+    def c_getn(self, *t: tuple[int, int]):
+        """Get ranges of bus value(s).
+        N *	
+        int	starting bus index
+        int	number of sequential buses to get (M)
+
+        Get contiguous ranges of buses. Replies to sender with the corresponding /c_setn command."""
+
+        self.send_message("/c_getn", [n for p in t for n in p])
+
+        self.receive_message(desired="/c_setn")
+    # Groups -----------------
+
+    def g_head(self, *t: tuple[int, int]):
+        """Add node to head of group.
+        N *	
+        int	group ID
+        int	node ID
+
+        Adds the node to the head (first to be executed) of the group."""
+
+        self.send_message("/g_head", [n for p in t for n in p])
+
+    def g_tail(self, *t: tuple[int, int]):
+        """Add node to tail of group.
+        N *	
+        int	group ID
+        int	node ID
+
+        Adds the node to the tail (last to be executed) of the group."""
+
+        self.send_message("/g_tail", [n for p in t for n in p])
+
+    def g_freeAll(self, *groupIDS: int):
+        """Delete all nodes in a group.
+        N * int	group ID(s)
+
+        Frees all nodes in the group. A list of groups may be specified."""
+
+        self.send_message("/g_freeAll", groupIDS)
+
+    def g_deepFree(self, *groupIDS: int):
+        """Free all synths in this group and all its sub-groups.
+        N * int	group ID(s)
+
+        Traverses all groups below this group and frees all the synths. Sub-groups are not freed. A list of groups may be specified."""
+
+        self.send_message("/g_deepFree", groupIDS)
+
+    def g_queryTree(self, *t: tuple[int, int]):
+        """Get a representation of this group's node subtree.
+        N *	
+        int	group ID
+        int	flag: if not 0 the current control (arg) values for synths will be included
+
+        Request a representation of this group's node subtree, i.e. all the groups and synths contained within it. 
+        Replies to the sender with a /g_queryTree.reply message listing all of the nodes 
+        contained within the group in the following format:
+        """
+
+        self.send_message("/g_queryTree", [n for p in t for n in p])
+
+        msg = self.receive_message(desired="/g_queryTree.reply")
+        data = msg.params
+        flag = not not data[0]
+        nodeID = data[1]
+        childCount = data[2]
+
+        #print("----", nodeID, childCount)
+
+        tree = {}
+
+        i = 3
+        while i < len(data):
+            n_id = data[i]
+            children = data[i+1]
+            if children == -1:
+                s_type = data[i+2]
+                if flag:
+                    M = data[i+3]
+                    params = [(data[i+4+m], data[i+5+m]) for m in range(0, M*2, 2)]
+                    i += 4+M*2
+                    tree[n_id] = (s_type, params)
+                else:
+                    i += 3
+                    tree[n_id] = s_type
+            else:
+                i += 2
+                tree[n_id] = children
+        return tree

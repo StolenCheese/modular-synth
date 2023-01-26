@@ -51,6 +51,9 @@ if __name__ == "__main__":
     # run ./scsynth.exe -u 57117 in your scsynth install directory
     # C:\Program Files\SuperCollider-3.13.0-rc1 for me
 
+    # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x14\x2f\x63\x5f\x73\x65\x74\x00\x00\x2c\x69\x69\x00\x00\x00\x00\x00\x00\x00\x03\x70")
+    # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x38\x2f\x6e\x5f\x6d\x61\x70\x6e\x00\x2c\x69\x73\x69\x69\x73\x69\x69\x00\x00\x00\x00\x00\x00\x03\xe8\x66\x72\x65\x71\x31\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x66\x72\x65\x71\x32\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01")
+
     ip = "127.0.0.1"
     port = 57117
 
@@ -101,10 +104,21 @@ if __name__ == "__main__":
             case ["set", int(id), *t]:
                 client.n_set(id, *parametrise(t))
 
+            case ["bus", "set",  *t]:  # set bus at index to value
+                client.c_set(*parametrise(t))
+            case ["bus", "get",  *t]:  # set bus at index to value
+                print(t)
+                print(client.c_get(t))
+
+            case ["map", int(id),  *t]:  # (maps to bus)
+                client.n_map(id, *parametrise(t))
+
             case ["get", int(id), *params]:
                 client.s_get(id, params)
 
             case ["q", int(id)]:
                 client.n_query(id)
+            case ["q"]:
+                print("\n".join([f"{id}: {data}" for (id, data) in client.g_queryTree((0, 1)).items()]))
             case c:
                 print(f"unknown command {c}")

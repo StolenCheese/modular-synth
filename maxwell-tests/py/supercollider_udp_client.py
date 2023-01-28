@@ -42,7 +42,6 @@ class SuperColliderUPDClient(UDPClient):
 
         self.incoming: queue.Queue[osc_message.OscMessage] = queue.Queue()
         self._notify = False
-        self.ids = set()
 
         threading.Thread(target=self.resv_loop).start()
 
@@ -125,9 +124,8 @@ class SuperColliderUPDClient(UDPClient):
          If the node is a group, then it maps the controls of every node in the group.
          If the control bus index is -1 then any current mapping is undone.
          Any `n_set`, `n_setn` and `n_fill` command will also unmap the control."""
-        data = [nodeID, *[n for p in N for n in [*p, 1]]]
-        print(f"Sending map {data}")
-        self.send_message("/n_mapn", data)
+
+        self.send_message("/n_mapn", [nodeID, *[n for p in N for n in [*p, 1]]])
 
     def n_set(self, nodeID: int, *N: tuple[int | str, float | int]):
         """Set a node's control value(s).
@@ -148,13 +146,17 @@ class SuperColliderUPDClient(UDPClient):
 
     def n_free(self, *ids: int):
 
-        if not self.ids.issuperset(ids):
+        if not set(self.synths.keys()).issuperset(ids):
             print("Warning; not all IDS registered")
 
         self.send_message("/n_free", ids)
 
-    def n_run(self, id: int, on: int):
+        for id in ids:
+            self.synths[id].valid = False
+            del self.synths[id]
 
+    def n_run(self, id: int, on: int):
+        self.ensure_id(id)
         self.send_message("/n_run", [id, on])
 # SYNTHS ------------------------
 
@@ -167,6 +169,7 @@ class SuperColliderUPDClient(UDPClient):
 
         Replies to sender with the corresponding /n_set command.
         """
+        self.ensure_id(nodeID)
         self.send_message("/s_get", [nodeID, *N])
 
         msg = self.receive_message(desired="/n_set", fail_type="/s_get")
@@ -200,10 +203,6 @@ class SuperColliderUPDClient(UDPClient):
         Arrayed control values are applied in the manner of `n_setn` (i.e., sequentially starting at the indexed or named control). 
         See the Node Messaging helpfile.
         """
-        if id in self.ids:
-            print("not adding duplicate ID")
-            return
-        self.ids.add(id)
 
         control = [n for p in control_values for n in p]
 
@@ -308,6 +307,9 @@ class SuperColliderUPDClient(UDPClient):
 
         Adds the node to the head (first to be executed) of the group."""
 
+        for _, id in t:
+            self.ensure_id(id)
+
         self.send_message("/g_head", [n for p in t for n in p])
 
     def g_tail(self, *t: tuple[int, int]):
@@ -317,6 +319,9 @@ class SuperColliderUPDClient(UDPClient):
         int	node ID
 
         Adds the node to the tail (last to be executed) of the group."""
+
+        for _, id in t:
+            self.ensure_id(id)
 
         self.send_message("/g_tail", [n for p in t for n in p])
 
@@ -336,7 +341,7 @@ class SuperColliderUPDClient(UDPClient):
 
         self.send_message("/g_deepFree", groupIDS)
 
-    def g_queryTree(self, *t: tuple[int, int]):
+    def g_queryTree(self, *t: tuple[int, int]) -> dict[int, int | tuple[str, list[tuple]]]:
         """Get a representation of this group's node subtree.
         N *	
         int	group ID
@@ -357,14 +362,14 @@ class SuperColliderUPDClient(UDPClient):
 
         #print("----", nodeID, childCount)
 
-        tree = {}
+        tree: dict[int, int | tuple[str, list[tuple]]] = {}
 
         i = 3
         while i < len(data):
-            n_id = data[i]
-            children = data[i+1]
+            n_id: int = data[i]
+            children: int = data[i+1]
             if children == -1:
-                s_type = data[i+2]
+                s_type: str = data[i+2]
                 if flag:
                     M = data[i+3]
                     params = [(data[i+4+m], data[i+5+m]) for m in range(0, M*2, 2)]
@@ -372,7 +377,7 @@ class SuperColliderUPDClient(UDPClient):
                     tree[n_id] = (s_type, params)
                 else:
                     i += 3
-                    tree[n_id] = s_type
+                    tree[n_id] = (s_type, None)
             else:
                 i += 2
                 tree[n_id] = children

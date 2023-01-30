@@ -146,14 +146,7 @@ class SuperColliderUPDClient(UDPClient):
 
     def n_free(self, *ids: int):
 
-        if not set(self.synths.keys()).issuperset(ids):
-            print("Warning; not all IDS registered")
-
         self.send_message("/n_free", ids)
-
-        for id in ids:
-            self.synths[id].valid = False
-            del self.synths[id]
 
     def n_run(self, id: int, on: int):
         self.ensure_id(id)

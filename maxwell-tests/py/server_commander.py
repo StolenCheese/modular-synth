@@ -1,10 +1,6 @@
-"""Small example OSC client
 
-This program sends 10 random values between 0.0 and 1.0 to the /filter address,
-waiting for 1 seconds between each value.
-"""
-
-from notes import note
+import mido
+from notes import note, midi_node
 import random
 import time
 
@@ -141,7 +137,7 @@ if __name__ == "__main__":
     # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x38\x2f\x6e\x5f\x6d\x61\x70\x6e\x00\x2c\x69\x73\x69\x69\x73\x69\x69\x00\x00\x00\x00\x00\x00\x03\xe8\x66\x72\x65\x71\x31\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x66\x72\x65\x71\x32\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01")
 
     ip = "127.0.0.1"
-    port = 58000
+    port = 59000
 
     client = SuperColliderServer(ip, port)
 
@@ -162,6 +158,19 @@ if __name__ == "__main__":
 
     client.add_scsyndef("pinknoise-kr")
     client.add_scsyndef("sin-kr")
+
+    # Play the terraria underground theme
+    mid = mido.MidiFile('Underground.mid')
+    synths: dict[int, Synth] = {}
+    for msg in mid.play():
+        if msg.type == "note_on":
+            if msg.channel in synths:
+                synths[msg.channel].free()
+
+            synths[msg.channel] = client.create_synth(
+                "sin-ar", AddAction.groupHead, client[0], freq=midi_node(msg.note))
+        elif msg.type == "note_off":
+            synths[msg.channel].free()
 
     for i in range(1, 4):
         bus = client.create_bus()

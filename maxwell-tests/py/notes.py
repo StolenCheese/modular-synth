@@ -110,6 +110,10 @@ notes = {
 }
 
 
+def midi_node(midi):
+    return 2**((midi-69)/12)*440
+
+
 def note(arg):
     if isinstance(arg, str):
         if arg.startswith("bus"):

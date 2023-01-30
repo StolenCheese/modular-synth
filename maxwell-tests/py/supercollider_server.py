@@ -101,6 +101,11 @@ class Synth(Node):
     def run(self, enable: bool):
         self.server.n_run(self.id, 1 if enable else 0)
 
+    def free(self):
+        if self.valid:
+            self.server._server.n_free(self.index)
+            self.valid = False
+
     def __repr__(self) -> str:
         return f"{self.synth}: {self.params}"
 

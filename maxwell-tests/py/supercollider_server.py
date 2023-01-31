@@ -49,7 +49,7 @@ class Synth(Node):
     def __init__(self, server: "SuperColliderServer", id: int, synth: str, group: Group, params: dict) -> None:
         super().__init__(server, id, group)
 
-        self.params: dict[str, int | float | Bus] = {k: v for k, v in params}
+        self.params: dict[str, int | float | Bus] = {k: v for k, v in params.items()}
         self.synth = synth
 
         self.control = self.synth.endswith("-kr")
@@ -99,7 +99,7 @@ class Synth(Node):
         self.run(False)
 
     def run(self, enable: bool):
-        self.server.n_run(self.id, 1 if enable else 0)
+        self.server._server.n_run(self.index, 1 if enable else 0)
 
     def free(self):
         if self.valid:
@@ -138,7 +138,9 @@ class SuperColliderServer:
 
         self._server.s_new(synth, self.nextNodeID, add_action, add_target.index, *args.items())
 
-        self.sync(add_target)  # this will load the synth we just created, and all it's params, into `synths`
+        # self.sync(add_target)  # this will load the synth we just created, and all it's params, into `synths`
+
+        self.synths[self.nextNodeID] = Synth(self, self.nextNodeID, synth, add_target, args)
 
         # self.synths[self.nextNodeID].create_output_bus()
 
@@ -174,7 +176,8 @@ class SuperColliderServer:
             if isinstance(data, tuple):
                 params = data[1]
                 if id not in self.synths:
-                    print(f"discovered new synth {id}: ")
+                    #
+                    # Sprint(f"discovered new synth {id}: ")
                     self.synths[id] = Synth(self, id, data[0], group, params)
 
                 for k, v in params:
@@ -187,7 +190,7 @@ class SuperColliderServer:
 
                         self.nextBusID = max(self.nextBusID, busID + 1)
 
-                        print(f"    {k} connected to {busID}")
+                        #print(f"    {k} connected to {busID}")
 
                     elif k.startswith(OUT):
                         busID = int(v)
@@ -197,4 +200,4 @@ class SuperColliderServer:
 
                         self.nextBusID = max(self.nextBusID, busID + 1)
 
-                        print(f"    {k} outputting to {busID}")
+                        #print(f"    {k} outputting to {busID}")

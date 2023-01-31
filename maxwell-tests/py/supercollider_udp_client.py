@@ -53,7 +53,8 @@ class SuperColliderUPDClient(UDPClient):
                 packet = osc_packet.OscPacket(x)
                 msg = packet.messages[0].message
 
-                print(f"received {msg.address}")
+                #
+                # print(f"received {msg.address}")
 
                 self.incoming.put(msg)
 
@@ -149,7 +150,6 @@ class SuperColliderUPDClient(UDPClient):
         self.send_message("/n_free", ids)
 
     def n_run(self, id: int, on: int):
-        self.ensure_id(id)
         self.send_message("/n_run", [id, on])
 # SYNTHS ------------------------
 
@@ -344,11 +344,12 @@ class SuperColliderUPDClient(UDPClient):
         Replies to the sender with a /g_queryTree.reply message listing all of the nodes 
         contained within the group in the following format:
         """
-
+        print("Getting tree")
         self.send_message("/g_queryTree", [n for p in t for n in p])
 
         msg = self.receive_message(desired="/g_queryTree.reply")
         data = msg.params
+        print(data)
         flag = not not data[0]
         nodeID = data[1]
         childCount = data[2]

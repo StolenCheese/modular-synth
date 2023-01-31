@@ -110,7 +110,7 @@ notes = {
 }
 
 
-def midi_node(midi):
+def midi_note(midi):
     return 2**((midi-69)/12)*440
 
 

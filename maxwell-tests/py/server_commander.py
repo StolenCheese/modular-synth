@@ -1,6 +1,6 @@
 
 import mido
-from notes import note, midi_node
+from notes import note, midi_note
 import random
 import time
 
@@ -58,7 +58,6 @@ def merge_dicts(*dict_args):
 
 def run_command(server: SuperColliderServer, command: str):
     c = [augment(a) for a in command.split()]
-    print(c)
 
     # ignore these variable names please
     client = server._server
@@ -125,63 +124,98 @@ def run_command(server: SuperColliderServer, command: str):
 
 
 if __name__ == "__main__":
-    # https://doc.sccode.org/Reference/Server-Architecture.html
-    # https://doc.sccode.org/Reference/Server-Command-Reference.html
+    try:
+        # https://doc.sccode.org/Reference/Server-Architecture.html
+        # https://doc.sccode.org/Reference/Server-Command-Reference.html
 
-    # run ./scsynth.exe -u 57117 in your scsynth install directory
-    # C:\Program Files\SuperCollider-3.13.0-rc1 for me
+        # run ./scsynth.exe -u 57117 in your scsynth install directory
+        # C:\Program Files\SuperCollider-3.13.0-rc1 for me
 
-    # cd "C:\Program Files\SuperCollider-3.13.0-rc1"; ./scsynth.exe -u 58000
+        # cd "C:\Program Files\SuperCollider-3.13.0-rc1"; ./scsynth.exe -u 58000
 
-    # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x14\x2f\x63\x5f\x73\x65\x74\x00\x00\x2c\x69\x69\x00\x00\x00\x00\x00\x00\x00\x03\x70")
-    # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x38\x2f\x6e\x5f\x6d\x61\x70\x6e\x00\x2c\x69\x73\x69\x69\x73\x69\x69\x00\x00\x00\x00\x00\x00\x03\xe8\x66\x72\x65\x71\x31\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x66\x72\x65\x71\x32\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01")
+        # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x14\x2f\x63\x5f\x73\x65\x74\x00\x00\x2c\x69\x69\x00\x00\x00\x00\x00\x00\x00\x03\x70")
+        # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x38\x2f\x6e\x5f\x6d\x61\x70\x6e\x00\x2c\x69\x73\x69\x69\x73\x69\x69\x00\x00\x00\x00\x00\x00\x03\xe8\x66\x72\x65\x71\x31\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x66\x72\x65\x71\x32\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01")
+        print("Connecting to server")
+        ip = "127.0.0.1"
+        port = 59000
 
-    ip = "127.0.0.1"
-    port = 59000
+        client = SuperColliderServer(ip, port)
 
-    client = SuperColliderServer(ip, port)
+        client.notify = True
 
-    client.notify = True
+        # example series of commands:
+        # add sine_with_freq
+        # play sine_with_freq 500 freq c#3
+        # pause 500
+        # play 500
+        # set 500 freq c#4
+        # add drum
+        # play drum 600
+        # stop 500
 
-    # example series of commands:
-    # add sine_with_freq
-    # play sine_with_freq 500 freq c#3
-    # pause 500
-    # play 500
-    # set 500 freq c#4
-    # add drum
-    # play drum 600
-    # stop 500
+        client.add_scsyndef("sin-mix-ar")
+        client.add_scsyndef("organ")
+        client.add_scsyndef("decay2-ar")
 
-    client.add_scsyndef("impulse-decay2-kr")
-    client.add_scsyndef("sin-ar")
+        # b = client.create_bus()
+        # client.create_synth("decay2-ar", AddAction.groupHead, client[0], ain=b, out=0)
+        # client.create_synth("sin-ar", AddAction.groupTail, client[0], out=b, mul=1, freq="c4")
 
-    client.add_scsyndef("pinknoise-kr")
-    client.add_scsyndef("sin-kr")
+        # exit()
 
-    # Play the terraria underground theme
-    mid = mido.MidiFile('Underground.mid')
-    synths: dict[int, Synth] = {}
-    for msg in mid.play():
-        if msg.type == "note_on":
-            if msg.channel in synths:
-                synths[msg.channel].free()
+        # Play the terraria underground theme
+        mid = mido.MidiFile('../../../midi/Megalovania.mid')
+        print("Starting MIDI:")
 
-            synths[msg.channel] = client.create_synth(
-                "sin-ar", AddAction.groupHead, client[0], freq=midi_node(msg.note))
-        elif msg.type == "note_off":
-            synths[msg.channel].free()
+        def decay_sin():
+            # b = client.create_bus()5
+            # client.create_synth("decay2-ar", AddAction.groupHead, client[0], ain=b, out=0)
+            return client.create_synth("organ", AddAction.groupTail, client[0], out=0, amp=0, freq=0)
 
-    for i in range(1, 4):
-        bus = client.create_bus()
+        synths: dict[int, Synth] = {
+            i: decay_sin()
+            for i in range(16)
+        }
 
-        sinar = client.create_synth("sin-ar", AddAction.groupHead, client[0], freq=bus)
+        notes: dict[int, set] = {
+            i: set()
+            for i in range(16)
+        }
 
-        impulsekr = client.create_synth("impulse-decay2-kr", AddAction.groupHead, client[0], out=bus, freq=2 ** i, mul=300/i)
+        s = {}
 
-    #bus2.connect(sinar, "freq")
+        # run_command(client, "ls")
 
-    while True:
-        time.sleep(0.1)
-        print(">>> ", end="")
-        run_command(client, input())
+        for msg in mid.play():
+            print(msg)
+            if msg.type == "note_on":  # ]i
+                # 8i
+                if (msg.channel, msg.note) in s:
+                    s[(msg.channel, msg.note)].free()
+
+                s[(msg.channel, msg.note)] = decay_sin()
+
+                s[(msg.channel, msg.note)].set(amp=0.1, freq=midi_note(msg.note))
+
+            elif msg.type == "note_off":
+
+                s[(msg.channel, msg.note)].set(amp=0)
+
+        print("over")
+
+        for i in range(1, 4):
+            bus = client.create_bus()
+
+            sinar = client.create_synth("sin-ar", AddAction.groupHead, client[0], freq=bus)
+
+            impulsekr = client.create_synth("impulse-decay2-kr", AddAction.groupHead, client[0], out=bus, freq=2 ** i, mul=300/i)
+
+        # bus2.connect(sinar, "freq")
+
+        while True:
+            time.sleep(0.1)
+            print(">>> ", end="")
+            run_command(client, input())
+    except KeyboardInterrupt:
+        client._server.g_freeAll(0)
+        exit()

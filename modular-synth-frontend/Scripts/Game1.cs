@@ -11,12 +11,12 @@ public class Game1 : Game
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private InputManager inputManager;
+    private InputManager input;
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
-        inputManager = new InputManager();
+        input = new InputManager();
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -41,7 +41,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        inputManager.Update();
+        input.Update();
 
         // TODO: Add your update logic here
         base.Update(gameTime);

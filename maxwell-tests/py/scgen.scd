@@ -1,4 +1,4 @@
-x = "C:/Users/maxwe/Documents/modular-synth/maxwell-tests/py/synthdefs/";
+x = "A:/Documents/synth/modular-synth/maxwell-tests/py/synthdefs/";
 
 (
 SynthDef("sin-kr", { arg freq= 440.0, phase= 0.0, mul= 1.0, add= 0.0, out=0;
@@ -50,10 +50,10 @@ SynthDef("mdapiano-ar", { arg freq= 440.0, gate= 1, vel= 100, decay= 0.8, releas
 
 
 (
-SynthDef( "organ", { |freq = 440, sustain = 1, amp = 0.1|
+SynthDef( "organ", { |freq = 440, gate = 1, amp = 0.1|
         var sig;
         sig = LFPar.ar( freq * [1,2,3,5], 0, amp/[2,4,5,7] );
-        Out.ar( 0, Env([0,1,1,0], [0.025,sustain,0.025]).kr(2) * sig.dup )
+	Out.ar( 0, EnvGen.kr(Env.adsr(), gate) * sig.dup )
 }).writeDefFile(x);
 );
 

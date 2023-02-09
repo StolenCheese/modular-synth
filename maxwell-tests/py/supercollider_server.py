@@ -201,3 +201,44 @@ class SuperColliderServer:
                         self.nextBusID = max(self.nextBusID, busID + 1)
 
                         #print(f"    {k} outputting to {busID}")
+
+    def queryTree(self, *t: tuple[int, int]) -> dict[int, int | tuple[str, list[tuple]]]:
+        """Get a representation of this group's node subtree.
+        N *	
+        int	group ID
+        int	flag: if not 0 the current control (arg) values for synths will be included
+
+        Request a representation of this group's node subtree, i.e. all the groups and synths contained within it. 
+        Replies to the sender with a /g_queryTree.reply message listing all of the nodes 
+        contained within the group in the following format:
+        """
+        msg = self._server.g_queryTree(*t)
+
+        data = msg.params
+        print(data)
+        flag = not not data[0]
+        nodeID = data[1]
+        childCount = data[2]
+
+        #print("----", nodeID, childCount)
+
+        tree: dict[int, int | tuple[str, list[tuple]]] = {}
+
+        i = 3
+        while i < len(data):
+            n_id: int = data[i]
+            children: int = data[i+1]
+            if children == -1:
+                s_type: str = data[i+2]
+                if flag:
+                    M = data[i+3]
+                    params = [(data[i+4+m], data[i+5+m]) for m in range(0, M*2, 2)]
+                    i += 4+M*2
+                    tree[n_id] = (s_type, params)
+                else:
+                    i += 3
+                    tree[n_id] = (s_type, None)
+            else:
+                i += 2
+                tree[n_id] = children
+        return tree

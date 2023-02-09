@@ -137,7 +137,7 @@ if __name__ == "__main__":
         # m = osc_packet.OscPacket(b"\x23\x62\x75\x6e\x64\x6c\x65\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x38\x2f\x6e\x5f\x6d\x61\x70\x6e\x00\x2c\x69\x73\x69\x69\x73\x69\x69\x00\x00\x00\x00\x00\x00\x03\xe8\x66\x72\x65\x71\x31\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x66\x72\x65\x71\x32\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01")
         print("Connecting to server")
         ip = "127.0.0.1"
-        port = 59000
+        port = 58000
 
         client = SuperColliderServer(ip, port)
 
@@ -164,53 +164,53 @@ if __name__ == "__main__":
         # exit()
 
         # Play the terraria underground theme
-        mid = mido.MidiFile('../../../midi/Megalovania.mid')
+        mid = mido.MidiFile('../../../midi/freebird.mid')
         print("Starting MIDI:")
 
-        def decay_sin():
+        def decay_sin(freq=0):
             # b = client.create_bus()5
             # client.create_synth("decay2-ar", AddAction.groupHead, client[0], ain=b, out=0)
-            return client.create_synth("organ", AddAction.groupTail, client[0], out=0, amp=0, freq=0)
 
-        synths: dict[int, Synth] = {
-            i: decay_sin()
-            for i in range(16)
+            return client.create_synth("organ", AddAction.groupTail, client[0], out=0, amp=0.1, gate=1, freq=freq)
+
+        synths = {
+            i: {-1: 1, -2: 0} for i in range(16)
         }
-
-        notes: dict[int, set] = {
-            i: set()
-            for i in range(16)
-        }
-
-        s = {}
 
         # run_command(client, "ls")
 
         for msg in mid.play():
+            c = msg.channel
             print(msg)
-            if msg.type == "note_on":  # ]i
-                # 8i
-                if (msg.channel, msg.note) in s:
-                    s[(msg.channel, msg.note)].free()
+            match msg.type:
+                case "note_on":  # ]i
+                    # 8i
+                    f = midi_note(msg.note + synths[c][-2])
+                    if msg.note not in synths[c]:
+                        synths[c][msg.note] = decay_sin(freq=f)
+                    else:
+                        synths[c][msg.note].set(gate=1)
 
-                s[(msg.channel, msg.note)] = decay_sin()
+                case "note_off":
 
-                s[(msg.channel, msg.note)].set(amp=0.1, freq=midi_note(msg.note))
+                    synths[c][msg.note].set(gate=-1.1)
 
-            elif msg.type == "note_off":
+                case "control_change":
+                    if msg.control == 7:
+                        # volume change
+                        synths[c][-1] = msg.value / 127
+                        for i, s in synths[c].items():
+                            if i >= 0:
+                                s.set(amp=0.1*synths[c][-1])
 
-                s[(msg.channel, msg.note)].set(amp=0)
+                case "pitchwheel":
 
-        print("over")
+                    synths[c][-2] = (-msg.pitch / 8192) * 4
 
-        for i in range(1, 4):
-            bus = client.create_bus()
-
-            sinar = client.create_synth("sin-ar", AddAction.groupHead, client[0], freq=bus)
-
-            impulsekr = client.create_synth("impulse-decay2-kr", AddAction.groupHead, client[0], out=bus, freq=2 ** i, mul=300/i)
-
-        # bus2.connect(sinar, "freq")
+                    for i, s in synths[c].items():
+                        if i >= 0:
+                            freq = midi_note(i + synths[c][-2])
+                            s.set(freq=freq)
 
         while True:
             time.sleep(0.1)

@@ -2,16 +2,21 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace modular_synth_frontend;
+namespace modular_synth_frontend.Scripts;
 
 public class Game1 : Game
 {
+
+    Texture2D cardTexture;
+
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private InputManager input;
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
+        input = new InputManager();
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -28,6 +33,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
+        cardTexture = Content.Load<Texture2D>("Card Design");
     }
 
     protected override void Update(GameTime gameTime)
@@ -35,16 +41,20 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        input.Update();
 
+        // TODO: Add your update logic here
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        GraphicsDevice.Clear(Color.DarkSeaGreen);
 
         // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(cardTexture, new Vector2(0, 0), Color.White);
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }

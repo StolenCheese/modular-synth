@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace modular_synth_frontend.Scripts;
+namespace modular_synth_frontend.Core;
 
     public class InputManager
 {

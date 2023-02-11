@@ -24,7 +24,7 @@ namespace synth_api {
     }
 
     void Port::cyclicCheck(Port *target) {
-        // PRECONDITION: There are no existing cycles (assuming all links are undirected)
+        // INVARIANT: There are no existing cycles (assuming all links are undirected)
         // Complexity: O(n) where n is the number of ports across sections.
         std::list<Port *> queue;
         queue.insert(queue.end(), target);

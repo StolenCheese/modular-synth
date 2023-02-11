@@ -41,9 +41,15 @@ namespace synth_api {
         virtual void removeLink(Port *other);
 
     protected:
+        // SuperCollider bus identifier
         uint64_t bus;
+
+        // Holds all actual front-end created connections (models wires)
         std::set<Port *> outgoingConnections;
+
+        // Holds all back-end created connections (models ports on the same section)
         std::set<Port *> outgoingSymbolicLinks;
+
         /*
          * Checks for cycles existing in the tree - these can cause problems
          * (e.g. infinite stall, feedback loop) in super collider!

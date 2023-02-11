@@ -6,8 +6,15 @@
 #include "OutputPort.h"
 #include "../exception/LinkException.hpp"
 
+#include <list>
+
 namespace synth_api {
     void InputPort::linkTo(Port *other) {
+        // IMPORTANT NOTE: Our model stores links with *directionality*
+        // So the DIRECTION of linkage (this->Port::linkTo(other) and other->Port::linkTo(this)) is important!
+
+        // Before we mess with controllers, we check for cycles.
+        Port::cyclicCheck(other);
 
         // dynamic cast outputs nullptr when the cast is invalid on a virtual class
         // this only works with *virtual* classes, however!
@@ -18,6 +25,7 @@ namespace synth_api {
                 throw AlreadyBoundInputException((char *) "Cannot bound input to output - already bound!", *this, *other);
             }
             this->controller = other;
+            other->Port::linkTo(this);
         } else if (inputPort) {
             // both are bound with controllers. It's possible we have an input daisy chain, so
             // we need to scan for this
@@ -33,27 +41,38 @@ namespace synth_api {
                         // will become null
                         makeRootController();
                         this->follow(inputPort);
+                        inputPort->Port::linkTo(this);
                     } else {
                         // else make the other node a root controller
                         // and then link the other node as its controller
                         inputPort->makeRootController();
                         inputPort->follow(this);
+                        this->Port::linkTo(inputPort);
                     }
                 }
             } else if (this->controller != nullptr && inputPort->controller == nullptr) {
                 inputPort->follow(this);
+                this->Port::linkTo(inputPort);
             } else {
                 this->follow(inputPort);
+                inputPort->Port::linkTo(this);
             }
         }
-        Port::linkTo(other);
     };
-    void InputPort::removeLink(Port *other) {};
 
-
-    void InputPort::subscribe(InputPort *other) {
-        subscribers.insert(other);
-    }
+    void InputPort::removeLink(Port *other) {
+        auto * otherAsInputPort = dynamic_cast<InputPort *>(other);
+        if (this->controller == other) {
+            if (otherAsInputPort) {
+                otherAsInputPort->unsubscribe(this);
+            }
+            this->controller = nullptr;
+        } else if (otherAsInputPort->controller == this) {
+            otherAsInputPort->controller = nullptr;
+            this->unsubscribe(otherAsInputPort);
+        }
+        Port::removeLink(other);
+    };
 
     void InputPort::follow(InputPort *other) {
         if (this->controller != nullptr) {
@@ -62,7 +81,7 @@ namespace synth_api {
             // and this logic is only here as a safety check
             // Speed is not crucial so the safety check is an added safeguard in a
             // project with a tight timeframe
-            if (auto * isOutput = dynamic_cast<OutputPort *>(this->controller)) {
+            if (dynamic_cast<OutputPort *>(this->controller)) {
                 throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to follow another port "
                                                               "while controller is an OutputPort!");
             } else if (auto *previous = dynamic_cast<InputPort *>(this->controller)) {
@@ -70,8 +89,15 @@ namespace synth_api {
             }
         }
         this->controller = other;
-        this->bus = other->bus;
+        {
+            this->bus = other->bus;
+        }
         other->subscribe(this);
+        notify();
+    }
+
+    void InputPort::subscribe(InputPort *other) {
+        subscribers.insert(other);
     }
 
     void InputPort::unsubscribe(InputPort *other) {
@@ -101,10 +127,27 @@ namespace synth_api {
                                                               "InputPort the root controller in a dependency with an "
                                                               "OutputPort!");
             }
+            // reverse direction of linkage
+            next->Port::removeLink(current);
+            current->Port::linkTo(next);
             next->follow(current);
             current = next;
             next = dynamic_cast<InputPort *>(nextController);
         }
         current->notify();
+    }
+
+    void InputPort::notify() {
+        // INVARIANT: The graph (viewed as undirected) is acyclic
+        std::list<InputPort *> queue;
+        queue.insert(queue.begin(), this);
+        while (!queue.empty()) {
+            InputPort * curr = queue.front();
+            queue.pop_front();
+            for (InputPort * subscriber : curr->subscribers) {
+                subscriber->bus = curr->bus;
+                queue.insert(queue.end(), subscriber);
+            }
+        }
     }
 } // synth_api

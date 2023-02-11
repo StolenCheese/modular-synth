@@ -16,7 +16,15 @@ namespace synth_api {
     private:
         std::set<InputPort *> subscribers;
         Port *controller;
+
+        /*
+         * Subscribing to a node will give you updates when its bus changes.
+         */
         void subscribe(InputPort *other);
+
+        /*
+         * Removing a port from the subscriber list
+         */
         void unsubscribe(InputPort *other);
 
         /*
@@ -36,7 +44,14 @@ namespace synth_api {
          */
         void makeRootController();
 
+        /*
+         * A shortcut to set up the controller, bus, and subscribers so that `this` has `other` as a controller.
+         */
         void follow(InputPort *other);
+
+        /*
+         * Updates the bus of all dependent ports.
+         */
         void notify();
     public:
         void linkTo(Port *other) override;

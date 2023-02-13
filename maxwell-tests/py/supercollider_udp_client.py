@@ -334,7 +334,7 @@ class SuperColliderUPDClient(UDPClient):
 
         self.send_message("/g_deepFree", groupIDS)
 
-    def g_queryTree(self, *t: tuple[int, int]) -> dict[int, int | tuple[str, list[tuple]]]:
+    def g_queryTree(self, *t: tuple[int, int]):
         """Get a representation of this group's node subtree.
         N *	
         int	group ID
@@ -344,35 +344,6 @@ class SuperColliderUPDClient(UDPClient):
         Replies to the sender with a /g_queryTree.reply message listing all of the nodes 
         contained within the group in the following format:
         """
-        print("Getting tree")
         self.send_message("/g_queryTree", [n for p in t for n in p])
 
-        msg = self.receive_message(desired="/g_queryTree.reply")
-        data = msg.params
-        print(data)
-        flag = not not data[0]
-        nodeID = data[1]
-        childCount = data[2]
-
-        #print("----", nodeID, childCount)
-
-        tree: dict[int, int | tuple[str, list[tuple]]] = {}
-
-        i = 3
-        while i < len(data):
-            n_id: int = data[i]
-            children: int = data[i+1]
-            if children == -1:
-                s_type: str = data[i+2]
-                if flag:
-                    M = data[i+3]
-                    params = [(data[i+4+m], data[i+5+m]) for m in range(0, M*2, 2)]
-                    i += 4+M*2
-                    tree[n_id] = (s_type, params)
-                else:
-                    i += 3
-                    tree[n_id] = (s_type, None)
-            else:
-                i += 2
-                tree[n_id] = children
-        return tree
+        return self.receive_message(desired="/g_queryTree.reply")

@@ -21,6 +21,10 @@ public abstract class Entity
     //List of components the entity holds
     protected List<Component> componentList;
 
+    public Entity() {
+        EntityManager.entities.Add(this);
+    }
+
     protected void AddComponent(Component component){
         componentList.Add(component);
     }

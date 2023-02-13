@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace modular_synth_frontend.Core;
 
@@ -20,7 +21,7 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = 720;
         _graphics.ApplyChanges();
 
-        input = new InputManager();
+        input = InputManager.GetInstance();
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -48,7 +49,6 @@ public class Game1 : Game
 
         input.Update();
 
-        // TODO: Add your update logic here
         base.Update(gameTime);
     }
 

@@ -81,7 +81,7 @@ namespace synth_api {
             // and this logic is only here as a safety check
             // Speed is not crucial so the safety check is an added safeguard in a
             // project with a tight timeframe
-            if (dynamic_cast<OutputPort *>(this->controller)) {
+            if (dynamic_cast<OutputPort *>(this->controller) != nullptr) {
                 throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to follow another port "
                                                               "while controller is an OutputPort!");
             } else if (auto *previous = dynamic_cast<InputPort *>(this->controller)) {
@@ -130,6 +130,8 @@ namespace synth_api {
             // reverse direction of linkage
             next->Port::removeLink(current);
             current->Port::linkTo(next);
+
+            // reverse direction of controller
             next->follow(current);
             current = next;
             next = dynamic_cast<InputPort *>(nextController);
@@ -149,5 +151,9 @@ namespace synth_api {
                 queue.insert(queue.end(), subscriber);
             }
         }
+    }
+
+    void InputPort::setDefault(uint64_t value) {
+        defaultValue = value;
     }
 } // synth_api

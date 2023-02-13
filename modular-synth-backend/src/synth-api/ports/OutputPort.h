@@ -8,6 +8,9 @@
 #include "Port.h"
 
 namespace synth_api {
-    class OutputPort : public Port { };
+    class OutputPort : public Port {
+    public:
+        explicit OutputPort(uint64_t bus) : Port(bus) { };
+    };
 }
 #endif //MODULAR_SYNTH_OUTPUTPORT_H

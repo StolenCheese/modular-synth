@@ -44,7 +44,7 @@ namespace synth_api {
 
                 // by the precondition, we will never insert the same item twice
                 // into the queue
-                queue.insert(queue.end(), outgoingLink);
+                queue.insert(queue.cend(), outgoingLink);
             }
 
             for (auto it = next_node->outgoingSymbolicLinks.begin(); it != next_node->outgoingSymbolicLinks.end(); ++it) {

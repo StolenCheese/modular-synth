@@ -11,7 +11,7 @@
 namespace synth_api {
 
     class Port {
-    private:
+    protected:
         explicit Port(uint64_t bus) : bus(bus) {};
     public:
         /*
@@ -45,7 +45,7 @@ namespace synth_api {
         uint64_t bus;
 
         // Holds all actual front-end created connections (models wires)
-        std::set<Port *> outgoingConnections;
+        std::set<Port *> connections;
 
         // Holds all back-end created connections (models ports on the same section)
         std::set<Port *> outgoingSymbolicLinks;

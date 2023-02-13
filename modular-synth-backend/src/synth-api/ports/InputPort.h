@@ -16,6 +16,7 @@ namespace synth_api {
     private:
         std::set<InputPort *> subscribers;
         Port *controller;
+        uint64_t defaultValue;
 
         /*
          * Subscribing to a node will give you updates when its bus changes.
@@ -54,8 +55,10 @@ namespace synth_api {
          */
         void notify();
     public:
+        explicit InputPort(uint64_t bus, uint64_t defaultValue) : Port(bus), controller(nullptr), defaultValue(defaultValue) {};
         void linkTo(Port *other) override;
         void removeLink(Port *other) override;
+        void setDefault(uint64_t value);
     };
 
 }

@@ -16,6 +16,10 @@ public class Game1 : Game
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
+        _graphics.PreferredBackBufferWidth = 1280;
+        _graphics.PreferredBackBufferHeight = 720;
+        _graphics.ApplyChanges();
+
         input = new InputManager();
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -54,7 +58,7 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
-        _spriteBatch.Draw(cardTexture, new Vector2(0, 0), Color.White);
+        _spriteBatch.Draw(cardTexture, new Rectangle(0,0,200,300), Color.White);
         _spriteBatch.End();
 
         base.Draw(gameTime);

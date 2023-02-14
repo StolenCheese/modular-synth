@@ -1,7 +1,9 @@
-cmake_minimum_required(VERSION 2.6)
-PROJECT(TestOscpack)
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+
+include_directories(         "${CMAKE_SOURCE_DIR}"
+                            ${CMAKE_CURRENT_SOURCE_DIR}
+                          "${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0" 
+                          )
 
 # separate versions of NetworkingUtils.cpp and UdpSocket.cpp are provided for Win32 and POSIX
 # the IpSystemTypePath selects the correct ones based on the current platform
@@ -13,7 +15,7 @@ ELSE(WIN32)
  set(IpSystemTypePath ip/posix)
 ENDIF(WIN32)
 
-ADD_LIBRARY(oscpack 
+ADD_LIBRARY(oscpack  STATIC  
 
 ip/IpEndpointName.h
 ip/IpEndpointName.cpp
@@ -43,24 +45,25 @@ osc/OscOutboundPacketStream.cpp
 )
 
 
-ADD_EXECUTABLE(OscUnitTests tests/OscUnitTests.cpp)
-TARGET_LINK_LIBRARIES(OscUnitTests oscpack ${LIBS})
 
-ADD_EXECUTABLE(OscSendTests tests/OscSendTests.cpp)
-TARGET_LINK_LIBRARIES(OscSendTests oscpack ${LIBS})
+#ADD_EXECUTABLE(OscUnitTests tests/OscUnitTests.cpp)
+#TARGET_LINK_LIBRARIES(OscUnitTests oscpack ${LIBS})
 
-ADD_EXECUTABLE(OscReceiveTest tests/OscReceiveTest.cpp)
-TARGET_LINK_LIBRARIES(OscReceiveTest oscpack ${LIBS})
+#ADD_EXECUTABLE(OscSendTests tests/OscSendTests.cpp)
+#TARGET_LINK_LIBRARIES(OscSendTests oscpack ${LIBS})
+
+#ADD_EXECUTABLE(OscReceiveTest tests/OscReceiveTest.cpp)
+#TARGET_LINK_LIBRARIES(OscReceiveTest oscpack ${LIBS})
 
 
-ADD_EXECUTABLE(OscDump examples/OscDump.cpp)
-TARGET_LINK_LIBRARIES(OscDump oscpack ${LIBS})
+#ADD_EXECUTABLE(OscDump examples/OscDump.cpp)
+#TARGET_LINK_LIBRARIES(OscDump oscpack ${LIBS})
 
-ADD_EXECUTABLE(SimpleReceive examples/SimpleReceive.cpp)
-TARGET_LINK_LIBRARIES(SimpleReceive oscpack ${LIBS})
+#ADD_EXECUTABLE(SimpleReceive examples/SimpleReceive.cpp)
+#TARGET_LINK_LIBRARIES(SimpleReceive oscpack ${LIBS})
 
-ADD_EXECUTABLE(SimpleSend examples/SimpleSend.cpp)
-TARGET_LINK_LIBRARIES(SimpleSend oscpack ${LIBS})
+#ADD_EXECUTABLE(SimpleSend examples/SimpleSend.cpp)
+#TARGET_LINK_LIBRARIES(SimpleSend oscpack ${LIBS})
 
 
 if(MSVC)

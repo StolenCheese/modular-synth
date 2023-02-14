@@ -14,19 +14,8 @@ namespace synth_api {
 
     class InputPort : public Port {
     private:
-        std::set<InputPort *> subscribers;
         Port *controller;
         uint64_t defaultValue;
-
-        /*
-         * Subscribing to a node will give you updates when its bus changes.
-         */
-        void subscribe(InputPort *other);
-
-        /*
-         * Removing a port from the subscriber list
-         */
-        void unsubscribe(InputPort *other);
 
         /*
          * Makes this port a root controller.
@@ -48,14 +37,27 @@ namespace synth_api {
         /*
          * A shortcut to set up the controller, bus, and subscribers so that `this` has `other` as a controller.
          */
-        void follow(InputPort *other);
+        void follow(Port *other);
 
         /*
          * Updates the bus of all dependent ports.
          */
         void notify();
+    protected:
+        std::set<InputPort *> subscribers;
+        /*
+         * Subscribing to a node will give you updates when its bus changes.
+         */
+        void subscribe(Port *other) override;
+
+        /*
+         * Removing a port from the subscriber list
+         */
+        void unsubscribe(Port *other) override;
     public:
-        explicit InputPort(uint64_t bus, uint64_t defaultValue) : Port(bus), controller(nullptr), defaultValue(defaultValue) {};
+        explicit InputPort(uint64_t bus, uint64_t defaultValue, std::list<Port *>::iterator identifier) : Port(bus, identifier), controller(nullptr), defaultValue(defaultValue) {
+            subscribers = std::set<InputPort *>();
+        };
         void linkTo(Port *other) override;
         void removeLink(Port *other) override;
         void setDefault(uint64_t value);

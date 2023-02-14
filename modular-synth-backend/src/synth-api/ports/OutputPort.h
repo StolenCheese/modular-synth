@@ -6,11 +6,20 @@
 #define MODULAR_SYNTH_OUTPUTPORT_H
 
 #include "Port.h"
+#include "InputPort.h"
 
 namespace synth_api {
     class OutputPort : public Port {
+        friend InputPort;
+    private:
+        std::set<InputPort *> subscribers;
+    protected:
+        void subscribe(Port *other) override;
+        void unsubscribe(Port *other) override;
     public:
-        explicit OutputPort(uint64_t bus) : Port(bus) { };
+        explicit OutputPort(uint64_t bus, std::list<Port *>::iterator identifier) : Port(bus, identifier) {
+            subscribers = std::set<InputPort *>();
+        };
     };
 }
 #endif //MODULAR_SYNTH_OUTPUTPORT_H

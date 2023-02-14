@@ -4,6 +4,8 @@
 
 #include "InputPort.h"
 #include "OutputPort.h"
+#include "Port.h"
+
 #include "../exception/LinkException.hpp"
 
 #include <list>
@@ -25,7 +27,7 @@ namespace synth_api {
                 throw AlreadyBoundInputException((char *) "Cannot bound input to output - already bound!", *this, *other);
             }
             this->controller = other;
-            other->Port::linkTo(this);
+            this->Port::linkTo(other);
         } else if (inputPort) {
             // both are bound with controllers. It's possible we have an input daisy chain, so
             // we need to scan for this
@@ -41,7 +43,7 @@ namespace synth_api {
                         // will become null
                         makeRootController();
                         this->follow(inputPort);
-                        inputPort->Port::linkTo(this);
+                        this->Port::linkTo(inputPort);
                     } else {
                         // else make the other node a root controller
                         // and then link the other node as its controller
@@ -55,7 +57,7 @@ namespace synth_api {
                 this->Port::linkTo(inputPort);
             } else {
                 this->follow(inputPort);
-                inputPort->Port::linkTo(this);
+                this->Port::linkTo(inputPort);
             }
         }
     };
@@ -67,41 +69,52 @@ namespace synth_api {
                 otherAsInputPort->unsubscribe(this);
             }
             this->controller = nullptr;
+            auto old_bus = this->bus;
+            this->bus = 0;
+            if (old_bus) {
+                this->notify();
+            }
         } else if (otherAsInputPort->controller == this) {
             otherAsInputPort->controller = nullptr;
             this->unsubscribe(otherAsInputPort);
+            auto old_bus = otherAsInputPort->bus;
+            otherAsInputPort->bus = 0;
+            if (old_bus) {
+                otherAsInputPort->notify();
+            }
         }
         Port::removeLink(other);
     };
 
-    void InputPort::follow(InputPort *other) {
+    void InputPort::follow(Port *other) {
         if (this->controller != nullptr) {
-            // we can't replace an OutputPort with another - if we've gotten here
-            // then it's a fatal logic error. the logic should never allow this,
-            // and this logic is only here as a safety check
-            // Speed is not crucial so the safety check is an added safeguard in a
-            // project with a tight timeframe
-            if (dynamic_cast<OutputPort *>(this->controller) != nullptr) {
-                throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to follow another port "
-                                                              "while controller is an OutputPort!");
-            } else if (auto *previous = dynamic_cast<InputPort *>(this->controller)) {
-                previous->unsubscribe(previous);
+            if (auto * previousInput = dynamic_cast<InputPort *>(this->controller)) {
+                previousInput->unsubscribe(this);
+            } else if (auto * previousOutput = dynamic_cast<OutputPort *>(this->controller)) {
+                previousOutput->unsubscribe(this);
             }
         }
         this->controller = other;
-        {
-            this->bus = other->bus;
+        if (auto * otherAsInput = dynamic_cast<InputPort *>(other)) {
+            this->bus = otherAsInput->bus;
+            otherAsInput->subscribe(this);
+        } else if (auto * otherAsOutput = dynamic_cast<OutputPort *>(other)) {
+            this->bus = otherAsOutput->bus;
+            otherAsOutput->subscribe(this);
         }
-        other->subscribe(this);
         notify();
     }
 
-    void InputPort::subscribe(InputPort *other) {
-        subscribers.insert(other);
+    void InputPort::subscribe(Port *other) {
+        auto *otherAsInputPort = dynamic_cast<InputPort *>(other);
+        if (otherAsInputPort) {
+            subscribers.insert(otherAsInputPort);
+        }
     }
 
-    void InputPort::unsubscribe(InputPort *other) {
-        auto loc = subscribers.find(other);
+    void InputPort::unsubscribe(Port *other) {
+        auto *otherAsInputPort = dynamic_cast<InputPort *>(other);
+        auto loc = subscribers.find(otherAsInputPort);
         if (loc != subscribers.end()) {
             subscribers.erase(loc);
         }
@@ -127,9 +140,6 @@ namespace synth_api {
                                                               "InputPort the root controller in a dependency with an "
                                                               "OutputPort!");
             }
-            // reverse direction of linkage
-            next->Port::removeLink(current);
-            current->Port::linkTo(next);
 
             // reverse direction of controller
             next->follow(current);

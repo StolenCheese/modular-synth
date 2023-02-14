@@ -6,13 +6,12 @@
 #define MODULAR_SYNTH_PORT_H
 
 #include <cstdint>
+#include <list>
 #include <set>
 
 namespace synth_api {
 
     class Port {
-    protected:
-        explicit Port(uint64_t bus) : bus(bus) {};
     public:
         /*
          * Ports can be bound to each other. This is analogous to a
@@ -44,17 +43,28 @@ namespace synth_api {
         // SuperCollider bus identifier
         uint64_t bus;
 
-        // Holds all actual front-end created connections (models wires)
-        std::set<Port *> connections;
+        // Holds all actual front-end created outgoingConnections (models wires)
+        std::set<Port *> outgoingConnections;
 
-        // Holds all back-end created connections (models ports on the same section)
+        // Holds all back-end created outgoingConnections (models ports on the same section)
         std::set<Port *> outgoingSymbolicLinks;
+
+        explicit Port(uint64_t bus, std::list<Port *>::iterator identifier) : bus(bus), identifier(identifier) {};
 
         /*
          * Checks for cycles existing in the tree - these can cause problems
          * (e.g. infinite stall, feedback loop) in super collider!
          */
         void cyclicCheck(Port *target);
+
+        /*
+         *
+         */
+        virtual void subscribe(Port *) = 0;
+        virtual void unsubscribe(Port *) = 0;
+
+    private:
+        std::list<Port *>::iterator identifier;
     };
 
 }

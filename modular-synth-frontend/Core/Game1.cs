@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace modular_synth_frontend.Core;
 
@@ -16,7 +17,11 @@ public class Game1 : Game
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
-        input = new InputManager();
+        _graphics.PreferredBackBufferWidth = 1280;
+        _graphics.PreferredBackBufferHeight = 720;
+        _graphics.ApplyChanges();
+
+        input = InputManager.GetInstance();
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -44,7 +49,6 @@ public class Game1 : Game
 
         input.Update();
 
-        // TODO: Add your update logic here
         base.Update(gameTime);
     }
 
@@ -54,7 +58,7 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
-        _spriteBatch.Draw(cardTexture, new Vector2(0, 0), Color.White);
+        _spriteBatch.Draw(cardTexture, new Rectangle(0,0,200,300), Color.White);
         _spriteBatch.End();
 
         base.Draw(gameTime);

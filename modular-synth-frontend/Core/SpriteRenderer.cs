@@ -8,4 +8,20 @@ public class SpriteRenderer : Component{
 
     public Color colour = Color.White;
 
+    public SpriteRenderer(Texture2D sprite)
+    {
+        this.image = sprite;
+        colour = Color.White;
+    }
+
+    public SpriteRenderer(Texture2D sprite, Color colour)
+    {
+        this.image = sprite;
+        this.colour = colour;
+    }
+
+    public void Draw()
+    {
+
+    }
 }

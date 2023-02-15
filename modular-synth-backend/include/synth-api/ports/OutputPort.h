@@ -8,6 +8,8 @@
 #include "Port.h"
 #include "InputPort.h"
 
+#include <set>
+
 namespace synth_api {
     class OutputPort : public Port {
         friend InputPort;
@@ -17,7 +19,7 @@ namespace synth_api {
         void subscribe(Port *other) override;
         void unsubscribe(Port *other) override;
     public:
-        explicit OutputPort(uint64_t bus, std::list<Port *>::iterator identifier) : Port(bus, identifier) {
+        explicit OutputPort(uint64_t bus, std::list<Port *>::const_iterator identifier) : Port(bus, identifier) {
             subscribers = std::set<InputPort *>();
         };
     };

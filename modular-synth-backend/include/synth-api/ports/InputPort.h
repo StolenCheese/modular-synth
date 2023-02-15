@@ -8,6 +8,7 @@
 #include "Port.h"
 
 #include <cstdint>
+#include <iterator>
 #include <set>
 
 namespace synth_api {
@@ -55,7 +56,7 @@ namespace synth_api {
          */
         void unsubscribe(Port *other) override;
     public:
-        explicit InputPort(uint64_t bus, uint64_t defaultValue, std::list<Port *>::iterator identifier) : Port(bus, identifier), controller(nullptr), defaultValue(defaultValue) {
+        explicit InputPort(uint64_t bus, uint64_t defaultValue, const std::list<Port *>::const_iterator identifier) : Port(bus, identifier), controller(nullptr), defaultValue(defaultValue) {
             subscribers = std::set<InputPort *>();
         };
         void linkTo(Port *other) override;

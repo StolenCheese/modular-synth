@@ -13,7 +13,14 @@
 #include <vector>
 
 namespace synth_api {
+
+    /*
+     * Use this to model a section on a modular synth.
+     * You can query for specific ports via parameters, which will be defined in UI file
+     * (TODO @mp2015: spread knowledge of UI file so we're on the same page about what is actually in it as I'm guessing)
+     */
     class Section {
+
     private:
         // Mapping of parameter name to corresponding Output that provides it
         // Parameter names kept as a convenience to programmers
@@ -31,13 +38,24 @@ namespace synth_api {
          *      std::vector<std::pair<std::string, uint64_t>> outputPortList: Each string is the parameter name for the output port,
          *                   and the uint64_t is the bus number assigned to that output.
          */
-        void generatePortModel(std::vector<std::pair<std::string, uint64_t>> inputPortList, std::vector<std::pair<std::string, uint64_t>> outputPortList);
+        void generatePortModel(const std::vector<std::pair<std::string, uint64_t>>& inputPortList, const std::vector<std::pair<std::string, uint64_t>>& outputPortList);
 
     public:
         /*
+         * Generates a Section object from a given section definition file.
+         *
+         * TODO @bms53 @mp2015 @ksw40: Currently, this just outputs a standard model with three inputs and two outputs.
+         *  we need actual parsing, which is not here currently!
+         *
+         * Parameters:
+         *      char * filepath: path/to/the/section/def/file
+         */
+        explicit Section(char * filepath);
+
+        /*
          * Returns the port object for a given parameter, either corresponding to an output or an input.
          */
-        Port * getPortFor(std::string param);
+        Port * getPortFor(const std::string& param);
     };
 }
 

@@ -60,6 +60,6 @@ namespace synth_api {
         explicit FatalOutputControllerException(char * message) : message(message) {};
     };
 
-} // synth_api
+} // synth-api
 
 #endif //MODULAR_SYNTH_LINKEXCEPTION_HPP

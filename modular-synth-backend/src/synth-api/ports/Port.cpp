@@ -2,8 +2,8 @@
 // Created by bmsyi on 09/02/2023.
 //
 
-#include "Port.h"
-#include "../exception/LinkException.hpp"
+#include "synth-api/ports/Port.h"
+#include "synth-api/exception/LinkException.hpp"
 
 #include <set>
 #include <list>
@@ -19,7 +19,7 @@ namespace synth_api {
     void Port::removeLink(Port *other) {
         auto loc = this->outgoingConnections.find(other);
         if (loc == this->outgoingConnections.end()) {
-            throw new NoSuchConnectionException((char *) "No such connection exists!", *this, *other);
+            throw NoSuchConnectionException((char *) "No such connection exists!", *this, *other);
         }
         this->outgoingConnections.erase(other);
 
@@ -40,9 +40,7 @@ namespace synth_api {
             queue.pop_front();
 
             // Scan over both *real* and *symbolic* links
-            for (auto it = next_node->outgoingConnections.begin(); it != next_node->outgoingConnections.end(); ++it) {
-
-                Port * outgoingLink = *it;
+            for (auto outgoingLink : next_node->outgoingConnections) {
 
                 // if we've already visited the node, we skip it
                 if (visited.find(outgoingLink) != visited.cend()) {
@@ -62,19 +60,21 @@ namespace synth_api {
                 queue.insert(queue.cend(), outgoingLink);
             }
 
-            for (auto it = next_node->outgoingSymbolicLinks.begin(); it != next_node->outgoingSymbolicLinks.end(); ++it) {
-                Port * symLink = *it;
-
+            for (auto symLink : next_node->outgoingSymbolicLinks) {
                 if (visited.find(symLink) != visited.cend()) {
                     continue;
                 }
                 visited.insert(symLink);
 
                 if (symLink == target) {
-                    throw new CyclicLinksException((char *) "Cyclic SYMBOLIC link detected!", *this, *target);
+                    throw CyclicLinksException((char *) "Cyclic SYMBOLIC link detected!", *this, *target);
                 }
                 queue.insert(queue.end(), symLink);
             }
         }
+    }
+
+    void Port::symbolicLinkTo(Port *other) {
+        outgoingSymbolicLinks.insert(other);
     }
 }

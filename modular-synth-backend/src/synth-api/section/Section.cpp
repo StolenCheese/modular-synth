@@ -2,26 +2,40 @@
 // Created by bmsyi on 11/02/2023.
 //
 
-#include "Section.h"
+#include "synth-api/section/Section.h"
+#include "synth-api/section/_model/PortManager.h"
 
 namespace synth_api {
-    void Section::generatePortModel(std::vector<std::pair<std::string, uint64_t>> inputPortList, std::vector<std::pair<std::string, uint64_t>> outputPortList) {
-//        for (auto p : inputPortList) {
-//            InputPort * newInputPort = new InputPort(0, p.second);
-//            inputPorts.insert({p.first, newInputPort});
-//        }
-//        for (auto p : outputPortList) {
-//            OutputPort * newOutputPort = new OutputPort(p.second);
-//            outputPorts.insert({p.first, newOutputPort});
-//        }
+    void Section::generatePortModel(const std::vector<std::pair<std::string, uint64_t>>& inputPortList, const std::vector<std::pair<std::string, uint64_t>>& outputPortList) {
+        for (const auto& p : inputPortList) {
+            InputPort * newInputPort = PortManager::getNewInputPort(p.second);
+            inputPorts.insert({p.first, newInputPort});
+        }
+        for (const auto& p : outputPortList) {
+            OutputPort * newOutputPort = PortManager::getNewOutputPort(p.second);
+            outputPorts.insert({p.first, newOutputPort});
+        }
+
+        for (const auto& outputPair : outputPorts) {
+            for (const auto& inputPair : inputPorts) {
+                inputPair.second->symbolicLinkTo(outputPair.second);
+                outputPair.second->symbolicLinkTo(inputPair.second);
+            }
+        }
     }
 
-    Port * Section::getPortFor(std::string param) {
+    Port * Section::getPortFor(const std::string& param) {
         if (inputPorts.find(param) != inputPorts.cend()) {
             return inputPorts.find(param)->second;
         } else if (outputPorts.find(param) != outputPorts.cend()) {
             return outputPorts.find(param)->second;
         }
         return nullptr;
+    }
+
+    Section::Section(char *filepath) {
+        std::vector<std::pair<std::string, uint64_t>> inputPortList = {{"pitch", 10}, {"amplification", 20}, {"frequency", 300}};
+        std::vector<std::pair<std::string, uint64_t>> outputPortList = {{"reverb", 1}, {"tonality", 2}};
+        generatePortModel(inputPortList, outputPortList);
     }
 }

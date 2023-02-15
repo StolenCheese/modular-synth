@@ -5,6 +5,7 @@
 #ifndef MODULAR_SYNTH_PORT_H
 #define MODULAR_SYNTH_PORT_H
 
+
 #include <cstdint>
 #include <list>
 #include <set>
@@ -12,6 +13,7 @@
 namespace synth_api {
 
     class Port {
+        friend Section;
     public:
         /*
          * Ports can be bound to each other. This is analogous to a
@@ -39,17 +41,28 @@ namespace synth_api {
          */
         virtual void removeLink(Port *other);
 
+        /*
+         * Adds a symbolic link to another wire (this is only for cyclic checking!)
+         *
+         * Parameters:
+         *      Port other: Port to connect to
+         */
+        void symbolicLinkTo(Port *other);
+
     protected:
         // SuperCollider bus identifier
+        // TODO @bms53 @ksw40: Refactor into LogicalBus type
         uint64_t bus;
 
         // Holds all actual front-end created outgoingConnections (models wires)
+        // TODO @bms53: Rename to imply it is bi-directional
         std::set<Port *> outgoingConnections;
 
         // Holds all back-end created outgoingConnections (models ports on the same section)
+        // TODO @bms53: Rename to imply it is bi-directional
         std::set<Port *> outgoingSymbolicLinks;
 
-        explicit Port(uint64_t bus, std::list<Port *>::iterator identifier) : bus(bus), identifier(identifier) {};
+        explicit Port(uint64_t bus, const std::list<Port *>::const_iterator identifier) : bus(bus), identifier(identifier) {};
 
         /*
          * Checks for cycles existing in the tree - these can cause problems
@@ -58,13 +71,14 @@ namespace synth_api {
         void cyclicCheck(Port *target);
 
         /*
-         *
+         * See InputPort
+         * TODO @bms53: move docstrings
          */
         virtual void subscribe(Port *) = 0;
         virtual void unsubscribe(Port *) = 0;
 
     private:
-        std::list<Port *>::iterator identifier;
+        std::list<Port *>::const_iterator identifier;
     };
 
 }

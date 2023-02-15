@@ -15,8 +15,11 @@ namespace synth_api {
     private:
         static std::list<Port *> ports;
     public:
-        static InputPort * getNewInputPort();
-        static OutputPort * getNewOutputPort();
+        // TODO @bms53: Make these thread safe with locks!
+        static InputPort * getNewInputPort(uint64_t defaultValue);
+        static OutputPort * getNewOutputPort(uint64_t defaultBus);
+
+        // TODO @ksw40: Add single-pass "toposort" logic
     };
 
 }

@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 namespace modular_synth_frontend.Core;
-public class EntityManager{
+public static class EntityManager{
     public static List<Entity> entities;
 
-    public void Update(){
-
+    public static void Update(){
+        foreach(Entity entity in entities)
+        {
+            entity.Update();
+        }
     }
 
-    public void FixedUpdate(){
-
+    public static void FixedUpdate(){
+        foreach (Entity entity in entities)
+        {
+            entity.FixedUpdate();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using modular_synth_frontend.UI;
 using System.Diagnostics;
 
 namespace modular_synth_frontend.Core;
@@ -9,6 +10,7 @@ public class Game1 : Game
 {
 
     Texture2D cardTexture;
+    Module cardModule;
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -31,7 +33,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         base.Initialize();
-
+        
     }
 
     protected override void LoadContent()
@@ -40,6 +42,7 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
         cardTexture = Content.Load<Texture2D>("Card Design");
+        cardModule = new Module(cardTexture);
     }
 
     protected override void Update(GameTime gameTime)
@@ -48,7 +51,8 @@ public class Game1 : Game
             Exit();
 
         input.Update();
-
+        cardModule.Update();
+        
         base.Update(gameTime);
     }
 
@@ -58,7 +62,7 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
-        _spriteBatch.Draw(cardTexture, new Rectangle(0,0,200,300), Color.White);
+        cardModule.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace modular_synth_frontend.Core;
 
@@ -21,7 +22,7 @@ public abstract class Entity
     //List of components the entity holds
     protected List<Component> componentList;
 
-    public Entity() {
+    protected Entity() {
         EntityManager.entities.Add(this);
     }
 
@@ -32,6 +33,7 @@ public abstract class Entity
     public void Update(){
         foreach(Component component in componentList){
             component.Update();
+            Debug.WriteLine("aheem heem wheemper");
         }
     }
 

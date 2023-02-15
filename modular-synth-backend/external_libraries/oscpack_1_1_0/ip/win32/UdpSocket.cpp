@@ -196,7 +196,7 @@ public:
 	{
 		assert( isConnected_ );
 
-        send( socket_, data, (int)size, 0 );
+        assert(send( socket_, data, (int)size, 0 ) != SOCKET_ERROR);
 	}
 
     void SendTo( const IpEndpointName& remoteEndpoint, const char *data, std::size_t size )
@@ -223,7 +223,7 @@ public:
 
     std::size_t ReceiveFrom( IpEndpointName& remoteEndpoint, char *data, std::size_t size )
 	{
-		assert( isBound_ );
+		// assert( isBound_ );
 
 		struct sockaddr_in fromAddr;
         socklen_t fromAddrLen = sizeof(fromAddr);

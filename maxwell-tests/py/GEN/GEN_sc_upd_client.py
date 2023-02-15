@@ -52,7 +52,13 @@ def unpack_table(table: bs4.Tag, occurrence=[]):
                 val_type = lhs[0]
 
             # format for python
-            val_type = val_type.replace("or", "|").replace("string", "str").strip()
+            val_type = val_type.replace("string", "std::string").replace("bytes", "const char *").strip().split("or")
+
+            if len(val_type) > 1:
+                val_type = ", ".join(val_type)
+                val_type = f"std::variant<{val_type}>"
+            else:
+                val_type = val_type[0]
 
             table_contents.append(TypedParam(tuple(occurrence),  rhs.contents[0], val_type))
 
@@ -68,7 +74,7 @@ def extract_address(text: str):
         j = min(js)
     else:
         j = -1
-        
+
     return text[i:j]
 
 
@@ -137,12 +143,13 @@ def listify(types: list[str | list]):
     if isinstance(types, str):
         return types
     elif len(types) > 1:
-        return f"list[tuple[{', '.join([listify(t) for t in  types])}]]"
+        return f"std::vector<std::tuple<{', '.join([listify(t) for t in  types])}>>"
     else:
-        return f"list[{types[0]}]"
+        return f"std::vector<{types[0]}>"
 
 
-def function_from_command(c: Command) -> str:
+def header_from_command(c: Command) -> str:
+
     # step 1. Name params
     all_names = []
     for t in c.type_info:
@@ -151,16 +158,16 @@ def function_from_command(c: Command) -> str:
     del all_names
 
     # Generate the function command
-    doc = ident.join(c.info)
+    doc = "\n" + "\n".join(c.info)
     if c.type_info:
-        doc += ident
-        doc += ident.join([f":param:{t.name}: - {t.desc}" for t in c.type_info])
+        doc += "\n"
+        doc += "\n".join([f":param:{t.name}: - {t.desc}" for t in c.type_info])
 
-    async_await = ""
+    doc = doc.replace("\n", "\n         //")
+
+    return_type = "void"
     if c.await_command_success:
-        async_await = f"""
-        return self.receive_message(desired="{c.await_command_success}")
-    """
+        return_type = f"std::future<osc::ReceivedMessage>"
 
     # First pass on types - group and label
 
@@ -192,128 +199,124 @@ def function_from_command(c: Command) -> str:
     for i, p in enumerate(params):
         typed_params.append((p[1], listify(p[2])))
 
-    return f'''    def {c.name[1:]}({", ".join(["self"] + [f"{p}: {t}" for p, t in typed_params])}):
-        """
-        {doc}
-        """
-        self.send_message("{c.name}", [{", ".join([p for o, p,t in params])}])
-        {async_await}'''
+    return f'''
+    {doc}    
+    {return_type} {c.name[1:]}({", ".join([f"{t} {p}" for p, t in typed_params])});'''
 
 
-with open("GEN/supercollider_udp_client.py", "w") as f:
-
-    f.write('''import collections
-import queue
-import threading
-import time
-from typing import Iterable
-from pythonosc.udp_client import UDPClient
-from pythonosc.osc_message_builder import OscMessageBuilder, ArgValue
-from pythonosc.osc_message import OscMessage
-from pythonosc.osc_bundle import OscBundle
-
-from enum import IntEnum
-
-from pythonosc import udp_client
-from pythonosc import osc_packet
-from pythonosc import osc_message
-import socket
+def stream_param(o, p, t):
+    s = "{"
+    e = "}"
+    if o == "N":
+        return f"foreach(auto v : {p}){s}p << v;{e}"
+    else:
+        return f"p << {p};\n        "
 
 
-class AddAction(IntEnum):
+def function_from_command(c: Command) -> str:
+    # step 1. Name params
+    all_names = []
+    for t in c.type_info:
+        t.name = make_name(t.desc, all_names)
+        all_names.append(t.name)
+    del all_names
+
+    async_await = "Send();"
+    if c.await_command_success:
+        async_await = f"""
+        return SendRecieve();
     """
-    ```
-    add actions:
-        0	add the new node to the head of the group specified by the add target ID.
-        1	add the new node to the tail of the group specified by the add target ID.
-        2	add the new node just before the node specified by the add target ID.
-        3	add the new node just after the node specified by the add target ID.
-        4	the new node replaces the node specified by the add target ID. The target node is freed.
-    ```
-    """
-    groupHead=0
-    groupTail=1
-    beforeNode=2
-    afterNode=3
-    replaceNode=4
+
+    return_type = "void"
+    if c.await_command_success:
+        return_type = f"std::future<osc::ReceivedMessage>"
+
+    # First pass on types - group and label
+
+    params = []  # (Occurrences, Param, Types)
+    for t in c.type_info:
+        n = "".join(t.occurrence)
+        if n == '':
+            params.append(("S", t.name, t.p_type))
+        elif n == "N ":
+            if len(params) > 0 and params[-1][0] == "N":
+                # append
+                params[-1][2].append(t.p_type)
+            else:
+                params.append(("N", t.name, [t.p_type]))
+        elif n == "N M ":
+            # N must have occurred before, at the min to define an int M
+            # I would say this is probably one of the worst pieces of code I've ever written
+            # If I didn't have to actively not do it in one line
+            if isinstance(params[-1][2][-1], list):
+                params[-1][2][-1].append(t.p_type)
+            else:
+                params[-1][2].append([t.p_type])
+        else:
+            print("Unknown occurrence format: '"+n+"'")
+
+    # Second pass on types: format for python
+    typed_params = []
+
+    for i, p in enumerate(params):
+        typed_params.append((p[1], listify(p[2])))
+
+    s = "{"
+    e = "}"
+
+    return f''' 
+    {return_type} SuperColliderCommander::{c.name[1:]}({", ".join([f"{t} {p}" for p, t in typed_params])}){s}
+        
+        
+        p << osc::BeginMessage("{c.name}");
+        {"".join([stream_param(o,p,t) for o, p,t in params] )}
+        p << osc::EndMessage;
+        {async_await}
+    {e}'''
 
 
-class SuperColliderUPDClient(UDPClient):
-    """Simple OSC client that automatically builds :class:`OscMessage` from arguments"""
+# Requesting for the website
+Web = req.get('https://doc.sccode.org/Reference/Server-Command-Reference.html')
 
-    def __init__(self, address: str, port: int, allow_broadcast: bool=False, family: socket.AddressFamily=socket.AF_UNSPEC) -> None:
-        super().__init__(address, port, allow_broadcast, family)
+ident = '\n        '
+# Creating a BeautifulSoup object and specifying the parser
+scr = BeautifulSoup(Web.text, 'html5lib')
 
-        self.incoming: queue.Queue[osc_message.OscMessage]=queue.Queue()
-        self._notify=False
+contents = scr.findChild(attrs={"class": "contents"})
 
-        threading.Thread(target=self.resv_loop).start()
+tags: list[bs4.Tag] = contents.find_all(recursive=False)
 
-    def resv_loop(self):
-        while True:
-            try:
-                x=self._sock.recv(1024)
+commands = decode_commands(tags)
 
-                packet=osc_packet.OscPacket(x)
-                msg=packet.messages[0].message
+with open("GEN/SuperColliderCommander.cpp", "w") as f:
 
-                #
-                # print(f"received \{msg.address\}")
-
-                self.incoming.put(msg)
-
-            except socket.error:
-                time.sleep(0.1)
-                continue
-
-    def send_message(self, address: str, value: list) -> None:
-        """Build :class:`OscMessage` from arguments and send to server
-
-        Args:
-            address: OSC address the message shall go to
-            value: One or more arguments to be added to the message
-        """
-        builder = OscMessageBuilder(address=address)
-
-        def fill_params(vs):
-            if isinstance(value, Iterable) and not isinstance(value, (str, bytes)):
-                for v in vs:
-                    fill_params(v)
-            elif vs:
-                builder.add_arg(vs)
-
-        fill_params(value)
-
-        msg = builder.build()
-        self.send(msg)
-
-    def receive_message(self, desired: str=None, fail_type: str=None):
-        p=None
-        while p == None or p.address == "/fail" or (desired and p.address != desired):
-            while self.incoming.empty():
-                time.sleep(0.1)
-            p=self.incoming.get()
-
-            if p.address == "/fail" and p.params[0] == fail_type:
-                return p
-
-        return p''')
-    f.write("\n")
-
-    # Requesting for the website
-    Web = req.get('https://doc.sccode.org/Reference/Server-Command-Reference.html')
-
-    ident = '\n        '
-    # Creating a BeautifulSoup object and specifying the parser
-    scr = BeautifulSoup(Web.text, 'html5lib')
-
-    contents = scr.findChild(attrs={"class": "contents"})
-
-    tags: list[bs4.Tag] = contents.find_all(recursive=False)
-
-    commands = decode_commands(tags)
+    f.write("""#include "SuperColliderCommander.hpp" """)
 
     for c in commands:
         if c.sent_by_client:
             f.write(function_from_command(c))
             f.write("\n")
+
+    f.write("")
+
+with open("GEN/SuperColliderCommander.hpp", "w") as f:
+
+    f.write("""
+#include "ServerSocket.hpp"
+#include "osc/OscOutboundPacketStream.h"
+#include "osc/OscReceivedElements.h"
+#include "osc/OscPacketListener.h"
+#include "ip/UdpSocket.h"
+#include <iostream>
+#include <variant>  
+#include <vector>
+#include <utility>
+
+class SuperColliderCommander : ServerSocket{""")
+
+    for c in commands:
+        if c.sent_by_client:
+            f.write(header_from_command(c))
+            f.write("\n")
+
+    f.write("}")

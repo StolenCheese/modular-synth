@@ -1,21 +1,24 @@
+ 
 
-
-include_directories(         "${CMAKE_SOURCE_DIR}"
-                            ${CMAKE_CURRENT_SOURCE_DIR}
-                          "${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0" 
-                          )
+include_directories( "${CMAKE_SOURCE_DIR}"
+${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0
+  )
 
 # separate versions of NetworkingUtils.cpp and UdpSocket.cpp are provided for Win32 and POSIX
 # the IpSystemTypePath selects the correct ones based on the current platform
 
-IF(WIN32)
+IF(WIN32) 
+
  set(IpSystemTypePath ip/win32)
  set(LIBS ${LIBS} Ws2_32 winmm)
 ELSE(WIN32)
+
  set(IpSystemTypePath ip/posix)
 ENDIF(WIN32)
 
-ADD_LIBRARY(oscpack  STATIC  
+message("Compiling with ${IpSystemTypePath}")
+
+ADD_LIBRARY(oscpack     
 
 ip/IpEndpointName.h
 ip/IpEndpointName.cpp
@@ -44,7 +47,12 @@ osc/OscOutboundPacketStream.cpp
 
 )
 
-
+IF(WIN32)
+  find_library(WSOCK32_LIBRARY wsock32)
+  find_library(WS2_32_LIBRARY ws2_32)
+  
+target_link_libraries(oscpack wsock32 ws2_32 winmm )
+ ENDIF(WIN32)
 
 #ADD_EXECUTABLE(OscUnitTests tests/OscUnitTests.cpp)
 #TARGET_LINK_LIBRARIES(OscUnitTests oscpack ${LIBS})

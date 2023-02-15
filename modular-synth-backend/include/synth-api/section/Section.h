@@ -16,8 +16,8 @@ namespace synth_api {
 
     /*
      * Use this to model a section on a modular synth.
-     * You can query for specific ports via parameters, which will be defined in UI file
-     * (TODO @mp2015: spread knowledge of UI file so we're on the same page about what is actually in it as I'm guessing)
+     * You can query for specific ports via parameters, which will be defined in section definition file
+     * (TODO @mp2015: spread knowledge of UI file so we're on the same page about what is actually in it as I'm guessing here)
      */
     class Section {
 
@@ -44,8 +44,11 @@ namespace synth_api {
         /*
          * Generates a Section object from a given section definition file.
          *
-         * TODO @bms53 @mp2015 @ksw40: Currently, this just outputs a standard model with three inputs and two outputs.
-         *  we need actual parsing, which is not here currently!
+         * TODO (@bms53 || @ksw40) && @mp2015: Currently, this just outputs a standard model with three inputs and two outputs.
+         *  We need actual parsing, not this random nonsense that's here currently!
+         *
+         * NOTE @jw2190: This should be suitable for testing. You can mess around with the dummy section I've set up
+         * as the filepath parameter is arbitrary.
          *
          * Parameters:
          *      char * filepath: path/to/the/section/def/file

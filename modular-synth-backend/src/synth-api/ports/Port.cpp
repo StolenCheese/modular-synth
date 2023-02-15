@@ -18,17 +18,19 @@ namespace synth_api {
 
     void Port::removeLink(Port *other) {
         auto loc = this->outgoingConnections.find(other);
+
+        // front-end has messed up if they are trying to remove a non-existent connection
+        // we crash as this is the first time an error has been detected.
         if (loc == this->outgoingConnections.end()) {
             throw NoSuchConnectionException((char *) "No such connection exists!", *this, *other);
         }
         this->outgoingConnections.erase(other);
 
-        // if it is
         other->outgoingConnections.erase(other->outgoingConnections.find(this));
     }
 
     void Port::cyclicCheck(Port *target) {
-        // INVARIANT: There are no existing cycles in a U(ndirected)A(cyclic)G(raph)
+        // INVARIANT: There are no existing cycles in a UAG (undirected acyclic graph)
         // Time & Space Complexity: O(n) where n is the number of ports across sections.
         std::list<Port *> queue;
         std::set<Port *> visited;
@@ -43,6 +45,8 @@ namespace synth_api {
             for (auto outgoingLink : next_node->outgoingConnections) {
 
                 // if we've already visited the node, we skip it
+                // the visited check ensure we never add the same item to the queue for checking twice
+                // (this should guarantee termination)
                 if (visited.find(outgoingLink) != visited.cend()) {
                     continue;
                 }
@@ -52,11 +56,9 @@ namespace synth_api {
                 // if our target is matched, then introducing the link would raise a cycle,
                 // so we throw an exception to alert front-end the user is doing something bad
                 if (outgoingLink == target) {
-                    throw new CyclicLinksException((char *) "Cyclic link detected!", *this, *target);
+                    throw CyclicLinksException((char *) "Cyclic link detected!", *this, *target);
                 }
 
-                // by the precondition, we will never insert the same item twice
-                // into the queue
                 queue.insert(queue.cend(), outgoingLink);
             }
 

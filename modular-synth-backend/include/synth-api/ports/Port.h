@@ -44,6 +44,9 @@ namespace synth_api {
         /*
          * Adds a symbolic link to another wire (this is only for cyclic checking!)
          *
+         * Front-end: Only use this if you know something that the section definition file cannot communicate. The
+         * Section class automatically creates all symbolic links between inputs and outputs that should be needed.
+         *
          * Parameters:
          *      Port other: Port to connect to
          */

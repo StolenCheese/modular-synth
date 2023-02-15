@@ -10,18 +10,6 @@ internal class Module : Interactable
     private bool dragging;
     private Vector2 clickOffset;
 
-    /*
-    Transform t = new Transform();
-    SpriteRenderer sprite; 
-
-    public Module(Texture2D image)
-    {
-        AddComponent(t);
-        sprite = new SpriteRenderer(image);
-        AddComponent(sprite);
-    }
-    */
-
     public Module(Texture2D sprite) : base(sprite)
     { }
 

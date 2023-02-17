@@ -13,20 +13,23 @@ internal class Module : Interactable
     public Module(Texture2D sprite) : base(sprite)
     { }
 
-    public void Update()
+    public Module(Texture2D sprite, Vector2 pos) : base(sprite, pos)
+    { }
+
+    public override void Update()
     {
         if (boundingBox.Contains(input.MousePosition()))
         {
             if (input.LeftMouseClickDown())
             {
                 dragging = true;
-                clickOffset = position - MousePosVector();
+                clickOffset = position - input.MousePosVector();
             }
         }
 
         if (dragging)
         {
-            position = MousePosVector() + clickOffset;
+            position = input.MousePosVector() + clickOffset;
             if (input.LeftMouseClickUp())
             {
                 dragging = false;
@@ -35,8 +38,10 @@ internal class Module : Interactable
         }
     }
 
-    public Vector2 MousePosVector()
+    //set on spawn
+    public void Drag()
     {
-        return new Vector2(input.MousePosition().X, input.MousePosition().Y);
+        dragging = true;
+        clickOffset= position - input.MousePosVector();
     }
 }

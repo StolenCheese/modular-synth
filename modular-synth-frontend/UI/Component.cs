@@ -13,4 +13,9 @@ internal class Component : Interactable
     {
        
     }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
 }

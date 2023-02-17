@@ -135,5 +135,10 @@ namespace modular_synth_frontend.Core;
     {
         return newState.Position;
     }
+
+    public Vector2 MousePosVector()
+    {
+        return new Vector2(newState.Position.X, newState.Position.Y);
+    }
 }
 

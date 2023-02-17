@@ -3,18 +3,8 @@ using Microsoft.Xna.Framework;
 
 namespace modular_synth_frontend.Core;
 
-internal abstract class Interactable
+internal abstract class Interactable : Entity
 {
-    // <summary>
-    // Checks if we run Update events on entity
-    // </summary>
-    public bool enabled = true;
-
-    // <summary>
-    // Checks if we run Draw events on entity
-    // </summary>
-    public bool visible = true;
-
     protected Texture2D sprite;
     protected Color colour;
     protected Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
@@ -53,7 +43,7 @@ internal abstract class Interactable
         boundingBox = new Rectangle((int)position.X,(int)position.Y, sprite.Width + offset, sprite.Height + offset);
     }
 
-    public void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(sprite, position, colour);
     }

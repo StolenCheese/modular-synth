@@ -13,4 +13,9 @@ internal class Wire : Interactable
     public Wire(Texture2D sprite) : base(sprite)
     {
     }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
 }

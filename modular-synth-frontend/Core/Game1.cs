@@ -10,7 +10,8 @@ public class Game1 : Game
 {
 
     Texture2D cardTexture;
-    Module cardModule;
+    Texture2D spawnTexture;
+    ModuleSpawnButton button;
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -41,8 +42,9 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
-        cardTexture = Content.Load<Texture2D>("Card Design");
-        cardModule = new Module(cardTexture);
+        cardTexture = Content.Load<Texture2D>("Neutral Card Smol");
+        spawnTexture = Content.Load<Texture2D>("uwu spawn");
+        button = new ModuleSpawnButton(spawnTexture, cardTexture, new Vector2(10,-10));
     }
 
     protected override void Update(GameTime gameTime)
@@ -51,7 +53,8 @@ public class Game1 : Game
             Exit();
 
         input.Update();
-        cardModule.Update();
+        EntityManager.Update();
+        button.Update();
         
         base.Update(gameTime);
     }
@@ -62,7 +65,10 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
-        cardModule.Draw(_spriteBatch);
+
+        button.Draw(_spriteBatch);
+        EntityManager.Draw(_spriteBatch);
+
         _spriteBatch.End();
 
         base.Draw(gameTime);

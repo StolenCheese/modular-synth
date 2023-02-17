@@ -23,9 +23,10 @@ public abstract class Entity
     protected List<Component> componentList;
 
     protected Entity() {
-        EntityManager.entities.Add(this);
+        //EntityManager.entities.Add(this);
     }
 
+    /*
     protected void AddComponent(Component component){
         componentList.Add(component);
     }
@@ -42,4 +43,9 @@ public abstract class Entity
             component.FixedUpdate();
         }
     }
+    */
+
+    public abstract void Update();
+    //public abstract void Destroy();
+    public abstract void Draw(SpriteBatch spriteBatch);
 }

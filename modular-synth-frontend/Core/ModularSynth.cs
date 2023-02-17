@@ -6,25 +6,39 @@ using System.Diagnostics;
 
 namespace modular_synth_frontend.Core;
 
-public class Game1 : Game
+public class ModularSynth : Game
 {
-
-    Texture2D cardTexture;
-    Texture2D spawnTexture;
-    ModuleSpawnButton button;
+    public static ModularSynth instance { get; private set; }
+    public static Viewport viewport { get { return instance.GraphicsDevice.Viewport; } }
+    public static Vector2 screenSize { get { return new Vector2(viewport.Height, viewport.Height); } }
+    public static GameTime gameTime { get; private set; }
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private InputManager input;
+    private Grid grid;
 
-    public Game1()
+    public const int menuBarHeight = 42;
+    public const int dividerHeight = 9;
+
+    Texture2D cardTexture;
+    Texture2D spawnTexture;
+    Texture2D gridTexture;
+    ModuleSpawnButton button;
+
+    public ModularSynth()
     {
+        instance = this;
         _graphics = new GraphicsDeviceManager(this);
+
         _graphics.PreferredBackBufferWidth = 1280;
         _graphics.PreferredBackBufferHeight = 720;
+
         _graphics.ApplyChanges();
 
         input = InputManager.GetInstance();
+        grid = new Grid();
+
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -32,9 +46,7 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-
         base.Initialize();
-        
     }
 
     protected override void LoadContent()
@@ -44,6 +56,7 @@ public class Game1 : Game
         // TODO: use this.Content to load your game content here
         cardTexture = Content.Load<Texture2D>("Neutral Card Smol");
         spawnTexture = Content.Load<Texture2D>("uwu spawn");
+        gridTexture = Content.Load<Texture2D>("gridtile");
         button = new ModuleSpawnButton(spawnTexture, cardTexture, new Vector2(10,-10));
     }
 
@@ -65,10 +78,16 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
+   
+        _spriteBatch.Draw(gridTexture, new Rectangle(0, 0, viewport.Width, menuBarHeight), Color.White);
+
+        _spriteBatch.Draw(gridTexture, new Rectangle(0, ((viewport.Height - menuBarHeight)/3 + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
+        _spriteBatch.Draw(gridTexture, new Rectangle(0, (((viewport.Height - menuBarHeight) / 3)*2 + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
+        _spriteBatch.Draw(gridTexture, new Rectangle(0, viewport.Height - dividerHeight, viewport.Width, dividerHeight), Color.White);
+        grid.Draw(_spriteBatch, gridTexture);
 
         button.Draw(_spriteBatch);
         EntityManager.Draw(_spriteBatch);
-
         _spriteBatch.End();
 
         base.Draw(gameTime);

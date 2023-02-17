@@ -8,7 +8,10 @@ public class EntityManager{
     public static void Update(){
         foreach(Entity entity in entities)
         {
-            entity.Update();
+            if (entity.enabled)
+            {
+                entity.Update();
+            }
         }
     }
 
@@ -16,7 +19,10 @@ public class EntityManager{
     {
         foreach(Entity entity in entities)
         {
-            entity.Draw(spriteBatch);
+            if (entity.visible)
+            {
+                entity.Draw(spriteBatch);
+            }
         }
     }
 }

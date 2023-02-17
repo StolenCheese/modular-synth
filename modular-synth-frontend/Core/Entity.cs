@@ -19,33 +19,32 @@ public abstract class Entity
     // </summary>
     public bool visible = true;
 
-    //List of components the entity holds
-    protected List<Component> componentList;
-
-    protected Entity() {
-        //EntityManager.entities.Add(this);
-    }
-
-    /*
-    protected void AddComponent(Component component){
-        componentList.Add(component);
-    }
-
-    public void Update(){
-        foreach(Component component in componentList){
-            component.Update();
-            Debug.WriteLine("aheem heem wheemper");
-        }
-    }
-
-    public void FixedUpdate(){
-        foreach(Component component in componentList){
-            component.FixedUpdate();
-        }
-    }
-    */
+    protected Entity() {}
 
     public abstract void Update();
     //public abstract void Destroy();
     public abstract void Draw(SpriteBatch spriteBatch);
 }
+
+
+//List of components the entity holds
+//protected List<Component> componentList;
+
+/*
+protected void AddComponent(Component component){
+    componentList.Add(component);
+}
+
+public void Update(){
+    foreach(Component component in componentList){
+        component.Update();
+        Debug.WriteLine("aheem heem wheemper");
+    }
+}
+
+public void FixedUpdate(){
+    foreach(Component component in componentList){
+        component.FixedUpdate();
+    }
+}
+*/

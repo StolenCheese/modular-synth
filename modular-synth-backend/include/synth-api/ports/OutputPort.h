@@ -19,7 +19,7 @@ namespace synth_api {
         void subscribe(Port *other) override;
         void unsubscribe(Port *other) override;
     public:
-        explicit OutputPort(uint64_t bus, std::list<Port *>::const_iterator identifier) : Port(bus, identifier) {
+        explicit OutputPort(std::list<Port *>::const_iterator identifier) : Port(identifier) {
             subscribers = std::set<InputPort *>();
         };
     };

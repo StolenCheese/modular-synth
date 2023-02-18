@@ -13,6 +13,8 @@
 
 namespace synth_api {
 
+    enum Rate {control, audio, dependent};
+
     class InputPort : public Port {
     private:
         Port *controller;
@@ -56,7 +58,7 @@ namespace synth_api {
          */
         void unsubscribe(Port *other) override;
     public:
-        explicit InputPort(uint64_t bus, uint64_t defaultValue, const std::list<Port *>::const_iterator identifier) : Port(bus, identifier), controller(nullptr), defaultValue(defaultValue) {
+        explicit InputPort(uint64_t defaultValue, const std::list<Port *>::const_iterator identifier) : Port(identifier), controller(nullptr), defaultValue(defaultValue) {
             subscribers = std::set<InputPort *>();
         };
         void linkTo(Port *other) override;

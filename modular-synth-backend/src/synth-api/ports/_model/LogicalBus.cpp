@@ -9,23 +9,23 @@
 #include <list>
 
 namespace synth_api {
-    void LogicalBus::connect(InputPort *inputPort) {
+    void LogicalBus::addListener(InputPort *inputPort) {
         std::list<InputPort *> queue;
         // inputPort should already be disconnected ; front-end logic should enforce this (i.e. can't connect to a new
         // bus whilst we're already connected to one)
-        inputPort.bus = this;   // perhaps replace with inputPort.setBus(logicalBus);
-        if (inputPort.rate == audio || inputPort.audioRateRequirement) { // perhaps replace with inputPort.getRate()
+        inputPort->logicalBus = this;   // perhaps replace with inputPort.setBus(logicalBus);
+        if (inputPort->rate == audio || inputPort->audioRateRequirement) { // perhaps replace with inputPort.getRate()
             queue.insert(queue.begin(), inputPort);
         }
 
         while (!queue.empty()) {
             InputPort *curr = queue.front();
             queue.pop_front();
-            if (curr->bus.addAudioRateRequirement()) {  // if this made the bus audio rate
-                curr->bus.propagateChangeForward();
-                for (InputPort *symbolic : curr->bus->writer.symbolicLinks) {
-                    if (symbolic.rate == dependent) {
-                        if (symbolic.addAudioRateRequirement()) { // if this made the InputPort audio rate
+            if (curr->logicalBus->addAudioRateRequirement()) {  // if this made the bus audio rate
+                curr->logicalBus->propagateChangeForward();
+                for (InputPort *symbolic : curr->logicalBus->writer->symbolicLinks) {
+                    if (symbolic->rate == dependent) {
+                        if (symbolic->addAudioRateRequirement()) { // if this made the InputPort audio rate
                             queue.insert(queue.begin(), symbolic);
                         }
                     }
@@ -35,8 +35,8 @@ namespace synth_api {
     }
 
     bool LogicalBus::addAudioRateRequirement() {
-        this.audioRateRequirement++;
-        if (this.audioRateRequirement == 1) {   // we're switching from control to audio
+        this->audioRateRequirement++;
+        if (this->audioRateRequirement == 1) {   // we're switching from control to audio
             //SCOOP free(this.bus) // call the destructor
             //SCOOP this.bus = new Bus(rate=audio)
             propagateRateChangeForward();
@@ -46,8 +46,8 @@ namespace synth_api {
     }
 
     bool LogicalBus::removeAudioRateRequirement() {
-        this.audioRateRequirement--;
-        if (this.audioRateRequirement == 0) {   // we're switching from audio to control
+        this->audioRateRequirement--;
+        if (this->audioRateRequirement == 0) {   // we're switching from audio to control
             //SCOOP free(this.bus) // call the destructor
             //SCOOP this.bus = new Bus(rate=control)
             propagateRateChangeForward();

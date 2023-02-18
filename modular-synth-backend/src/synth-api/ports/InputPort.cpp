@@ -34,10 +34,10 @@ namespace synth_api {
             if (this->controller && inputPort->controller) {
                 // we only have output-to-output if two buses
                 // are linked together
-                if (this->bus && inputPort->bus) {
+                if (this->logicalBus && inputPort->logicalBus) {
                     throw OutputToOutputException((char *) "Binding two inputs linked to outputs", *this, *other);
                 } else {
-                    if (!this->bus) {
+                    if (!this->logicalBus) {
                         // flipping the direction will make this node a
                         // root controller node, and its controller
                         // will become null
@@ -69,17 +69,19 @@ namespace synth_api {
                 otherAsInputPort->unsubscribe(this);
             }
             this->controller = nullptr;
-            auto old_bus = this->bus;
-            this->bus = 0;
-            if (old_bus) {
+            auto oldBus = this->logicalBus;
+            this->logicalBus = nullptr;
+            if (oldBus) {
+                oldBus->removeListener(this);
                 this->notify();
             }
         } else if (otherAsInputPort->controller == this) {
             otherAsInputPort->controller = nullptr;
             this->unsubscribe(otherAsInputPort);
-            auto old_bus = otherAsInputPort->bus;
-            otherAsInputPort->bus = 0;
-            if (old_bus) {
+            auto oldBus = otherAsInputPort->logicalBus;
+            otherAsInputPort->logicalBus = nullptr;
+            if (oldBus) {
+                oldBus->removeListener(other);
                 otherAsInputPort->notify();
             }
         }
@@ -96,10 +98,12 @@ namespace synth_api {
         }
         this->controller = other;
         if (auto * otherAsInput = dynamic_cast<InputPort *>(other)) {
-            this->bus = otherAsInput->bus;
+            this->logicalBus = otherAsInput->logicalBus;
+            this->logicalBus->addListener(this);
             otherAsInput->subscribe(this);
         } else if (auto * otherAsOutput = dynamic_cast<OutputPort *>(other)) {
-            this->bus = otherAsOutput->bus;
+            this->logicalBus = otherAsOutput->logicalBus;
+            this->logicalBus->addListener(this);
             otherAsOutput->subscribe(this);
         }
         notify();
@@ -132,7 +136,6 @@ namespace synth_api {
 
         // can only make the InputPort a root controller when there are no OutputPorts in the dependency graph
         current->controller = nullptr;
-        current->bus = 0;
         while (next != nullptr) {
             auto * nextController = next->controller;
             if (dynamic_cast<OutputPort *>(nextController)) {
@@ -157,7 +160,8 @@ namespace synth_api {
             InputPort * curr = queue.front();
             queue.pop_front();
             for (InputPort * subscriber : curr->subscribers) {
-                subscriber->bus = curr->bus;
+                subscriber->logicalBus = curr->logicalBus;
+                subscriber->logicalBus->addListener(subscriber);
                 queue.insert(queue.end(), subscriber);
             }
         }

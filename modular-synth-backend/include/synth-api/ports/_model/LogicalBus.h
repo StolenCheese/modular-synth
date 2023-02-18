@@ -21,17 +21,17 @@ namespace synth_api {
                                             // traversing the graph forwards (in the direction of control), starting
                                             // from the writing `OutputPort`
 
+        bool addAudioRateRequirement();     // returns true iff bus switched from control to audio
+        bool removeAudioRateRequirement();  // returns true iff bus switched from audio to control
+
     public:
         explicit LogicalBus(OutputPort *writer) : writer(writer) {
             //SCOOP bus = new Bus(rate=control)
         };
 
-        void connect(InputPort *inputPort);  // connects inputPort to the bus, and iteratively traverses the graph in
+        void addListener(InputPort *inputPort);  // connects inputPort to the bus, and iteratively traverses the graph in
                                             // the backwards direction (towards audio sources), updating the rates of
                                             // depended-upon ports and buses
-
-        bool addAudioRateRequirement();     // returns true iff bus switched from control to audio
-        bool removeAudioRateRequirement();  // returns true iff bus switched from audio to control
     };
 }
 

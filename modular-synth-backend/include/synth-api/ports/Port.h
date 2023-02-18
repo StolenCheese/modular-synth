@@ -5,6 +5,7 @@
 #ifndef MODULAR_SYNTH_PORT_H
 #define MODULAR_SYNTH_PORT_H
 
+#include "synth-api/ports/_model/LogicalBus.h"
 
 #include <cstdint>
 #include <list>
@@ -14,6 +15,7 @@ namespace synth_api {
 
     class Port {
         friend Section;
+        friend LogicalBus connect(InputPort *inputPort) {};
     public:
         /*
          * Ports can be bound to each other. This is analogous to a
@@ -55,7 +57,7 @@ namespace synth_api {
     protected:
         // SuperCollider bus identifier
         // TODO @bms53 @ksw40: Refactor into LogicalBus type
-        uint64_t bus;
+        LogicalBus *logicalBus;
 
         // Holds all actual front-end created outgoingConnections (models wires)
         // TODO @bms53: Rename to imply it is bi-directional

@@ -25,7 +25,7 @@ namespace synth_api {
         bool removeAudioRateRequirement();  // returns true iff bus switched from audio to control
 
     public:
-        explicit LogicalBus(OutputPort *writer) : writer(writer) {
+        explicit LogicalBus(OutputPort *writer) : writer(writer), audioRateRequirement(0) {
             //SCOOP bus = new Bus(rate=control)
         };
 

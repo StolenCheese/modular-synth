@@ -7,6 +7,7 @@
 
 #include "Port.h"
 #include "InputPort.h"
+#include "synth-api/ports/_model/LogicalBus.h"
 
 #include <set>
 
@@ -21,6 +22,7 @@ namespace synth_api {
     public:
         explicit OutputPort(std::list<Port *>::const_iterator identifier) : Port(identifier) {
             subscribers = std::set<InputPort *>();
+            logicalBus = new LogicalBus(this);
         };
     };
 }

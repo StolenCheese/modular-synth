@@ -15,7 +15,6 @@ namespace synth_api {
 
     class Port {
         friend Section;
-        friend LogicalBus connect(InputPort *inputPort) {};
     public:
         /*
          * Ports can be bound to each other. This is analogous to a

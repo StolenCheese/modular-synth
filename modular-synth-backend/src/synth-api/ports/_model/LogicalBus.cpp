@@ -11,10 +11,10 @@
 namespace synth_api {
     void LogicalBus::addListener(InputPort *inputPort) {
         std::list<InputPort *> queue;
-        // inputPort should already be disconnected ; front-end logic should enforce this (i.e. can't connect to a new
+        // inputPort should already be disconnected; front-end logic should enforce this (i.e. can't connect to a new
         // bus whilst we're already connected to one)
-        inputPort->logicalBus = this;   // perhaps replace with inputPort.setBus(logicalBus);
-        if (inputPort->rate == audio || inputPort->audioRateRequirement) { // perhaps replace with inputPort.getRate()
+        inputPort->logicalBus = this;
+        if (inputPort->rate == audio || inputPort->audioRateRequirement) {
             queue.insert(queue.begin(), inputPort);
         }
 

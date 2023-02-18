@@ -56,7 +56,7 @@ namespace synth_api {
 
     protected:
         // Logical bus to represent bus connections at a high-level. Abstracts away audio/control rate details.
-        LogicalBus *logicalBus = nullptr;
+        LogicalBus *logicalBus;
 
         // Holds all actual front-end created outgoingConnections (models wires)
         // TODO @bms53: Rename to imply it is bi-directional
@@ -66,7 +66,7 @@ namespace synth_api {
         // TODO @bms53: Rename to imply it is bi-directional
         std::set<Port *> outgoingSymbolicLinks;
 
-        explicit Port(const std::list<Port *>::const_iterator identifier) : identifier(identifier) {};
+        explicit Port(const std::list<Port *>::const_iterator identifier) : logicalBus(nullptr), identifier(identifier) {};
 
         /*
          * Checks for cycles existing in the tree - these can cause problems

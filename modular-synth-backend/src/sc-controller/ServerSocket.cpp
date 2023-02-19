@@ -28,8 +28,7 @@ osc::ReceivedMessage ServerSocket::Recv()
 
 
 ServerSocket::ServerSocket(IpEndpointName endpoint) : 
-	_endpoint(endpoint), UdpSocket(),
-	p(_outBuf.data(), 1024) {
+	_endpoint(endpoint), UdpSocket() {
 
 
 	Connect(_endpoint);
@@ -43,7 +42,7 @@ void ServerSocket::Send( )
 	p.Clear();
 }
 
-std::future<osc::ReceivedMessage> ServerSocket::SendRecieve()
+std::future<osc::ReceivedMessage> ServerSocket::SendReceive()
 {
 	Send();
 

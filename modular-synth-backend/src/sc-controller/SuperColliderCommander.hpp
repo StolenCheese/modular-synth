@@ -7,9 +7,12 @@
 #include <iostream>
 #include <variant>  
 #include <vector>
-#include <utility>
+#include <utility> 
 
-class SuperColliderCommander : ServerSocket {
+class SuperColliderCommander : ServerSocket { 
+public:
+
+    SuperColliderCommander(IpEndpointName endpoint);
 
     //Quit program. Exits the synthesis server.
     //
@@ -98,7 +101,8 @@ class SuperColliderCommander : ServerSocket {
     //Asynchronous.Replies to sender with /done when complete.
     //:param:buffer: - buffer of data.
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> d_recv(const char* buffer, const char* completion);
+    std::future<osc::ReceivedMessage> d_recv(std::string buffer );
+    std::future<osc::ReceivedMessage> d_recv(std::string buffer, osc::OutboundPacketStream completion);
 
 
     //Load synth definition.
@@ -107,7 +111,7 @@ class SuperColliderCommander : ServerSocket {
     //Asynchronous.Replies to sender with /done when complete.
     //:param:pathname: - pathname of file. Can be a pattern like 
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> d_load(std::string pathname, const char* completion);
+    std::future<osc::ReceivedMessage> d_load(std::string pathname );
 
 
     //Load a directory of synth definitions.
@@ -116,7 +120,7 @@ class SuperColliderCommander : ServerSocket {
     //Asynchronous.Replies to sender with /done when complete.
     //:param:directory: - pathname of directory.
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> d_loadDir(std::string directory, const char* completion);
+    std::future<osc::ReceivedMessage> d_loadDir(std::string directory );
 
 
     //Delete synth definition.
@@ -258,7 +262,7 @@ class SuperColliderCommander : ServerSocket {
     //:param:target: - add target ID
     //:param:control: - a control index or name
     //:param:interpreted: - floating point and integer arguments are interpreted as control value.  a symbol argument consisting of the letter 'c' or 'a' (for control or audio) followed by the bus's index.    
-    std::future<osc::ReceivedMessage> s_new(std::string definition, int synth, int action, int target, std::vector<std::pair<std::variant<int, std::string>, std::variant<float, int, std::string>>> control);
+    void s_new(std::string definition, int synth, int action, int target, std::vector<std::pair<std::variant<int, std::string>, std::variant<float, int, std::string>>> control);
 
 
     //Get control value(s).

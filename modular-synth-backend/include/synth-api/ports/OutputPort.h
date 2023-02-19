@@ -6,14 +6,14 @@
 #define MODULAR_SYNTH_OUTPUTPORT_H
 
 #include "Port.h"
-#include "InputPort.h"
+
 #include "synth-api/ports/_model/LogicalBus.h"
 
 #include <set>
 
 namespace synth_api {
     class OutputPort : public Port {
-        friend InputPort;
+        friend class InputPort;
     private:
         std::set<InputPort *> subscribers;
     protected:

@@ -6,7 +6,6 @@
 #define MODULAR_SYNTH_INPUTPORT_H
 
 #include "Port.h"
-#include "synth-api/ports/_model/LogicalBus.h"
 
 #include <cstdint>
 #include <iterator>

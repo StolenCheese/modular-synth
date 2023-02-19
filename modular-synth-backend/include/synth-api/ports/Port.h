@@ -5,16 +5,15 @@
 #ifndef MODULAR_SYNTH_PORT_H
 #define MODULAR_SYNTH_PORT_H
 
-#include "synth-api/ports/_model/LogicalBus.h"
-
 #include <cstdint>
 #include <list>
 #include <set>
 
 namespace synth_api {
 
+    class LogicalBus;
     class Port {
-        friend Section;
+        friend class Section;
     public:
         /*
          * Ports can be bound to each other. This is analogous to a

@@ -5,12 +5,11 @@
 #ifndef MODULAR_SYNTH_LOGICALBUS_H
 #define MODULAR_SYNTH_LOGICALBUS_H
 
-#include "synth-api/ports/OutputPort.h"
+#include <cstdint>
 #include "synth-api/ports/InputPort.h"
 
-#include <cstdint>
-
 namespace synth_api {
+    class OutputPort;
     class LogicalBus {
     private:
         uint16_t audioRateRequirement;

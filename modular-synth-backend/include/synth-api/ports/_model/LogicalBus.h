@@ -31,6 +31,8 @@ namespace synth_api {
         void addListener(InputPort *inputPort);  // connects inputPort to the bus, and iteratively traverses the graph in
                                             // the backwards direction (towards audio sources), updating the rates of
                                             // depended-upon ports and buses
+
+        void removeListener(InputPort *inputPort);
     };
 }
 

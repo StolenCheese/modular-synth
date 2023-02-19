@@ -69,19 +69,15 @@ namespace synth_api {
                 otherAsInputPort->unsubscribe(this);
             }
             this->controller = nullptr;
-            auto oldBus = this->logicalBus;
-            this->logicalBus = nullptr;
-            if (oldBus) {
-                oldBus->removeListener(this);
+            if (this->logicalBus) {
+                disconnectFromBus();
                 this->notify();
             }
         } else if (otherAsInputPort->controller == this) {
             otherAsInputPort->controller = nullptr;
             this->unsubscribe(otherAsInputPort);
-            auto oldBus = otherAsInputPort->logicalBus;
-            otherAsInputPort->logicalBus = nullptr;
-            if (oldBus) {
-                oldBus->removeListener(other);
+            if (otherAsInputPort->logicalBus) {
+                otherAsInputPort->disconnectFromBus();
                 otherAsInputPort->notify();
             }
         }
@@ -98,12 +94,10 @@ namespace synth_api {
         }
         this->controller = other;
         if (auto * otherAsInput = dynamic_cast<InputPort *>(other)) {
-            this->logicalBus = otherAsInput->logicalBus;
-            this->logicalBus->addListener(this);
+            connectToBus(otherAsInput->logicalBus);
             otherAsInput->subscribe(this);
         } else if (auto * otherAsOutput = dynamic_cast<OutputPort *>(other)) {
-            this->logicalBus = otherAsOutput->logicalBus;
-            this->logicalBus->addListener(this);
+            connectToBus(otherAsOutput->logicalBus);
             otherAsOutput->subscribe(this);
         }
         notify();
@@ -160,8 +154,11 @@ namespace synth_api {
             InputPort * curr = queue.front();
             queue.pop_front();
             for (InputPort * subscriber : curr->subscribers) {
-                subscriber->logicalBus = curr->logicalBus;
-                subscriber->logicalBus->addListener(subscriber);
+                if (curr->logicalBus) {
+                    subscriber->connectToBus(logicalBus);
+                } else {
+                    subscriber->disconnectFromBus();
+                }
                 queue.insert(queue.end(), subscriber);
             }
         }
@@ -169,5 +166,31 @@ namespace synth_api {
 
     void InputPort::setDefault(uint64_t value) {
         defaultValue = value;
+    }
+
+    bool InputPort::addAudioRateRequirement() {
+        this->audioRateRequirement++;
+        if (this->audioRateRequirement == 1) {   // we're switching from control to audio
+            return true;
+        }
+        return false;
+    }
+
+    bool InputPort::removeAudioRateRequirement() {
+        this->audioRateRequirement--;
+        if (this->audioRateRequirement == 0) {   // we're switching from audio to control
+            return true;
+        }
+        return false;
+    }
+
+    void InputPort::connectToBus(LogicalBus* logicalBus) {
+        this->logicalBus = logicalBus;
+        logicalBus->addListener(this);
+    }
+
+    void InputPort::disconnectFromBus() {
+        this->logicalBus->removeListener(this);
+        this->logicalBus = nullptr;
     }
 } // synth-api

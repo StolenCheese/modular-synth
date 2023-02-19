@@ -13,6 +13,7 @@ namespace synth_api {
 
     class LogicalBus;
     class Port {
+        friend class LogicalBus;
         friend class Section;
     public:
         /*

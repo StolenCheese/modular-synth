@@ -10,10 +10,8 @@
 
 namespace synth_api {
     void LogicalBus::addListener(InputPort *inputPort) {
+        // INVARIANT: inputPort->bus == this
         std::list<InputPort *> queue;
-        // inputPort should already be disconnected; front-end logic should enforce this (i.e. can't connect to a new
-        // bus whilst we're already connected to one)
-        inputPort->logicalBus = this;
         if (inputPort->rate == audio || inputPort->audioRateRequirement) {
             queue.insert(queue.begin(), inputPort);
         }
@@ -21,12 +19,43 @@ namespace synth_api {
         while (!queue.empty()) {
             InputPort *curr = queue.front();
             queue.pop_front();
-            if (curr->logicalBus->addAudioRateRequirement()) {  // if this made the bus audio rate
-                curr->logicalBus->propagateChangeForward();
-                for (InputPort *symbolic : curr->logicalBus->writer->symbolicLinks) {
-                    if (symbolic->rate == dependent) {
-                        if (symbolic->addAudioRateRequirement()) { // if this made the InputPort audio rate
-                            queue.insert(queue.begin(), symbolic);
+            if (curr->logicalBus && curr->logicalBus->addAudioRateRequirement()) {  // if this made the bus audio rate
+                curr->logicalBus->propagateRateChangeForward();
+
+                for (Port *symbolic : curr->logicalBus->writer->outgoingSymbolicLinks) {
+                    if (auto *symbolicInputPort = dynamic_cast<InputPort *>(symbolic)) {
+
+                        if (symbolicInputPort->rate == dependent) {
+                            if (symbolicInputPort->addAudioRateRequirement()) { // if this made the InputPort audio rate
+                                queue.insert(queue.begin(), symbolicInputPort);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void LogicalBus::removeListener(InputPort *inputPort) {
+        // INVARIANT: inputPort->bus == this
+        std::list<InputPort *> queue;
+        if (inputPort->rate == audio || inputPort->audioRateRequirement) {
+            queue.insert(queue.begin(), inputPort);
+        }
+
+        while (!queue.empty()) {
+            InputPort *curr = queue.front();
+            queue.pop_front();
+            if (curr->logicalBus->removeAudioRateRequirement()) {  // if this made the bus control rate
+                curr->logicalBus->propagateRateChangeForward(); // !!! will also propagate change to the chain that's leaving!
+
+                for (Port *symbolic : curr->logicalBus->writer->outgoingSymbolicLinks) {
+                    if (auto *symbolicInputPort = dynamic_cast<InputPort *>(symbolic)) {
+
+                        if (symbolicInputPort->rate == dependent) {
+                            if (symbolicInputPort->removeAudioRateRequirement()) { // if this made the InputPort control rate
+                                queue.insert(queue.begin(), symbolicInputPort);
+                            }
                         }
                     }
                 }

@@ -60,6 +60,12 @@ namespace synth_api {
          * Removing a port from the subscriber list
          */
         void unsubscribe(Port *other) override;
+
+        bool addAudioRateRequirement();     // returns true iff port switched from control to audio
+        bool removeAudioRateRequirement();  // returns true iff port switched from audio to control
+
+        void connectToBus(LogicalBus* logicalBus);
+        void disconnectFromBus();
     public:
         const Rate rate;
 

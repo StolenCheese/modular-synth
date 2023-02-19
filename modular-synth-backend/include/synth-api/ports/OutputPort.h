@@ -14,6 +14,7 @@
 namespace synth_api {
     class OutputPort : public Port {
         friend class InputPort;
+        friend class LogicalBus;
     private:
         std::set<InputPort *> subscribers;
     protected:

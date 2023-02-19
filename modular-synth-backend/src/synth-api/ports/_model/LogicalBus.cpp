@@ -20,7 +20,7 @@ namespace synth_api {
             InputPort *curr = queue.front();
             queue.pop_front();
             if (curr->logicalBus && curr->logicalBus->addAudioRateRequirement()) {  // if this made the bus audio rate
-                curr->logicalBus->propagateRateChangeForward();
+                curr->logicalBus->propagateRateChangeForward(); // won't propagate to the connecting port tree as the root has not yet subscribed to the port that connects it to the bus
 
                 for (Port *symbolic : curr->logicalBus->writer->outgoingSymbolicLinks) {
                     if (auto *symbolicInputPort = dynamic_cast<InputPort *>(symbolic)) {
@@ -46,8 +46,8 @@ namespace synth_api {
         while (!queue.empty()) {
             InputPort *curr = queue.front();
             queue.pop_front();
-            if (curr->logicalBus->removeAudioRateRequirement()) {  // if this made the bus control rate
-                curr->logicalBus->propagateRateChangeForward(); // !!! will also propagate change to the chain that's leaving!
+            if (curr->logicalBus && curr->logicalBus->removeAudioRateRequirement()) {  // if this made the bus control rate
+                curr->logicalBus->propagateRateChangeForward(); // won't propagate to the disconnecting port tree as the root has just unsubscribed from the port that connects it to the bus
 
                 for (Port *symbolic : curr->logicalBus->writer->outgoingSymbolicLinks) {
                     if (auto *symbolicInputPort = dynamic_cast<InputPort *>(symbolic)) {

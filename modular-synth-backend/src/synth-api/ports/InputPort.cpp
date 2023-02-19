@@ -187,9 +187,11 @@ namespace synth_api {
     void InputPort::connectToBus(LogicalBus* logicalBus) {
         this->logicalBus = logicalBus;
         logicalBus->addListener(this);
+        //SCOOP setInputBus(logicalBus.bus)
     }
 
     void InputPort::disconnectFromBus() {
+        //SCOOP setInputBus(defaultValue)
         this->logicalBus->removeListener(this);
         this->logicalBus = nullptr;
     }

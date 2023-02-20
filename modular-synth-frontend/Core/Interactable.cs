@@ -23,7 +23,7 @@ internal abstract class Interactable : Entity
         this.sprite = sprite;
         colour = Color.White;
         this.position = position;
-        boundingBox = sprite.Bounds;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, sprite.Width, sprite.Height);
     }
 
     public Interactable(Texture2D sprite, Vector2 position, Color colour)
@@ -31,7 +31,7 @@ internal abstract class Interactable : Entity
         this.sprite = sprite;
         this.colour = colour;
         this.position = position;
-        boundingBox = sprite.Bounds;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, sprite.Width, sprite.Height);
     }
 
     //offset is how much larger the bounding box is than the sprite
@@ -47,4 +47,11 @@ internal abstract class Interactable : Entity
     {
         spriteBatch.Draw(sprite, position, colour);
     }
+
+    /*
+    public override void Draw(SpriteBatch spriteBatch, int width, int height)
+    {
+        spriteBatch.Draw(sprite, new Rectangle((int)position.X, (int)position.Y, width, height), colour);
+    }
+    */
 }

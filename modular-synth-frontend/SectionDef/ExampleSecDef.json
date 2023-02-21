@@ -1,0 +1,33 @@
+{
+  "OscFreqDial": 
+  {
+    "ParameterID": "freq"
+  },
+  "FineTuneDial": 
+  {
+    "ParameterID": "finetune"
+  },
+  "FmCvDial": 
+  {
+    "ParameterID": "FmCv"
+  },
+  "VoltageWireInput": 
+  {
+    "ParameterID": "Voltage"
+  },
+  "SquareWaveWireOutput": 
+  {
+    "ParameterID": "SquareWave"
+  },
+  "SineWaveWireOutput": 
+  {
+    "ParameterID": "SineWave"
+  },
+  "SawWaveWireOutput":
+  {
+    "ParameterID": "SawWave"
+  },
+  "Background": {
+    "ParameterID": "Background"
+  }
+}

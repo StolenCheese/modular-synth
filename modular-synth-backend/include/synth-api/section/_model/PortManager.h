@@ -14,6 +14,7 @@ namespace synth_api {
 class PortManager {
 private:
     static std::list<Port*> ports;
+    enum Stage {OnStack, Explored};
 
 public:
     Port* in;
@@ -24,7 +25,12 @@ public:
     static InputPort* getNewInputPort(uint64_t defaultValue);
     static OutputPort* getNewOutputPort(uint64_t defaultBus);
 
-    // TODO @ksw40: Add single-pass "toposort" logic
+    /*
+     * Update the server-side order-of-evaluation of the synths so that new synth-to-synth dependencies are respected.
+     * To do this, we walk backwards from the root, towards the sources, finding a local topological ordering of the
+     * synths that the root depends on.
+     */
+    static void reorder(OutputPort *root);
 };
 
 }

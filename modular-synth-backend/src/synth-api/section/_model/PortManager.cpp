@@ -6,17 +6,54 @@
 
 #include "synth-api/ports/InputPort.h"
 #include "synth-api/ports/OutputPort.h"
+#include "synth-api/section/Section.h"
+
+#include <unordered_map>
+#include <list>
 
 namespace synth_api {
     InputPort *PortManager::getNewInputPort(uint64_t defaultValue) {
-        auto * inp = new InputPort(0, defaultValue, ports.cend());
+        auto * inp = new InputPort(defaultValue, control, ports.cend());
         ports.insert(ports.cend(), inp);
         return inp;
     }
 
     OutputPort *PortManager::getNewOutputPort(uint64_t defaultBus) {
-        auto * out = new OutputPort(defaultBus, ports.cend());
+        auto * out = new OutputPort(ports.cend());
         ports.insert(ports.cend(), out);
         return out;
+    }
+
+    void PortManager::reorder(OutputPort *root) {
+        std::unordered_map<Section *, Stage> stages;
+        std::list<Section *> stack;
+        std::list<Section *> order;
+
+        stack.insert(stack.begin(), root->section);
+        stages[root.section] = OnStack;
+
+        while (!stack.empty()) {
+            Section *curr = stack.back();
+            stack.pop_back();
+            switch (stages[curr]) {
+                case OnStack:   // put all unstacked neighbours on stack
+                    for (InputPort *inputPort : curr->inputPorts) {
+                        if (inputPort->logicalBus) {
+                            Section next = inputPort->logicalBus->writer->section;
+                            if (stages.find(next) == stages.end()) {    // if unstacked
+                                stack.insert(stack.end(), next);
+                                stages[next] = OnStack;
+                            }
+                        }
+                    }
+                    break;
+
+                case Explored:  // add to order
+                    order.insert(order.end(), curr);
+                    break;
+            }
+
+            // SCOOP server.pushNodesToStartOfEvalOrder(order); // i.e. the /n_order command with add action 0
+        }
     }
 }

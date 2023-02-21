@@ -7,6 +7,7 @@
 
 #include "../ports/InputPort.h"
 #include "../ports/OutputPort.h"
+#include "synth-api/section/_model/PortManager.h"
 #include "Synth.hpp"
 #include <map>
 #include <string>
@@ -20,6 +21,7 @@ namespace synth_api {
  * (TODO @mp2015: spread knowledge of UI file so we're on the same page about what is actually in it as I'm guessing here)
  */
 class Section {
+    friend class PortManager;
 
 private:
     Synth synth;

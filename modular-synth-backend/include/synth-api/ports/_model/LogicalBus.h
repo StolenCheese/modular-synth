@@ -12,6 +12,7 @@
 namespace synth_api {
 class OutputPort;
 class LogicalBus {
+    friend class PortManager;
 private:
     uint16_t audioRateRequirement;
     OutputPort* writer;

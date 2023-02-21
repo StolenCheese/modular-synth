@@ -6,6 +6,7 @@
 #define MODULAR_SYNTH_INPUTPORT_H
 
 #include "Port.h"
+#include "synth-api/section/_model/PortManager.h"
 
 #include <cstdint>
 #include <iterator>
@@ -16,6 +17,7 @@ namespace synth_api {
     enum Rate {control, audio, dependent};
 
     class InputPort : public Port {
+        friend class PortManager;
         friend class LogicalBus;
 
     private:

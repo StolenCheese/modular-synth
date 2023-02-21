@@ -8,13 +8,17 @@
 #include "../../ports/InputPort.h"
 #include "../../ports/OutputPort.h"
 #include "../../ports/Port.h"
+#include "synth-api/section/Section.h"
+
 #include <list>
+#include <unordered_map>
 
 namespace synth_api {
 class PortManager {
 private:
     static std::list<Port*> ports;
     enum Stage {OnStack, Explored};
+    static std::unordered_map<Port *, Section *> parentMap;
 
 public:
     Port* in;

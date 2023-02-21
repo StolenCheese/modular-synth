@@ -29,16 +29,18 @@ namespace synth_api {
         std::list<Section *> stack;
         std::list<Section *> order;
 
-        stack.insert(stack.begin(), root->section);
-        stages[root.section] = OnStack;
+        Section *parent = parentMap[root];
+        stack.insert(stack.begin(), parent);
+        stages[parent] = OnStack;
 
         while (!stack.empty()) {
             Section *curr = stack.back();
             switch (stages[curr]) {
                 case OnStack:   // put all unstacked neighbours on stack
-                    for (InputPort *inputPort : curr->inputPorts) {
+                    for (const auto& pair : curr->inputPorts) {
+                        InputPort *inputPort = pair.second;
                         if (inputPort->logicalBus) {
-                            Section next = inputPort->logicalBus->writer->section;
+                            Section *next = parentMap[inputPort->logicalBus->writer];
                             if (stages.find(next) == stages.end()) {    // if unstacked
                                 stack.insert(stack.end(), next);
                                 stages[next] = OnStack;
@@ -52,9 +54,8 @@ namespace synth_api {
                     stack.pop_back();
                     order.insert(order.end(), curr);
                     break;
-            }
-
-            // SCOOP server.pushNodesToStartOfEvalOrder(order); // i.e. the /n_order command with add action 0
+}
         }
+        // SCOOP server.pushNodesToStartOfEvalOrder(order); // i.e. the /n_order command with add action 0, use root group
     }
 }

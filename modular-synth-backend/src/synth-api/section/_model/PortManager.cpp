@@ -12,15 +12,15 @@
 #include <list>
 
 namespace synth_api {
-    InputPort *PortManager::getNewInputPort(uint64_t defaultValue) {
-        auto * inp = new InputPort(defaultValue, control, ports.cend());
-        ports.insert(ports.cend(), inp);
+    InputPort *PortManager::getNewInputPort(Section *parent, uint64_t defaultValue) {
+        auto * inp = new InputPort(defaultValue, Rate::control);
+        parentMap[inp] = parent;
         return inp;
     }
 
-    OutputPort *PortManager::getNewOutputPort(uint64_t defaultBus) {
-        auto * out = new OutputPort(ports.cend());
-        ports.insert(ports.cend(), out);
+    OutputPort *PortManager::getNewOutputPort(Section *parent) {
+        auto * out = new OutputPort();
+        parentMap[out] = parent;
         return out;
     }
 

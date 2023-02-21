@@ -21,7 +21,7 @@ namespace synth_api {
         void subscribe(Port *other) override;
         void unsubscribe(Port *other) override;
     public:
-        explicit OutputPort(std::list<Port *>::const_iterator identifier) : Port(identifier) {
+        explicit OutputPort() {
             subscribers = std::set<InputPort *>();
             logicalBus = new LogicalBus(this);
         };

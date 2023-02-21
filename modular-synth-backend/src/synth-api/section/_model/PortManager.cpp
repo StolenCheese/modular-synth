@@ -34,7 +34,6 @@ namespace synth_api {
 
         while (!stack.empty()) {
             Section *curr = stack.back();
-            stack.pop_back();
             switch (stages[curr]) {
                 case OnStack:   // put all unstacked neighbours on stack
                     for (InputPort *inputPort : curr->inputPorts) {
@@ -46,9 +45,11 @@ namespace synth_api {
                             }
                         }
                     }
+                    stages[curr] = Explored;
                     break;
 
                 case Explored:  // add to order
+                    stack.pop_back();
                     order.insert(order.end(), curr);
                     break;
             }

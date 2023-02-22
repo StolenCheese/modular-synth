@@ -24,7 +24,10 @@ public class ModularSynth : Game
     Texture2D cardTexture;
     Texture2D spawnTexture;
     Texture2D gridTexture;
+ 
     ModuleSpawnButton button;
+
+    public Texture2D slider;
 
     public ModularSynth()
     {
@@ -57,7 +60,11 @@ public class ModularSynth : Game
         cardTexture = Content.Load<Texture2D>("Neutral Card Smol");
         spawnTexture = Content.Load<Texture2D>("uwu spawn");
         gridTexture = Content.Load<Texture2D>("gridtile");
-        button = new ModuleSpawnButton(spawnTexture, cardTexture, new Vector2(10,-10));
+        Component.rail1 = Content.Load<Texture2D>("Rail1");
+        Component.slider1 = Content.Load<Texture2D>("Slider1");
+
+        button = new ModuleSpawnButton(spawnTexture, cardTexture, new Vector2(10,-10),_spriteBatch);
+
     }
 
     protected override void Update(GameTime gameTime)
@@ -85,7 +92,6 @@ public class ModularSynth : Game
         _spriteBatch.Draw(gridTexture, new Rectangle(0, (((viewport.Height - menuBarHeight) / 3)*2 + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
         _spriteBatch.Draw(gridTexture, new Rectangle(0, viewport.Height - dividerHeight, viewport.Width, dividerHeight), Color.White);
         grid.Draw(_spriteBatch, gridTexture);
-
         button.Draw(_spriteBatch);
         EntityManager.Draw(_spriteBatch);
         _spriteBatch.End();

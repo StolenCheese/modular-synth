@@ -20,9 +20,9 @@ internal class Module : Interactable
     public Module(Texture2D sprite, Vector2 pos,SpriteBatch spriteBatch) : base(sprite, pos)
     { 
         components.Add(new Component(pos, new Vector2(60,250),Component.rail1,Color.White,"",0.7));
-        components.Add(new Component(pos, new Vector2(60,250),Component.slider1,Color.White,"",0.7,true));
+        components.Add(new Component(pos, new Vector2(60,250),Component.slider2,Color.White,"",0.7,true));
         components.Add(new Component(pos, new Vector2(60,200),Component.rail1,Color.White,"",0.7));
-        //components.Add(new Component(pos, new Vector2(60,200),Component.slider1,Color.White,"",0.7,true));
+        components.Add(new Component(pos, new Vector2(60,200),Component.slider2,Color.White,"",0.7,true));
 
     }
 

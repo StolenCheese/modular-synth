@@ -31,8 +31,6 @@ internal class ModuleSpawnButton : Interactable
             if (input.LeftMouseClickDown())
             {
                 Module newModule = Spawn();
-                EntityManager.entities.Add(newModule);
-                newModule.addComponentsToEtyMgr();
                 newModule.Drag();
 
                 //need to create a dragging event i think because we need to have "on drag stop if not moved out of region then delete newModule

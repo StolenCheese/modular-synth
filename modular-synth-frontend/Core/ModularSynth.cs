@@ -60,9 +60,9 @@ public class ModularSynth : Game
         cardTexture = Content.Load<Texture2D>("Neutral Card Smol");
         spawnTexture = Content.Load<Texture2D>("uwu spawn");
         gridTexture = Content.Load<Texture2D>("gridtile");
-        Component.rail1 = Content.Load<Texture2D>("Rail1");
-        Component.slider1 = Content.Load<Texture2D>("Slider1");
-        Component.slider2 = Content.Load<Texture2D>("Slider2");
+        Slider.rail1 = Content.Load<Texture2D>("Rail1");
+        Slider.slider1 = Content.Load<Texture2D>("Slider1");
+        Slider.slider2 = Content.Load<Texture2D>("Slider2");
 
         button = new ModuleSpawnButton(spawnTexture, cardTexture, new Vector2(10,-10),_spriteBatch);
 

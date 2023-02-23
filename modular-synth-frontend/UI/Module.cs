@@ -19,14 +19,14 @@ internal class Module : Interactable
 
     public Module(Texture2D sprite, Vector2 pos,SpriteBatch spriteBatch) : base(sprite, pos)
     { 
-        components.Add(new Component(pos, new Vector2(60,250),Component.rail1,Color.White,"",0.7));
-        components.Add(new Component(pos, new Vector2(60,250),Component.slider2,Color.White,"",0.7,true));
-        components.Add(new Component(pos, new Vector2(60,200),Component.rail1,Color.White,"",0.7));
-        components.Add(new Component(pos, new Vector2(60,200),Component.slider2,Color.White,"",0.7,true));
+        components.Add(new Slider(pos, new Vector2(60,250),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7));
+        components.Add(new Slider(pos, new Vector2(60,200),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7));
 
+        addToEtyMgr();
     }
 
-    public void addComponentsToEtyMgr(){
+    public void addToEtyMgr(){
+        EntityManager.entities.Add(this);
         foreach(Component c in components){
             c.addComponentToEtyMgr();
         }

@@ -17,6 +17,7 @@
 
 int main(int argc, char* argv[])
 {
+
     // https://doc.sccode.org/Reference/Server-Command-Reference.html
     // cd "C:\Program Files\SuperCollider-3.13.0-rc1"; ./scsynth.exe -u 58000
 
@@ -33,21 +34,41 @@ int main(int argc, char* argv[])
 
     std::cout << "Transmitting test packets" << std::endl;
      
-
     server.dumpOSC(1);
+    // reset everything
+    server.g_deepFree({ 0 });
 
-   server.SyncTrees();
+    server.root.syncTree();
 
-   std::cout << "Version:" << std::endl;
-   std::cout << server.version().get().AddressPattern() << std::endl;
+    std::cout << "Version:" << std::endl;
+    std::cout << server.version().get().AddressPattern() << std::endl;
 
-   auto s1 = server.InstantiateSynth("sin-ar").get();
-  auto s2 =  server.InstantiateSynth("sin-ar").get();
+    auto s1 = server.InstantiateSynth("sin-kr").get();
 
+    std::cout << *s1 << std::endl;
+
+    auto s2 = server.InstantiateSynth("sin-ar").get();
+
+
+    std::cout << *s2 << std::endl;
+
+    auto b = server.InstantiateBus();
  
 
-  s1.Run(false);
-  s2.Run(false);
+    std::cout << "Linking synths:" << std::endl;
+    s1->set("out", b.index); 
+    s1->set("add", 440);
+    s1->set("mul", 100);
+    s1->set("freq", 1);
+
+    s2->set("freq", b);
+
+
+    std::cout << *s1 << std::endl;
+    std::cout << *s2 << std::endl;
+
+   // s1.Run(false);
+   // s2.Run(false);
 
 
     {

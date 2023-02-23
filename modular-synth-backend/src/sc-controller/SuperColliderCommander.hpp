@@ -9,10 +9,15 @@
 #include <vector>
 #include <utility> 
 
+typedef std::variant<int, std::string> t_ParamName;
+typedef std::variant<int,float, std::string> t_ParamValue;
+
 class SuperColliderCommander : ServerSocket { 
+protected:
+    SuperColliderCommander(IpEndpointName endpoint);
+
 public:
 
-    SuperColliderCommander(IpEndpointName endpoint);
 
     //Quit program. Exits the synthesis server.
     //
@@ -150,7 +155,7 @@ public:
     //:param:node: - node ID
     //:param:control: - a control index or name
     //:param:value: - a control value    
-    std::future<osc::ReceivedMessage> n_set(int node, std::vector<std::tuple<std::variant<int, std::string>, std::variant<float, int>>> control);
+    std::future<osc::ReceivedMessage> n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control);
 
 
     //Set ranges of a node's control value(s).
@@ -159,7 +164,7 @@ public:
     //:param:control: - a control index or name
     //:param:sequential: - number of sequential controls to change (M)
     //:param:value: - control value(s)    
-    void n_setn(int node, std::vector<std::tuple<std::variant<int, std::string>, int, std::vector<std::variant<float, int>>>> control);
+    void n_setn(int node, std::vector<std::tuple<t_ParamName, int, t_ParamValue>> control);
 
 
     //Fill ranges of a node's control value(s).
@@ -176,7 +181,7 @@ public:
     //:param:node: - node ID
     //:param:control: - a control index or name
     //:param:index: - control bus index    
-    void n_map(int node, std::vector<std::tuple<std::variant<int, std::string>, int>> control);
+    void n_map(int node, std::vector<std::tuple<t_ParamName, int>> control);
 
 
     //Map a node's controls to read from buses.
@@ -185,7 +190,7 @@ public:
     //:param:control: - a control index or name
     //:param:index: - control bus index
     //:param:controls: - number of controls to map    
-    void n_mapn(int node, std::vector<std::tuple<std::variant<int, std::string>, int, int>> control);
+    void n_mapn(int node, std::vector<std::tuple<t_ParamName, int, int>> control);
 
 
     //Map a node's controls to read from an audio bus.
@@ -193,7 +198,7 @@ public:
     //:param:node: - node ID
     //:param:control: - a control index or name
     //:param:index: - control bus index    
-    void n_mapa(int node, std::vector<std::tuple<std::variant<int, std::string>, int>> control);
+    void n_mapa(int node, std::vector<std::tuple<t_ParamName, int>> control);
 
 
     //Map a node's controls to read from audio buses.
@@ -202,7 +207,7 @@ public:
     //:param:control: - a control index or name
     //:param:index: - control bus index
     //:param:controls: - number of controls to map    
-    void n_mapan(int node, std::vector<std::tuple<std::variant<int, std::string>, int, int>> control);
+    void n_mapan(int node, std::vector<std::tuple<t_ParamName, int, int>> control);
 
 
     //Place a node before another.
@@ -348,16 +353,16 @@ public:
     //Get a representation of this group's node subtree.
     //Request a representation of this group's node subtree, i.e. all the groups and synths contained within it. Replies to the sender with a /g_queryTree.reply message listing all of the nodes contained within the group in the following format:
     //(): int - flag: if synth control values are included 1, else 0
-    //        (): int - node ID of the requested group
-    //        (): int - number of child nodes contained within the requested group
-    //        ('then for each node in the subtree:',): int - node ID
-    //        ('then for each node in the subtree:',): int - number of child nodes contained within this node. If -1 this is a synth, if >=0 it's a group
-    //        ('then for each node in the subtree:',):  - then, if this node is a synth:
-    //        ('then for each node in the subtree:',): symbol - the SynthDef name for this node.
-    //        ('then for each node in the subtree:',):  - then, if flag (see above) is true:
-    //        ('then for each node in the subtree:',): int - numControls for this synth (M)
-    //        ('then for each node in the subtree:', 'M '): std::variant<symbol ,  int> - control name or index
-    //        ('then for each node in the subtree:', 'M '): std::variant<float ,  symbol> - value or control bus mapping symbol (e.g. 'c1')
+    //(): int - node ID of the requested group
+    //(): int - number of child nodes contained within the requested group
+    //('then for each node in the subtree:',): int - node ID
+    //('then for each node in the subtree:',): int - number of child nodes contained within this node. If -1 this is a synth, if >=0 it's a group
+    //('then for each node in the subtree:',):  - then, if this node is a synth:
+    //('then for each node in the subtree:',): symbol - the SynthDef name for this node.
+    //('then for each node in the subtree:',):  - then, if flag (see above) is true:
+    //('then for each node in the subtree:',): int - numControls for this synth (M)
+    //('then for each node in the subtree:', 'M '): std::variant<symbol ,  int> - control name or index
+    //('then for each node in the subtree:', 'M '): std::variant<float ,  symbol> - value or control bus mapping symbol (e.g. 'c1')
     //N.B. The order of nodes corresponds to their execution order on the server. Thus child nodes (those contained within a group) are listed immediately following their parent. See the method Server:queryAllNodes for an example of how to process this reply.
     //:param:group: - group ID
     //:param:current: - flag: if not 0 the current control (arg) values for synths will be included    

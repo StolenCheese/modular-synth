@@ -180,7 +180,7 @@ void SuperColliderCommander::n_run(std::vector<std::tuple<int, int>> node) {
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::n_set(int node, std::vector<std::tuple<std::variant<int, std::string>, std::variant<float, int>>> control) {
+std::future<osc::ReceivedMessage> SuperColliderCommander::n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control) {
 
 
     p << osc::BeginMessage("/n_set");
@@ -193,7 +193,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::n_set(int node, std::v
 
 }
 
-void SuperColliderCommander::n_setn(int node, std::vector<std::tuple<std::variant<int, std::string>, int, std::vector<std::variant<float, int>>>> control) {
+void SuperColliderCommander::n_setn(int node, std::vector<std::tuple<t_ParamName, int, t_ParamValue>> control) {
 
 
     p << osc::BeginMessage("/n_setn");
@@ -217,7 +217,7 @@ void SuperColliderCommander::n_fill(int node, std::vector<std::tuple<std::varian
     Send();
 }
 
-void SuperColliderCommander::n_map(int node, std::vector<std::tuple<std::variant<int, std::string>, int>> control) {
+void SuperColliderCommander::n_map(int node, std::vector<std::tuple<t_ParamName, int>> control) {
 
 
     p << osc::BeginMessage("/n_map");
@@ -230,7 +230,7 @@ void SuperColliderCommander::n_map(int node, std::vector<std::tuple<std::variant
     Send();
 }
 
-void SuperColliderCommander::n_mapn(int node, std::vector<std::tuple<std::variant<int, std::string>, int, int>> control) {
+void SuperColliderCommander::n_mapn(int node, std::vector<std::tuple<t_ParamName, int, int>> control) {
 
 
     p << osc::BeginMessage("/n_mapn");
@@ -244,7 +244,7 @@ void SuperColliderCommander::n_mapn(int node, std::vector<std::tuple<std::varian
     Send();
 }
 
-void SuperColliderCommander::n_mapa(int node, std::vector<std::tuple<std::variant<int, std::string>, int>> control) {
+void SuperColliderCommander::n_mapa(int node, std::vector<std::tuple<t_ParamName, int>> control) {
 
 
     p << osc::BeginMessage("/n_mapa");
@@ -257,7 +257,7 @@ void SuperColliderCommander::n_mapa(int node, std::vector<std::tuple<std::varian
     Send();
 }
 
-void SuperColliderCommander::n_mapan(int node, std::vector<std::tuple<std::variant<int, std::string>, int, int>> control) {
+void SuperColliderCommander::n_mapan(int node, std::vector<std::tuple<t_ParamName, int, int>> control) {
 
 
     p << osc::BeginMessage("/n_mapan");
@@ -333,7 +333,6 @@ void SuperColliderCommander::s_new(
     p.s_new(definition, synth, action, target,control);
 
      Send();
-
 }
 
 

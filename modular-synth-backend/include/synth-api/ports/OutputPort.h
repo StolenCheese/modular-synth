@@ -7,7 +7,7 @@
 
 #include "Port.h"
 
-#include "synth-api/ports/_model/LogicalBus.h"
+#include "ports/_model/LogicalBus.h"
 
 #include <set>
 
@@ -21,9 +21,9 @@ namespace synth_api {
         void subscribe(Port *other) override;
         void unsubscribe(Port *other) override;
     public:
-        explicit OutputPort(std::list<Port *>::const_iterator identifier) : Port(identifier) {
+        explicit OutputPort(SuperColliderController* server, std::list<Port *>::const_iterator identifier) : Port(identifier) {
             subscribers = std::set<InputPort *>();
-            logicalBus = new LogicalBus(this);
+            logicalBus = new LogicalBus(server, this);
         };
     };
 }

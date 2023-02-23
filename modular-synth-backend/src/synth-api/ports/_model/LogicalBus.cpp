@@ -34,6 +34,7 @@ namespace synth_api {
                 }
             }
         }
+
     }
 
     void LogicalBus::removeListener(InputPort *inputPort) {

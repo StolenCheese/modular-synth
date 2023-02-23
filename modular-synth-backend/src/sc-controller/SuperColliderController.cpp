@@ -1,5 +1,7 @@
 #include "SuperColliderController.hpp"
 #include <fstream>
+#include <map>
+
 void print(osc::ReceivedMessage& m)
 {
     std::cout << m.AddressPattern() << ": ";
@@ -24,8 +26,14 @@ SuperColliderController::SuperColliderController(IpEndpointName endpoint)
 {
 }
 
-std::future<Synth> SuperColliderController::InstantiateSynth(const std::string& synthdef)
+std::future<Synth*> SuperColliderController::InstantiateSynth(const std::string& synthdef)
 {
+
+    //Find a free node id
+    while (root.subtree.contains(next_node_id)) {
+        next_node_id++; 
+    }
+
     if (!loaded_synthdefs.contains(synthdef)) {
         std::cout << "Loading for the first time" << std::endl;
 
@@ -60,13 +68,13 @@ std::future<Synth> SuperColliderController::InstantiateSynth(const std::string& 
         s_new(synthdef, next_node_id, 0, 0, {});
     }
 
-    SyncTrees();
+    SyncGroup(&root);
+     
+    std::promise<Synth*> tmpPromise; // default construct promise
 
-    std::promise<Synth> tmpPromise; // default construct promise
+    std::future<Synth*> tmp = tmpPromise.get_future(); // get future associated with promise
 
-    std::future<Synth> tmp = tmpPromise.get_future(); // get future associated with promise
-
-    tmpPromise.set_value(Synth(this, next_node_id, std::set<std::string>())); // set future value
+    tmpPromise.set_value(static_cast<Synth*>(root.subtree[next_node_id])); // set future value
 
     next_node_id++;
     return tmp;
@@ -77,10 +85,62 @@ Bus SuperColliderController::InstantiateBus()
     return Bus(this, next_bus_id++);
 }
 
-void SuperColliderController::SyncTrees()
+void SuperColliderController::SyncGroup( Group * g)
 {
-    std::cout << "Syncing" << std::endl;
-    auto m = g_queryTree({ { 0, 1 } }).get();
+    auto m = g_queryTree({ { g->index, 1 } }).get();
+    std::cout << m.AddressPattern() << std::endl;
+    auto it = m.ArgumentsBegin();
 
-    print(m);
+    int32_t flag = (it++)->AsInt32();
+    int32_t gNodeID = (it++)->AsInt32();
+
+    assert(gNodeID == g->index);
+
+    int32_t children = (it++)->AsInt32();
+
+    for (size_t i = 0; i < children; i++)
+    {
+
+        Node* data;
+
+        int32_t nodeID = (it++)->AsInt32();
+        int32_t children = (it++)->AsInt32();
+
+        if (children == -1) {
+            //This is a synth
+
+            auto synthdef = (it++)->AsString();
+            std::map<std::string, std::variant<  int, float, Bus>> controls;
+
+            if (flag) {
+                int controlCount = (it++)->AsInt32();
+                for (size_t j = 0; j < controlCount; j++)
+                {
+                    auto cs = (it++)->AsString();
+                    if (it->IsFloat()) {
+                        controls.insert({ cs,it->AsFloat() });
+                    }
+                    else {
+                        controls.insert({ cs,Bus(this, std::stoi(it->AsString())) });
+                    }
+                    it++;
+                }
+            }
+
+            if (!g->subtree.contains(nodeID))
+                data = new Synth(this, nodeID, controls);
+        }
+        else {
+            if (!g->subtree.contains(nodeID))
+                data = new Group(this, nodeID);
+        }
+
+        g->subtree.insert({ nodeID, data });
+
+        //else, This is another group
+
+    }
+
 }
+
+

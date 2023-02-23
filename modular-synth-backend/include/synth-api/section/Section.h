@@ -5,8 +5,8 @@
 #ifndef MODULAR_SYNTH_SECTION_H
 #define MODULAR_SYNTH_SECTION_H
 
-#include "../ports/InputPort.h"
-#include "../ports/OutputPort.h"
+#include "ports/InputPort.h"
+#include "ports/OutputPort.h"
 #include "Synth.hpp"
 #include <map>
 #include <string>
@@ -22,7 +22,7 @@ namespace synth_api {
 class Section {
 
 private:
-    Synth synth;
+    Synth* synth;
 
     // Mapping of parameter name to corresponding Output that provides it
     // Parameter names kept as a convenience to programmers
@@ -55,7 +55,7 @@ public:
      * Parameters:
      *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
      */
-    explicit Section(char* synthdef);
+    explicit Section(SuperColliderController* s, char* synthdef);
 
     /*
      * Returns the port object for a given parameter, either corresponding to an output or an input.

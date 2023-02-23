@@ -6,17 +6,17 @@
 #define MODULAR_SYNTH_LOGICALBUS_H
 
 #include "Bus.hpp"
-#include "synth-api/ports/InputPort.h"
+#include "ports/InputPort.h"
 #include <cstdint>
+#include "SuperColliderController.hpp"
 
 namespace synth_api {
 class OutputPort;
-class LogicalBus {
+class LogicalBus  {
 private:
     uint16_t audioRateRequirement;
-    OutputPort* writer;
+    OutputPort* writer; 
     Bus bus;
-    // SCOOP Bus *bus;
 
     void
     propagateRateChangeForward(); // when the bus's rate changes, tell the writer and all listeners by
@@ -27,10 +27,9 @@ private:
     bool removeAudioRateRequirement(); // returns true iff bus switched from audio to control
 
 public:
-    explicit LogicalBus(SuperColliderServer server, OutputPort* writer)
+    explicit LogicalBus(SuperColliderController* server, OutputPort* writer)
         : writer(writer)
-        , audioRateRequirement(0) {
-            // SCOOP bus = new Bus(rate=control)
+        , audioRateRequirement(0), bus(server->InstantiateBus()) {
         };
 
     void addListener(InputPort* inputPort); // connects inputPort to the bus, and iteratively traverses the graph in

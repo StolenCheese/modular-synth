@@ -1,50 +1,67 @@
 #include "Synth.hpp"
 
-Synth::Synth(SuperColliderController* _s, int index, std::set<std::string> _params)
-    : Node(_s, index)
-    , params(_params)
+Synth::Synth(SuperColliderController* s, int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls)
+    : Node(s, index)
+    , controls(controls)
 {
+ 
 }
+
 
 Synth::Synth()
     : Node(NULL, -1)
 {
+ 
 }
 
-std::future<std::variant<int, float, Bus>> Synth::get(const std::string& param)
+std::variant<int, float, Bus> Synth::get(const std::string& param)
 {
-    auto msg = s->s_get(index, { param }).get();
-    // TODO: Decode the message properly
-    print(msg);
-
-    osc::ReceivedMessage::const_iterator arg = msg.ArgumentsBegin();
-
-    int id = (arg++)->AsInt32();
-    arg++;
-
-    if (arg != msg.ArgumentsEnd())
-        throw osc::ExcessArgumentException();
-
-    std::promise<std::variant<int, float, Bus>>
-        prom {};
-    auto f = prom.get_future();
-    return f;
+    return controls[param];
 }
 
 void Synth::set(const std::string& param, const float v)
 {
+    controls[param] = v;
     s->n_set(index, { { param, v } });
 }
 
 void Synth::set(const std::string& param, const int v)
 {
-    s->n_set(index, { { param, v } });
+    if (controls.contains(param)) {
+        controls[param] = v;
+        s->n_set(index, { { param, v } });
+    }
+    else {
+        throw std::invalid_argument(param);
+    }
 }
 
 void Synth::set(const std::string& param, const Bus& v)
 {
-    if (v.t == BusType::CONTROL)
+    if (v.rate == BusRate::CONTROL)
+    {
+        controls.emplace(param, v);
         s->n_map(index, { { param, v.index } });
+    }
     else
-        set(param, v.index)
+        set(param, v.index);
+}
+
+
+std::ostream& operator<<(std::ostream& os, const Synth& g)
+{
+    os << "Synth " << g.index << ":{";
+   
+    for (auto it = g.controls.cbegin(); it != g.controls.cend(); ++it)
+    {
+        if (const int* pval = std::get_if<int>(&it->second))
+            os << it->first << " = " << *pval ;
+        else  if (const float* pval = std::get_if<float>(&it->second))
+           os << it->first << " = " << *pval   ;
+        else 
+           os << it->first << " = bus " << std::get<Bus>(it->second).index  ;
+    }
+
+    os << "}";
+    return os;
 }

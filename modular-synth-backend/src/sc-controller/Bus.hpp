@@ -1,23 +1,31 @@
+class Bus;
+
 #pragma once
 
-#include "SuperColliderController.hpp"
+#include<string>
+
+#include<variant>
+
+#include<future>
 
 enum class BusRate {
     CONTROL,
     AUDIO
 };
 
+class SuperColliderController; 
+
 class Bus {
-    friend class SuperColliderController;
+    friend class SuperColliderController; 
 
 private:
-    int index;
     SuperColliderController* s;
-    BusRate rate { BusRate::CONTROL };
 
-    Bus::Bus(SuperColliderController* s, int index);
+    Bus(SuperColliderController* s, int index);
 
 public:
+    BusRate rate{ BusRate::CONTROL };
+   const int index;
     // a symbol consisting of the letter 'c' or 'a' (for control or audio) followed by the bus's index. This may be used when setting a synth node's control inputs to map the input to the control bus.
     std::string asMap();
 

@@ -1,5 +1,7 @@
 #include "Bus.hpp"
 
+#include<format>
+
 Bus::Bus(SuperColliderController* s, int index)
     : s(s)
     , index(index)

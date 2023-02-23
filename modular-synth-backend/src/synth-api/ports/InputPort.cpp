@@ -2,11 +2,11 @@
 // Created by bmsyi on 09/02/2023.
 //
 
-#include "synth-api/ports/InputPort.h"
-#include "synth-api/ports/OutputPort.h"
-#include "synth-api/ports/Port.h"
+#include "ports/InputPort.h"
+#include "ports/OutputPort.h"
+#include "ports/Port.h"
 
-#include "synth-api/exception/LinkException.hpp"
+#include "exception/LinkException.hpp"
 
 #include <list>
 

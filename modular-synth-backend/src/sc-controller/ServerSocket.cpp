@@ -8,21 +8,23 @@ osc::ReceivedMessage ServerSocket::Recv()
 {
 	size_t size = 0; 
 		
-	if ((size = ReceiveFrom(_endpoint, _inBuf.data(), OUTPUT_BUFFER_SIZE)) != SOCKET_ERROR) {
+	while ((size = ReceiveFrom(_endpoint, _inBuf.data(), OUTPUT_BUFFER_SIZE)) != SOCKET_ERROR) {
 
 		osc::ReceivedPacket p(_inBuf.data(), size);
+		try {
+			if (p.IsMessage()) {
+				return osc::ReceivedMessage(p);
+			}
+			else {
+				throw std::exception("Received bundle when shouldn't");
+			}
+		}
+		catch (osc::MalformedPacketException& p) {
+			 //Try to receive again
+			std::cout << "Failed to receive packet" << std::endl;
+		}
+	}
 
-		if (p.IsMessage()) {
-			return osc::ReceivedMessage (p);
-		}
-		else {
-			throw std::exception("Received bundle when shouldn't");
-		}
-	
-	}
-	else {
-		throw std::exception("Failed to recieve data");
-	}
 }
 
 

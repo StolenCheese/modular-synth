@@ -40,6 +40,7 @@ public:
 
 	template <typename  T>
 	void push(T& v) {
+		throw std::exception("Unable to push data");
 	}
 
 	template <typename  T>
@@ -51,9 +52,16 @@ public:
 	void push(std::string& v) {
 		*this << v.c_str();
 	}
-
+	template <>
+	void push(const std::string& v) {
+		*this << v.c_str();
+	}
 	template <>
 	void push(float& v) {
+		*this << v;
+	}
+	template <>
+	void push(const float& v) {
 		*this << v;
 	}
 
@@ -61,7 +69,10 @@ public:
 	void push(int& v) {
 		*this << v;
 	}
-
+	template <>
+	void push(const int& v) {
+		*this << v;
+	}
 	template <typename  T0, typename  T1>
 	void push(std::tuple<T0, T1>& v) {
 		push(std::get<0>(v));
@@ -90,7 +101,7 @@ public:
 	}
 
 	template <typename  T0, typename  T1, typename  T2>
-	void push(std::variant<T0, T1>& v) {
+	void push(std::variant<T0, T1,T2>& v) {
 		if (const T0 * ptr(std::get_if<T0>(&v)); ptr)
 			push(*ptr);
 		if (const T1 * ptr(std::get_if<T1>(&v)); ptr)

@@ -12,7 +12,6 @@ class Synth : public Node {
     friend std::ostream& operator<<(std::ostream& os, const Synth& g);
 
 private:
-    std::map<std::string, std::variant<int, float, Bus>> controls{};
 
     // Create a new synth based on params from the server
     Synth(  int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls);
@@ -31,4 +30,7 @@ public:
 
     // Associates to /n_map if control, /n_set if audio
     void set(const std::string& param, const Bus& v);
+
+    // DO NOT WRITE TO THIS, IT WON'T WORK, just to be looked at
+    std::map<std::string, std::variant<int, float, Bus>> controls{};
 };

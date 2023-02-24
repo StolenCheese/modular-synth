@@ -155,7 +155,7 @@ public:
     //:param:node: - node ID
     //:param:control: - a control index or name
     //:param:value: - a control value    
-    osc::ReceivedMessage n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control);
+    void n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control);
 
 
     //Set ranges of a node's control value(s).

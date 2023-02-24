@@ -180,7 +180,7 @@ void SuperColliderCommander::n_run(std::vector<std::tuple<int, int>> node) {
     Send();
 }
 
-osc::ReceivedMessage SuperColliderCommander::n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control) {
+void SuperColliderCommander::n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control) {
 
 
     p << osc::BeginMessage("/n_set");
@@ -189,7 +189,7 @@ osc::ReceivedMessage SuperColliderCommander::n_set(int node, std::vector<std::tu
     p.push(control);
     p << osc::EndMessage;
 
-    return SendReceive();
+    Send();
 
 }
 

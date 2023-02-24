@@ -13,12 +13,31 @@ using namespace System;
 namespace SynthAPI {
 
     public ref class SCSection {
+    private:
+        array< String^ >^ params;
+        Synth* m_Impl;
     public:
+
+
         // Allocate the native object on the C++ Heap via a constructor
         SCSection(String^ synthdef)   {
             try {
+                //Generate the synth on the server.
+                //Currently blocking, in future will use a bool valid
                 m_Impl = SuperColliderController::get().InstantiateSynth(msclr::interop::marshal_as<std::string>(synthdef));
-               
+                auto size = m_Impl->controls.size();
+                 params = gcnew array< String^ >(size);
+                int i = 0;
+
+                // Cache the params of the function locally, to save lots of re-generating of strings
+       
+                for (auto it = m_Impl->controls.begin(); it != m_Impl->controls.end(); ++it) {
+                    params[i] = gcnew String(it->first.c_str());
+
+                    i++;
+                }
+                 
+
             }
             catch (std::exception& ex) {
                 //standard conversion from native to managed exception
@@ -39,20 +58,37 @@ namespace SynthAPI {
 
     public:
 
+        //Currently a null check, in future will also show if the node exists on the server yet
+        bool Valid() {
+            return m_Impl != nullptr;
+        }
+
+        //This all works with the old model, but without any wire attachments its pretty much useless
         void Set(String^ param, float value) {
             auto s = msclr::interop::marshal_as<std::string>(param);
             m_Impl->set(s, value);
         }       
+
         float Get(String^ param) {
             auto s = msclr::interop::marshal_as<std::string>(param);
             return std::get<float>(m_Impl->get(s));
+        }
+
+        property array<String^>^  controls {
+            
+            array<String^>^ get(){ return params; }
+         
+        }
+
+        property int index {
+
+            int get() { return m_Impl->index; }
+
         }
 
         void Run(bool run) {
             m_Impl->Run(run);
         }
 
-    private:
-        Synth* m_Impl;
     };
 }

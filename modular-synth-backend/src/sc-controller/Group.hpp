@@ -18,5 +18,5 @@ public:
 
     void syncTree();
 
-	Group(SuperColliderController* s, int index);
+	Group(int index);
 };

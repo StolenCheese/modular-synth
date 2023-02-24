@@ -7,13 +7,13 @@ void Group::syncTree()
 {
     if (!dirty) return;
 
-    s->SyncGroup(this);
+    SuperColliderController::get().SyncGroup(this);
 
     dirty = false;
     // print(m);
 }
 
-Group::Group(SuperColliderController* s, int index) : Node(s,index){}
+Group::Group( int index) : Node(index){}
 
 std::ostream& operator<<(std::ostream& os, const Group& g)
 {

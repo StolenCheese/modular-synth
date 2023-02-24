@@ -15,10 +15,10 @@ private:
     std::map<std::string, std::variant<int, float, Bus>> controls{};
 
     // Create a new synth based on params from the server
-    Synth(SuperColliderController* s, int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls);
+    Synth(  int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls);
 
     // default constructor exists to be used in future objects
-    Synth();
+    Synth();  
 
 public:
     // Get returns cached values, but, if everything is working, that's fine

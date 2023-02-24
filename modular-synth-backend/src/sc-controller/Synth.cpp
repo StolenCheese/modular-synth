@@ -1,7 +1,7 @@
 #include "Synth.hpp"
 
-Synth::Synth(SuperColliderController* s, int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls)
-    : Node(s, index)
+Synth::Synth( int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls)
+    : Node( index)
     , controls(controls)
 {
  
@@ -9,7 +9,7 @@ Synth::Synth(SuperColliderController* s, int32_t index, std::map<std::string, st
 
 
 Synth::Synth()
-    : Node(NULL, -1)
+    : Node( -1)
 {
  
 }
@@ -22,14 +22,14 @@ std::variant<int, float, Bus> Synth::get(const std::string& param)
 void Synth::set(const std::string& param, const float v)
 {
     controls[param] = v;
-    s->n_set(index, { { param, v } });
+    SuperColliderController::get().n_set(index, { { param, v } });
 }
 
 void Synth::set(const std::string& param, const int v)
 {
     if (controls.count(param)) {
         controls[param] = v;
-        s->n_set(index, { { param, v } });
+        SuperColliderController::get().n_set(index, {{param, v}});
     }
     else {
         throw std::invalid_argument(param);
@@ -41,7 +41,7 @@ void Synth::set(const std::string& param, const Bus& v)
     if (v.rate == BusRate::CONTROL)
     {
         controls.emplace(param, v);
-        s->n_map(index, { { param, v.index } });
+        SuperColliderController::get().n_map(index, { { param, v.index } });
     }
     else
         set(param, v.index);

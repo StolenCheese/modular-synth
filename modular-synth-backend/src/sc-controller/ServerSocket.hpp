@@ -19,7 +19,7 @@
 
 #define ADDRESS "127.0.0.1"
 #define PORT  58000
-#define OUTPUT_BUFFER_SIZE  1024
+#define OUTPUT_BUFFER_SIZE  4096
 
 class ServerSocket : UdpSocket {
 	IpEndpointName _endpoint; 

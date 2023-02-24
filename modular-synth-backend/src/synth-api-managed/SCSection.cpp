@@ -15,10 +15,16 @@ namespace SynthAPI {
     public ref class SCSection {
     public:
         // Allocate the native object on the C++ Heap via a constructor
-        SCSection(String^ synthdef) :
-            m_Impl(
-                SuperColliderController::get().InstantiateSynth(msclr::interop::marshal_as<std::string>(synthdef))
-            ) {}
+        SCSection(String^ synthdef)   {
+            try {
+                m_Impl = SuperColliderController::get().InstantiateSynth(msclr::interop::marshal_as<std::string>(synthdef));
+               
+            }
+            catch (std::exception& ex) {
+                //standard conversion from native to managed exception
+                throw gcnew System::Exception(gcnew System::String(ex.what()));
+            }
+        }
 
         // Deallocate the native object on a destructor
         ~SCSection() {

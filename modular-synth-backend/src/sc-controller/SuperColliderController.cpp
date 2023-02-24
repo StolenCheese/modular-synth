@@ -135,11 +135,11 @@ void SuperColliderController::SyncGroup( Group * g)
             }
 
             if (!g->subtree.count(nodeID))
-                data = new Synth(this, nodeID, controls);
+                data = new Synth( nodeID, controls);
         }
         else {
             if (!g->subtree.count(nodeID))
-                data = new Group(this, nodeID);
+                data = new Group( nodeID);
         }
 
         g->subtree.insert({ nodeID, data });

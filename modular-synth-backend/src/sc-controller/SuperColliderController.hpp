@@ -28,7 +28,7 @@ class SuperColliderController : public SuperColliderCommander {
 
 public:
 
-     Group root{ this, 0 };
+     Group root{  0 };
 
 
      static void Connect(IpEndpointName endpoint);

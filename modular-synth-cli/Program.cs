@@ -6,8 +6,16 @@ Console.WriteLine("Hello, World!");
 
 SCController.Connect("127.0.0.1", 58000);
 
-var s = new SCSection("sin-ar");
 
-System.Threading.Thread.Sleep(1000);
+while (true)
+{
+	var command = Console.ReadLine()!.Split(' ');
+	switch (command)
+	{
+		case ["new", String synth]:
+			var s = new SCSection(synth);
+			Console.WriteLine($"Created new synth");
 
-s.Run(false);
+			break;
+	};
+}

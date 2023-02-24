@@ -26,15 +26,29 @@ SuperColliderController::SuperColliderController(IpEndpointName endpoint)
 {
 }
 
-std::future<Synth*> SuperColliderController::InstantiateSynth(const std::string& synthdef)
+void SuperColliderController::Connect(IpEndpointName endpoint)
+{
+    s = new SuperColliderController(endpoint);
+}
+
+SuperColliderController& SuperColliderController::get()
+{
+    if (s == nullptr) {
+        throw std::exception("Invalid connection to supercollider server");
+    }
+    return *s;
+}
+
+Synth* SuperColliderController::InstantiateSynth(const std::string& synthdef)
 {
 
     //Find a free node id
-    while (root.subtree.contains(next_node_id)) {
+    while (root.subtree.count(next_node_id)) {
         next_node_id++; 
     }
+   const int id = next_node_id++; 
 
-    if (!loaded_synthdefs.contains(synthdef)) {
+    if (!loaded_synthdefs.count(synthdef)) {
         std::cout << "Loading for the first time" << std::endl;
 
         std::ifstream def;
@@ -52,9 +66,9 @@ std::future<Synth*> SuperColliderController::InstantiateSynth(const std::string&
 
             SuperColliderPacketBuilder completion { completion_buf.data(), completion_buf.size() };
 
-            completion.s_new(synthdef, next_node_id, 0, 0, {});
+            completion.s_new(synthdef, id, 0, 0, {});
 
-            auto m = d_recv(str, completion).get();
+            auto m = d_recv(str, completion);
 
             print(m);
 
@@ -65,19 +79,12 @@ std::future<Synth*> SuperColliderController::InstantiateSynth(const std::string&
         }
     } else {
         std::cout << "Already loaded" << std::endl;
-        s_new(synthdef, next_node_id, 0, 0, {});
+        s_new(synthdef, id, 0, 0, {});
     }
 
     SyncGroup(&root);
      
-    std::promise<Synth*> tmpPromise; // default construct promise
-
-    std::future<Synth*> tmp = tmpPromise.get_future(); // get future associated with promise
-
-    tmpPromise.set_value(static_cast<Synth*>(root.subtree[next_node_id])); // set future value
-
-    next_node_id++;
-    return tmp;
+    return static_cast<Synth*>(root.subtree[id]);
 }
 
 Bus SuperColliderController::InstantiateBus()
@@ -87,7 +94,7 @@ Bus SuperColliderController::InstantiateBus()
 
 void SuperColliderController::SyncGroup( Group * g)
 {
-    auto m = g_queryTree({ { g->index, 1 } }).get();
+    auto m = g_queryTree({ { g->index, 1 } });
     std::cout << m.AddressPattern() << std::endl;
     auto it = m.ArgumentsBegin();
 
@@ -127,11 +134,11 @@ void SuperColliderController::SyncGroup( Group * g)
                 }
             }
 
-            if (!g->subtree.contains(nodeID))
+            if (!g->subtree.count(nodeID))
                 data = new Synth(this, nodeID, controls);
         }
         else {
-            if (!g->subtree.contains(nodeID))
+            if (!g->subtree.count(nodeID))
                 data = new Group(this, nodeID);
         }
 

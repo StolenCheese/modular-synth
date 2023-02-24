@@ -51,7 +51,7 @@ IF(WIN32)
   find_library(WSOCK32_LIBRARY wsock32)
   find_library(WS2_32_LIBRARY ws2_32)
   
-target_link_libraries(oscpack wsock32 ws2_32 winmm )
+   target_link_libraries(oscpack wsock32 ws2_32 winmm )
  ENDIF(WIN32)
 
 #ADD_EXECUTABLE(OscUnitTests tests/OscUnitTests.cpp)

@@ -20,17 +20,27 @@ class SuperColliderController : public SuperColliderCommander {
     Bus inL = Bus(this, 2);
     Bus inR = Bus( this,3 );
 
+
+    SuperColliderController(const SuperColliderController&) = delete;
+    SuperColliderController(IpEndpointName endpoint);
+
+    inline  static SuperColliderController* s = nullptr;
+
 public:
 
-    Group root{ this, 0 };
+     Group root{ this, 0 };
 
 
-    SuperColliderController(IpEndpointName endpoint);
+     static void Connect(IpEndpointName endpoint);
+
+     static SuperColliderController& get();
+
+
 
     // Create a synth from a synthdef
     // Will return when Synth class has been fully populated, as apparently the port mechanism requires
     // all parameters to be known in advance
-    std::future<Synth*> InstantiateSynth(const std::string& synthdef);
+    Synth* InstantiateSynth(const std::string& synthdef);
 
     // Create new bus with no listeners or sources
     // Represents a supercollider control or audio bus

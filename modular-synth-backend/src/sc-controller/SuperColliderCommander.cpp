@@ -2,7 +2,7 @@
 SuperColliderCommander::SuperColliderCommander(IpEndpointName endpoint) : ServerSocket(endpoint)
 {
 }
-std::future<osc::ReceivedMessage> SuperColliderCommander::server_quit() {
+osc::ReceivedMessage SuperColliderCommander::server_quit() {
 
 
     p << osc::BeginMessage("/quit");
@@ -13,7 +13,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::server_quit() {
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::notify(int notifications, int client) {
+osc::ReceivedMessage SuperColliderCommander::notify(int notifications, int client) {
 
 
     p << osc::BeginMessage("/notify");
@@ -26,7 +26,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::notify(int notificatio
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::status() {
+osc::ReceivedMessage SuperColliderCommander::status() {
 
 
     p << osc::BeginMessage("/status");
@@ -58,7 +58,7 @@ void SuperColliderCommander::dumpOSC(int code) {
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::sync(int identifying) {
+osc::ReceivedMessage SuperColliderCommander::sync(int identifying) {
 
 
     p << osc::BeginMessage("/sync");
@@ -79,7 +79,7 @@ void SuperColliderCommander::clearSched() {
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::error(int mode) {
+osc::ReceivedMessage SuperColliderCommander::error(int mode) {
 
 
     p << osc::BeginMessage("/error");
@@ -91,7 +91,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::error(int mode) {
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::version() {
+osc::ReceivedMessage SuperColliderCommander::version() {
 
 
     p << osc::BeginMessage("/version");
@@ -102,7 +102,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::version() {
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::d_recv(std::string buffer) {
+osc::ReceivedMessage SuperColliderCommander::d_recv(std::string buffer) {
 
 
     p << osc::BeginMessage("/d_recv");
@@ -114,7 +114,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::d_recv(std::string buf
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::d_recv(std::string buffer, osc::OutboundPacketStream completion)
+osc::ReceivedMessage SuperColliderCommander::d_recv(std::string buffer, osc::OutboundPacketStream completion)
 {
     p << osc::BeginMessage("/d_recv");
     
@@ -126,7 +126,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::d_recv(std::string buf
     return SendReceive();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::d_load(std::string pathname ) {
+osc::ReceivedMessage SuperColliderCommander::d_load(std::string pathname ) {
 
 
     p << osc::BeginMessage("/d_load");
@@ -139,7 +139,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::d_load(std::string pat
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::d_loadDir(std::string directory ) {
+osc::ReceivedMessage SuperColliderCommander::d_loadDir(std::string directory ) {
 
 
     p << osc::BeginMessage("/d_loadDir");
@@ -180,7 +180,7 @@ void SuperColliderCommander::n_run(std::vector<std::tuple<int, int>> node) {
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control) {
+osc::ReceivedMessage SuperColliderCommander::n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control) {
 
 
     p << osc::BeginMessage("/n_set");
@@ -291,7 +291,7 @@ void SuperColliderCommander::n_after(std::vector<std::tuple<int, int>> place) {
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::n_query(std::vector<int> node) {
+osc::ReceivedMessage SuperColliderCommander::n_query(std::vector<int> node) {
 
 
     p << osc::BeginMessage("/n_query");
@@ -336,7 +336,7 @@ void SuperColliderCommander::s_new(
 }
 
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::s_get(int synth, std::vector<std::variant<int, std::string>> control) {
+osc::ReceivedMessage SuperColliderCommander::s_get(int synth, std::vector<std::variant<int, std::string>> control) {
 
 
     p << osc::BeginMessage("/s_get");
@@ -352,7 +352,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::s_get(int synth, std::
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::s_getn(
+osc::ReceivedMessage SuperColliderCommander::s_getn(
     int synth, std::vector<std::pair<std::variant<int, std::string>, int>> control) {
 
 
@@ -377,7 +377,7 @@ void SuperColliderCommander::s_noid(std::vector<int> synth) {
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::g_new(std::vector<std::tuple<int, int, int>> group) {
+osc::ReceivedMessage SuperColliderCommander::g_new(std::vector<std::tuple<int, int, int>> group) {
 
 
     p << osc::BeginMessage("/g_new");
@@ -392,7 +392,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::g_new(std::vector<std:
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::p_new(std::vector<std::tuple<int, int, int>> group) {
+osc::ReceivedMessage SuperColliderCommander::p_new(std::vector<std::tuple<int, int, int>> group) {
 
 
     p << osc::BeginMessage("/p_new");
@@ -462,7 +462,7 @@ void SuperColliderCommander::g_dumpTree(std::vector<std::tuple<int, int>> group)
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::g_queryTree(std::vector<std::tuple<int, int>> group) {
+osc::ReceivedMessage SuperColliderCommander::g_queryTree(std::vector<std::tuple<int, int>> group) {
      
     p << osc::BeginMessage("/g_queryTree");
     p.push(group);
@@ -485,7 +485,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::g_queryTree(std::vecto
 //    Send();
 //}
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_alloc(int buffer, int number, int channels, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_alloc(int buffer, int number, int channels, const char* completion) {
 
 
     p << osc::BeginMessage("/b_alloc");
@@ -500,7 +500,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_alloc(int buffer, in
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_allocRead(int buffer, std::string sound, int starting, int number, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_allocRead(int buffer, std::string sound, int starting, int number, const char* completion) {
 
 
     p << osc::BeginMessage("/b_allocRead");
@@ -516,7 +516,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_allocRead(int buffer
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_allocReadChannel(int buffer, std::string sound, int starting, int number, std::vector<int> channel, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_allocReadChannel(int buffer, std::string sound, int starting, int number, std::vector<int> channel, const char* completion) {
 
 
     p << osc::BeginMessage("/b_allocReadChannel");
@@ -532,7 +532,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_allocReadChannel(int
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_read(int buffer, std::string sound, int starting, int number, int frame, int leave, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_read(int buffer, std::string sound, int starting, int number, int frame, int leave, const char* completion) {
 
 
     p << osc::BeginMessage("/b_read");
@@ -550,7 +550,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_read(int buffer, std
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_readChannel(int buffer, std::string sound, int starting, int number, int frame, int leave, std::vector<int> channel, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_readChannel(int buffer, std::string sound, int starting, int number, int frame, int leave, std::vector<int> channel, const char* completion) {
 
 
     p << osc::BeginMessage("/b_readChannel");
@@ -572,7 +572,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_readChannel(int buff
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_write(int buffer, std::string sound, std::string header, std::string sample, int number, int starting, int leave, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_write(int buffer, std::string sound, std::string header, std::string sample, int number, int starting, int leave, const char* completion) {
 
 
     p << osc::BeginMessage("/b_write");
@@ -591,7 +591,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_write(int buffer, st
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_free(int buffer, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_free(int buffer, const char* completion) {
 
 
     p << osc::BeginMessage("/b_free");
@@ -604,7 +604,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_free(int buffer, con
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_zero(int buffer, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_zero(int buffer, const char* completion) {
 
 
     p << osc::BeginMessage("/b_zero");
@@ -665,7 +665,7 @@ void SuperColliderCommander::b_fill(int buffer, std::vector<std::tuple<int, int,
     Send();
 }
 
-//std::future<osc::ReceivedMessage> SuperColliderCommander::b_gen(int buffer, std::string command, ... arguments) {
+//osc::ReceivedMessage SuperColliderCommander::b_gen(int buffer, std::string command, ... arguments) {
 //
 //
 //    p << osc::BeginMessage("/b_gen");
@@ -679,7 +679,7 @@ void SuperColliderCommander::b_fill(int buffer, std::vector<std::tuple<int, int,
 //
 //}
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_close(int buffer, const char* completion) {
+osc::ReceivedMessage SuperColliderCommander::b_close(int buffer, const char* completion) {
 
 
     p << osc::BeginMessage("/b_close");
@@ -692,7 +692,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_close(int buffer, co
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_query(std::vector<int> buffer) {
+osc::ReceivedMessage SuperColliderCommander::b_query(std::vector<int> buffer) {
 
 
     p << osc::BeginMessage("/b_query");
@@ -703,7 +703,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_query(std::vector<in
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_get(int buffer, std::vector<int> sample) {
+osc::ReceivedMessage SuperColliderCommander::b_get(int buffer, std::vector<int> sample) {
 
 
     p << osc::BeginMessage("/b_get");
@@ -715,7 +715,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::b_get(int buffer, std:
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::b_getn(int buffer, std::vector<std::tuple<int, int>> starting) {
+osc::ReceivedMessage SuperColliderCommander::b_getn(int buffer, std::vector<std::tuple<int, int>> starting) {
 
 
     p << osc::BeginMessage("/b_getn");
@@ -776,7 +776,7 @@ void SuperColliderCommander::c_fill(std::vector<std::tuple<int, int, std::varian
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::c_get(std::vector<int> index) {
+osc::ReceivedMessage SuperColliderCommander::c_get(std::vector<int> index) {
 
 
     p << osc::BeginMessage("/c_get");
@@ -787,7 +787,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::c_get(std::vector<int>
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::c_getn(std::vector<std::tuple<int, int>> starting) {
+osc::ReceivedMessage SuperColliderCommander::c_getn(std::vector<std::tuple<int, int>> starting) {
 
 
     p << osc::BeginMessage("/c_getn");
@@ -801,7 +801,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::c_getn(std::vector<std
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::nrt_end() {
+osc::ReceivedMessage SuperColliderCommander::nrt_end() {
 
 
     p << osc::BeginMessage("/nrt_end");
@@ -857,7 +857,7 @@ void SuperColliderCommander::n_move() {
     Send();
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::n_info() {
+osc::ReceivedMessage SuperColliderCommander::n_info() {
 
 
     p << osc::BeginMessage("/n_info");
@@ -868,7 +868,7 @@ std::future<osc::ReceivedMessage> SuperColliderCommander::n_info() {
 
 }
 
-std::future<osc::ReceivedMessage> SuperColliderCommander::tr(int node, int trigger, float value) {
+osc::ReceivedMessage SuperColliderCommander::tr(int node, int trigger, float value) {
 
 
     p << osc::BeginMessage("/tr");

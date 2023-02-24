@@ -28,8 +28,8 @@ int main(int argc, char* argv[])
 
     auto endpoint = IpEndpointName(ADDRESS, PORT);
       
-    SuperColliderController server{ endpoint };
-
+    SuperColliderController::Connect(endpoint);
+    auto& server = SuperColliderController::get();
     // transmitSocket.Bind(IpEndpointName(IpEndpointName::ANY_ADDRESS, PORT + 1));
 
     std::cout << "Transmitting test packets" << std::endl;
@@ -41,13 +41,13 @@ int main(int argc, char* argv[])
     server.root.syncTree();
 
     std::cout << "Version:" << std::endl;
-    std::cout << server.version().get().AddressPattern() << std::endl;
+    std::cout << server.version().AddressPattern() << std::endl;
 
-    auto s1 = server.InstantiateSynth("sin-kr").get();
+    auto s1 = server.InstantiateSynth("sin-kr");
 
     std::cout << *s1 << std::endl;
 
-    auto s2 = server.InstantiateSynth("sin-ar").get();
+    auto s2 = server.InstantiateSynth("sin-ar");
 
 
     std::cout << *s2 << std::endl;
@@ -67,8 +67,13 @@ int main(int argc, char* argv[])
     std::cout << *s1 << std::endl;
     std::cout << *s2 << std::endl;
 
-   // s1.Run(false);
-   // s2.Run(false);
+    std::string s;
+    std::cin >> s;
+
+    
+
+    delete s1;
+    delete s2;
 
 
     {

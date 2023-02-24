@@ -36,7 +36,7 @@ namespace synth_api {
         return nullptr;
     }
 
-    Section::Section(SuperColliderController* s, char *synthdef) : synth(s->InstantiateSynth(std::string(synthdef)).get()) {
+    Section::Section(SuperColliderController* s, char *synthdef) : synth(s->InstantiateSynth(std::string(synthdef))) {
         //TODO: this whole constructor should be private, and objects created in async by a factory, in the same way as synths are created async here
         
 

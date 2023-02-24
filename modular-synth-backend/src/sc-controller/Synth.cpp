@@ -27,7 +27,7 @@ void Synth::set(const std::string& param, const float v)
 
 void Synth::set(const std::string& param, const int v)
 {
-    if (controls.contains(param)) {
+    if (controls.count(param)) {
         controls[param] = v;
         s->n_set(index, { { param, v } });
     }

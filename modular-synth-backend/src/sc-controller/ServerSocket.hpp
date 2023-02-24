@@ -6,8 +6,7 @@
 #include <iostream> 
 #include <vector>
 #include <algorithm>
-#include <numeric>
-#include <future>
+#include <numeric> 
 #include <string>
 #include <mutex>
 
@@ -27,7 +26,6 @@ class ServerSocket : UdpSocket {
 
 	std::thread _recvThread;
 
-	std::map<std::string, void (*) (osc::ReceivedMessage)> waiting{};
 	 
 	osc::ReceivedMessage Recv();
 protected:
@@ -38,8 +36,7 @@ public:
 
 	ServerSocket(IpEndpointName endpoint);
 	void Send();
-	std::future<osc::ReceivedMessage> SendReceive();
-	void Callback(std::string address, void (callback) (osc::ReceivedMessage) );
+	osc::ReceivedMessage SendReceive();
 	 
 
 };

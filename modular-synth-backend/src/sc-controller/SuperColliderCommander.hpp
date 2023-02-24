@@ -22,7 +22,7 @@ public:
     //Quit program. Exits the synthesis server.
     //
     //Asynchronous.Replies to sender with /done just before completion.    
-    std::future<osc::ReceivedMessage> server_quit();
+    osc::ReceivedMessage server_quit();
 
 
     //Register to receive notifications from server
@@ -31,7 +31,7 @@ public:
     //Asynchronous.Replies to sender with /done /notify clientID [maxLogins] when complete. If this client has registered for notifications before, this may be the same ID. Otherwise it will be a new one. Clients can use this ID in multi-client situations to avoid conflicts when allocating resources such as node IDs, bus indices, and buffer numbers. maxLogins is only returned when the client ID argument is supplied in this command. maxLogins is not supported by supernova.
     //:param:notifications: - 1 to receive notifications, 0 to stop receiving them.
     //:param:client: - client ID (optional)    
-    std::future<osc::ReceivedMessage> notify(int notifications, int client);
+    osc::ReceivedMessage notify(int notifications, int client);
 
 
     //Query the status. Replies to sender with the following message:
@@ -39,7 +39,7 @@ public:
     ///status.reply
     //int1. unused.intnumber of unit generators.intnumber of synths.intnumber of groups.intnumber of loaded synth definitions.floataverage percent CPU usage for signal processingfloatpeak percent CPU usage for signal processingdoublenominal sample ratedoubleactual sample rate
     //NOTE: /status messages won't be posted, if the server is in /dumpOSC mode    
-    std::future<osc::ReceivedMessage> status();
+    osc::ReceivedMessage status();
 
 
     //Plug-in defined command.
@@ -66,7 +66,7 @@ public:
     //
     //Asynchronous.Replies to sender with /synced, ID when complete.
     //:param:identifying: - a unique number identifying this command.    
-    std::future<osc::ReceivedMessage> sync(int identifying);
+    osc::ReceivedMessage sync(int identifying);
 
 
     //Clear all scheduled bundles. Removes all bundles from the scheduling queue.    
@@ -86,7 +86,7 @@ public:
     //
     //Temporary error suppression may not affect asynchronous commands in every case.
     //:param:mode: - mode    
-    std::future<osc::ReceivedMessage> error(int mode);
+    osc::ReceivedMessage error(int mode);
 
 
     //Query the SuperCollider version. Replies to sender with the following message:
@@ -97,7 +97,7 @@ public:
     //The standard human-readable version string can be constructed by concatenating major_version ++ "." ++ minor_version ++ patch_version. Since version information is easily accessible to sclang users via the methods described above, this command is mostly useful for alternate clients.
     //
     //The git branch name and commit hash could be anything if the user has forked SC, so they should only be used for display and user interface purposes.    
-    std::future<osc::ReceivedMessage> version();
+    osc::ReceivedMessage version();
 
 
     //Receive a synth definition file.
@@ -106,8 +106,8 @@ public:
     //Asynchronous.Replies to sender with /done when complete.
     //:param:buffer: - buffer of data.
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> d_recv(std::string buffer );
-    std::future<osc::ReceivedMessage> d_recv(std::string buffer, osc::OutboundPacketStream completion);
+    osc::ReceivedMessage d_recv(std::string buffer );
+    osc::ReceivedMessage d_recv(std::string buffer, osc::OutboundPacketStream completion);
 
 
     //Load synth definition.
@@ -116,7 +116,7 @@ public:
     //Asynchronous.Replies to sender with /done when complete.
     //:param:pathname: - pathname of file. Can be a pattern like 
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> d_load(std::string pathname );
+    osc::ReceivedMessage d_load(std::string pathname );
 
 
     //Load a directory of synth definitions.
@@ -125,7 +125,7 @@ public:
     //Asynchronous.Replies to sender with /done when complete.
     //:param:directory: - pathname of directory.
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> d_loadDir(std::string directory );
+    osc::ReceivedMessage d_loadDir(std::string directory );
 
 
     //Delete synth definition.
@@ -155,7 +155,7 @@ public:
     //:param:node: - node ID
     //:param:control: - a control index or name
     //:param:value: - a control value    
-    std::future<osc::ReceivedMessage> n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control);
+    osc::ReceivedMessage n_set(int node, std::vector<std::tuple<t_ParamName, t_ParamValue>> control);
 
 
     //Set ranges of a node's control value(s).
@@ -227,7 +227,7 @@ public:
     //Get info about a node.
     //The server sends an /n_info message for each node to registered clients. See Node Notifications below for the format of the /n_info message.
     //:param:node: - node ID    
-    std::future<osc::ReceivedMessage> n_query(std::vector<int> node);
+    osc::ReceivedMessage n_query(std::vector<int> node);
 
 
     //Trace a node.
@@ -274,7 +274,7 @@ public:
     //Replies to sender with the corresponding /n_set command.
     //:param:synth: - synth ID
     //:param:control: - a control index or name    
-    std::future<osc::ReceivedMessage> s_get(int synth, std::vector<std::variant<int, std::string>> control);
+    osc::ReceivedMessage s_get(int synth, std::vector<std::variant<int, std::string>> control);
 
 
     //Get ranges of control value(s).
@@ -282,7 +282,7 @@ public:
     //:param:synth: - synth ID
     //:param:control: - a control index or name
     //:param:sequential: - number of sequential controls to get (M)    
-    std::future<osc::ReceivedMessage> s_getn(int synth, std::vector<std::pair<std::variant<int, std::string>, int>> control);
+    osc::ReceivedMessage s_getn(int synth, std::vector<std::pair<std::variant<int, std::string>, int>> control);
 
 
     //Auto-reassign synth's ID to a reserved value.
@@ -301,7 +301,7 @@ public:
     //:param:group: - new group ID
     //:param:action: - add action (0,1,2, 3 or 4 see below)
     //:param:target: - add target ID    
-    std::future<osc::ReceivedMessage> g_new(std::vector<std::tuple<int, int, int>> group);
+    osc::ReceivedMessage g_new(std::vector<std::tuple<int, int, int>> group);
 
 
     //Create a new parallel group.
@@ -314,7 +314,7 @@ public:
     //:param:group: - new group ID
     //:param:action: - add action (0,1,2, 3 or 4 see below)
     //:param:target: - add target ID    
-    std::future<osc::ReceivedMessage> p_new(std::vector<std::tuple<int, int, int>> group);
+    osc::ReceivedMessage p_new(std::vector<std::tuple<int, int, int>> group);
 
 
     //Add node to head of group.
@@ -366,7 +366,7 @@ public:
     //N.B. The order of nodes corresponds to their execution order on the server. Thus child nodes (those contained within a group) are listed immediately following their parent. See the method Server:queryAllNodes for an example of how to process this reply.
     //:param:group: - group ID
     //:param:current: - flag: if not 0 the current control (arg) values for synths will be included    
-    std::future<osc::ReceivedMessage> g_queryTree(std::vector<std::tuple<int, int>> group);
+    osc::ReceivedMessage g_queryTree(std::vector<std::tuple<int, int>> group);
 
 
     //Send a command to a unit generator.
@@ -387,7 +387,7 @@ public:
     //:param:number: - number of frames
     //:param:channels: - number of channels (optional. default = 1 channel)
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_alloc(int buffer, int number, int channels, const char* completion);
+    osc::ReceivedMessage b_alloc(int buffer, int number, int channels, const char* completion);
 
 
     //Allocate buffer space and read a sound file.
@@ -399,7 +399,7 @@ public:
     //:param:starting: - starting frame in file (optional. default = 0)
     //:param:number: - number of frames to read (optional. default = 0, see below)
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_allocRead(int buffer, std::string sound, int starting, int number, const char* completion);
+    osc::ReceivedMessage b_allocRead(int buffer, std::string sound, int starting, int number, const char* completion);
 
 
     //Allocate buffer space and read channels from a sound file.
@@ -412,7 +412,7 @@ public:
     //:param:number: - number of frames to read
     //:param:channel: - source file channel index
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_allocReadChannel(int buffer, std::string sound, int starting, int number, std::vector<int> channel, const char* completion);
+    osc::ReceivedMessage b_allocReadChannel(int buffer, std::string sound, int starting, int number, std::vector<int> channel, const char* completion);
 
 
     //Read sound file data into an existing buffer.
@@ -426,7 +426,7 @@ public:
     //:param:frame: - starting frame in buffer (optional. default = 0)
     //:param:leave: - leave file open (optional. default = 0)
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_read(int buffer, std::string sound, int starting, int number, int frame, int leave, const char* completion);
+    osc::ReceivedMessage b_read(int buffer, std::string sound, int starting, int number, int frame, int leave, const char* completion);
 
 
     //Read sound file channel data into an existing buffer.
@@ -441,7 +441,7 @@ public:
     //:param:leave: - leave file open
     //:param:channel: - source file channel index
     //:param:completion: - completion message    
-    std::future<osc::ReceivedMessage> b_readChannel(int buffer, std::string sound, int starting, int number, int frame, int leave, std::vector<int> channel, const char* completion);
+    osc::ReceivedMessage b_readChannel(int buffer, std::string sound, int starting, int number, int frame, int leave, std::vector<int> channel, const char* completion);
 
 
     //Write sound file data.
@@ -459,7 +459,7 @@ public:
     //:param:starting: - starting frame in buffer (optional. default = 0)
     //:param:leave: - leave file open (optional. default = 0)
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_write(int buffer, std::string sound, std::string header, std::string sample, int number, int starting, int leave, const char* completion);
+    osc::ReceivedMessage b_write(int buffer, std::string sound, std::string header, std::string sample, int number, int starting, int leave, const char* completion);
 
 
     //Free buffer data.
@@ -468,7 +468,7 @@ public:
     //Asynchronous.Replies to sender with /done /b_free bufNum when complete.
     //:param:buffer: - buffer number
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_free(int buffer, const char* completion);
+    osc::ReceivedMessage b_free(int buffer, const char* completion);
 
 
     //Zero sample data.
@@ -477,7 +477,7 @@ public:
     //Asynchronous.Replies to sender with /done /b_zero bufNum when complete.
     //:param:buffer: - buffer number
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_zero(int buffer, const char* completion);
+    osc::ReceivedMessage b_zero(int buffer, const char* completion);
 
 
     //Set sample value(s).
@@ -515,7 +515,7 @@ public:
     //:param:buffer: - buffer number
     //:param:command: - command name
     //:param:arguments: - command arguments    
-   // std::future<osc::ReceivedMessage> b_gen(int buffer, std::string command, ... arguments);
+   // osc::ReceivedMessage b_gen(int buffer, std::string command, ... arguments);
 
 
     //Close soundfile.
@@ -524,7 +524,7 @@ public:
     //Asynchronous.Replies to sender with /done /b_close bufNum when complete.
     //:param:buffer: - buffer number
     //:param:completion: - an OSC message to execute upon completion. (optional)    
-    std::future<osc::ReceivedMessage> b_close(int buffer, const char* completion);
+    osc::ReceivedMessage b_close(int buffer, const char* completion);
 
 
     //Get buffer info.
@@ -534,14 +534,14 @@ public:
     //        ('N ',): int - number of channels
     //        ('N ',): float - sample rate
     //:param:buffer: - buffer number(s)    
-    std::future<osc::ReceivedMessage> b_query(std::vector<int> buffer);
+    osc::ReceivedMessage b_query(std::vector<int> buffer);
 
 
     //Get sample value(s).
     //Replies to sender with the corresponding /b_set command.
     //:param:buffer: - buffer number
     //:param:sample: - a sample index    
-    std::future<osc::ReceivedMessage> b_get(int buffer, std::vector<int> sample);
+    osc::ReceivedMessage b_get(int buffer, std::vector<int> sample);
 
 
     //Get ranges of sample value(s).
@@ -549,7 +549,7 @@ public:
     //:param:buffer: - buffer number
     //:param:starting: - starting sample index
     //:param:sequential: - number of sequential samples to get (M)    
-    std::future<osc::ReceivedMessage> b_getn(int buffer, std::vector<std::tuple<int, int>> starting);
+    osc::ReceivedMessage b_getn(int buffer, std::vector<std::tuple<int, int>> starting);
 
 
     //Set bus value(s).
@@ -578,21 +578,21 @@ public:
     //Get bus value(s).
     //Takes a list of buses and replies to sender with the corresponding /c_set command.
     //:param:index: - a bus index    
-    std::future<osc::ReceivedMessage> c_get(std::vector<int> index);
+    osc::ReceivedMessage c_get(std::vector<int> index);
 
 
     //Get ranges of bus value(s).
     //Get contiguous ranges of buses. Replies to sender with the corresponding /c_setn command.
     //:param:starting: - starting bus index
     //:param:sequential: - number of sequential buses to get (M)    
-    std::future<osc::ReceivedMessage> c_getn(std::vector<std::tuple<int, int>> starting);
+    osc::ReceivedMessage c_getn(std::vector<std::tuple<int, int>> starting);
 
 
     //End real time mode, close file. Not yet implemented.
     //
     //This message should be sent in a bundle in non real time mode. The bundle timestamp will establish the ending time of the file. This command will end non real time mode and close the sound file. Replies to sender with /done when complete.
     //These messages are sent by the server in response to some commands.    
-    std::future<osc::ReceivedMessage> nrt_end();
+    osc::ReceivedMessage nrt_end();
 
 
     //A node was started. This command is sent to all registered clients when a node is created.    
@@ -617,7 +617,7 @@ public:
 
     //Reply to /n_query. This command is sent to all registered clients in response to an /n_query command.
     //These messages are sent as notification of some event to all clients who have registered via the /notify command.    
-    std::future<osc::ReceivedMessage> n_info();
+    osc::ReceivedMessage n_info();
 
 
     //A trigger message.
@@ -626,5 +626,5 @@ public:
     //:param:node: - node ID
     //:param:trigger: - trigger ID
     //:param:value: - trigger value    
-    std::future<osc::ReceivedMessage> tr(int node, int trigger, float value);
+    osc::ReceivedMessage tr(int node, int trigger, float value);
 };

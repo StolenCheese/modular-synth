@@ -4,9 +4,7 @@ class Bus;
 
 #include<string>
 
-#include<variant>
-
-#include<future>
+#include<variant> 
 
 enum class BusRate {
     CONTROL,
@@ -29,7 +27,7 @@ public:
     // a symbol consisting of the letter 'c' or 'a' (for control or audio) followed by the bus's index. This may be used when setting a synth node's control inputs to map the input to the control bus.
     std::string asMap();
 
-    std::future<std::variant<int, float>> get();
+    std::variant<int, float> get();
 
     // Associates to /b_set
     void set(const float v);

@@ -63,6 +63,8 @@ public class ModularSynth : Game
         Slider.rail1 = Content.Load<Texture2D>("Rail1");
         Slider.slider1 = Content.Load<Texture2D>("Slider1");
         Slider.slider2 = Content.Load<Texture2D>("Slider2");
+        Dial.dial1 = Content.Load<Texture2D>("dial1");
+        Dial.indicator1 = Content.Load<Texture2D>("indicator1");
 
         button = new ModuleSpawnButton(spawnTexture, cardTexture, new Vector2(10,-10),_spriteBatch);
 

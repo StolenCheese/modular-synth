@@ -15,7 +15,7 @@ internal class Component : Interactable
     //TODO: make slider offsets based on StationaryComponent
     public bool isInteracting=false;
     protected double scale;
-    public float rotation = 0;
+    public double rotation = 0;
 
     //TODO: remove these 2
     public int height;
@@ -23,8 +23,16 @@ internal class Component : Interactable
     public bool vertical = false;
 
     //origin is at the center of the component. Use this to add offset
-    public Vector2 originOffset; 
 
+    public Component(Vector2 pos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1) : base(baseSprite, pos+moduleLocalPos, col,scale)
+    { 
+        this.scale = scale;
+        this.height=(int)(this.sprite.Height*this.scale);
+        this.width=(int)(this.sprite.Width*this.scale);
+        this.modulePos = pos;
+        this.moduleLocalPos = moduleLocalPos;
+        this.vertical = vertical;
+    }
     public Component(Vector2 pos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1,bool vertical=false) : base(baseSprite, pos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
@@ -35,7 +43,7 @@ internal class Component : Interactable
         this.vertical = vertical;
 
         if(vertical){
-            this.rotation = (float)Math.PI/2;
+            this.rotation = Math.PI/2;
              int temp = this.height;
              this.height = this.width;
              this.width = temp;
@@ -57,7 +65,7 @@ internal class Component : Interactable
         //spriteBatch.Draw(Slider.slider1, boundingBox,colour);
 
         //Using position instead of rect due to strange behaviour
-        spriteBatch.Draw(sprite, position,null, colour, rotation,  new Vector2(this.sprite.Width/2,this.sprite.Height/2),(float)this.scale,SpriteEffects.None,1.0f);
+        spriteBatch.Draw(sprite, position,null, colour, (float)rotation,  new Vector2(this.sprite.Width/2,this.sprite.Height/2),(float)this.scale,SpriteEffects.None,1.0f);
     }
     public override void Update(){
         this.position = modulePos + moduleLocalPos;

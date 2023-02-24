@@ -17,23 +17,31 @@ internal class Slider : Component
     private bool dragging;
     private float clickOffset = 0;
     private float sliderOffset = 0;
-
     //TODO: make slider offsets based on StationaryComponent
     private int maxSliderOffset=130;
     private int minSliderOffset=0;
     private InputManager input = InputManager.GetInstance();
 
-    public Slider(Vector2 pos, Vector2 localPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, String ParameterID,double trackScale=1,double sliderScale=1) : base(pos, localPos, sliderSprite, col, ParameterID, trackScale)
+    public Slider(Vector2 pos, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, String ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false) : base(pos, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
     { 
-        this.parentpos = pos;
-        this.localPos = localPos;
-        this.track = new Component(pos, localPos, trackSprite, col, ParameterID, sliderScale);
+        this.modulePos = pos;
+        this.moduleLocalPos = moduleLocalPos;
+        this.track = new Component(pos, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
+
+        if(vertical){
+            maxSliderOffset = track.height/2;
+            minSliderOffset = -track.height/2;
+        }else{
+            maxSliderOffset = track.width/2;
+            minSliderOffset = -track.width/2;
+        }
+        
     }
 
     //We want the module that this component belongs to to give the component its coordinates
     public override void UpdatePos(Vector2 pos){
         track.UpdatePos(pos);
-        this.parentpos = pos;
+        this.modulePos = pos;
     }
 
     //order is important!
@@ -46,6 +54,7 @@ internal class Slider : Component
         get {return sliderOffset;}
         set {this.sliderOffset = MathHelper.Clamp(value,minSliderOffset,maxSliderOffset);}
     }
+
     public override void Update(){     
         if (boundingBox.Contains(input.MousePosition()))
         {
@@ -61,15 +70,26 @@ internal class Slider : Component
         if (dragging)
         {
             this.isInteracting=true;
-            SliderOffset = input.MousePosVector().X + clickOffset - parentpos.X - localPos.X;
-            this.position.X = SliderOffset + parentpos.X + localPos.X;
+            if(vertical){
+                SliderOffset = input.MousePosVector().Y + clickOffset - modulePos.Y - moduleLocalPos.Y;
+                this.position.Y = SliderOffset + modulePos.Y + moduleLocalPos.Y;
+            }else{
+                SliderOffset = input.MousePosVector().X + clickOffset - modulePos.X - moduleLocalPos.X;
+                this.position.X = SliderOffset + modulePos.X + moduleLocalPos.X;
+            }
+            
             if (input.LeftMouseClickUp()){
                 dragging = false;
             }
             
         }else{
-            this.position = parentpos + localPos;
-            this.position.X += SliderOffset;          
+            this.position = modulePos + moduleLocalPos;
+            if(vertical){
+                this.position.Y += SliderOffset;  
+            }else{
+                this.position.X += SliderOffset;  
+            }
+                    
         }
     }
 }

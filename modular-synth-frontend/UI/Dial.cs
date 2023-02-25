@@ -12,16 +12,14 @@ internal class Dial : Component
 {
     public static Texture2D dial1;
     public static Texture2D indicator1;
-
     Component staticPart;
     private bool rotating;
-    private Vector2 clickOffset;
     private double dialRotation = 0;
     private double lastRotation = 0;
-
-    //TODO: make slider offsets based on StationaryComponent
-    private double maxRotation;
-    private double minRotation=-Math.PI;
+    private double r;
+    private double lastVal;
+    private double maxRotation=2*Math.PI;
+    private double minRotation=0;
     private double dialRotationOffset;
     private InputManager input = InputManager.GetInstance();
 
@@ -30,8 +28,10 @@ internal class Dial : Component
         this.modulePos = pos;
         this.moduleLocalPos = moduleLocalPos;
         this.staticPart = new Component(pos, moduleLocalPos, staticPartSprite, col, ParameterID, staticPartScale);
+         this.rotation = minRotation;
+         this.lastRotation = minRotation;
+         this.dialRotation = minRotation;
 
-        maxRotation=(Math.PI);
     }
 
     //We want the module that this component belongs to to give the component its coordinates
@@ -48,20 +48,43 @@ internal class Dial : Component
 
     private double DialRotation{
         get {return dialRotation;}
-        set {this.dialRotation = MathHelper.Clamp((float)(value),(float)minRotation,(float)maxRotation);}
+        set {
+            //clamp value to a range between 0 and 2pi
+            if(value<0){
+                value +=2*Math.PI;
+            }else if(value>2*Math.PI){
+                value -= 2*Math.PI;
+            }
+
+            double deltaR = value - lastVal;
+
+            //ignore unreasonably high changes in deltaR in a frame or no changes at all ()
+            if(deltaR!=0&&Math.Abs(deltaR)<20*Math.PI/180){
+                if(deltaR<minRotation&&minRotation<dialRotation){
+                    dialRotation += deltaR;
+                }else if(deltaR>0&&dialRotation<maxRotation){
+                    dialRotation += deltaR;
+                }
+            }
+            lastVal = value;
+            Console.WriteLine("value:{0},dialRotation:{1},deltaR:{2}",value*180/Math.PI,dialRotation*180/Math.PI,deltaR*180/Math.PI);
+        }
     }
 
     //returns an angle between 0 and 2pi with 0 at +ve y axis and increasing rotating clockwise (broken)
     private double getAngle(Vector2 v){
+        int rotations = 0;
         if(v.Y<=0&&v.X>=0){
-            return Math.PI/2-Math.Atan2(-v.Y,v.X);
+            r = Math.PI/2-Math.Atan2(-v.Y,v.X);
         }else if(v.Y>=0&&v.X>=0){
-            return Math.PI/2+Math.Atan2(v.Y,v.X);
+            r =  Math.PI/2+Math.Atan2(v.Y,v.X);
         } else if(v.Y>=0&&v.X<=0){
-            return Math.PI/2+Math.Atan2(v.Y,v.X);
+            r =  Math.PI/2+Math.Atan2(v.Y,v.X);
         } else{
-            return 5*Math.PI/2-Math.Atan2(-v.Y,v.X);
+            r =  5*Math.PI/2-Math.Atan2(-v.Y,v.X);
         }
+        if (r < 0) { r += 360f*(rotations+1);}
+        return r;
     }
 
     public override void Update(){    
@@ -71,22 +94,16 @@ internal class Dial : Component
             this.isInteracting=true;
             if (input.LeftMouseClickDown()){
                 rotating = true;
-                //Console.WriteLine(String.Format("{0},{1}",clickOffset.X,-clickOffset.Y));
                 dialRotationOffset = getAngle(input.MousePosVector() - position);
-                //Console.WriteLine(dialRotationOffset*180/Math.PI);
             }
-        }else{
-            this.isInteracting=false;
         }
         if (rotating){
-            this.isInteracting=true;
-            dialRotation = getAngle(input.MousePosVector() - position)- dialRotationOffset + lastRotation;
-            Console.WriteLine(dialRotation*180/Math.PI);
-
-
-            this.rotation = dialRotation;
-            
+            DialRotation = getAngle(input.MousePosVector() - position)- dialRotationOffset+ lastRotation;
+            //Console.WriteLine(String.Format("DialRotation:{0},dialRotationOffset:{1},lastRotation:{2},clkWiseLock:{3},aClkWiseLock:{4}",DialRotation*180/Math.PI,dialRotationOffset*180/Math.PI,lastRotation*180/Math.PI,clkWiseLock,aClkWiseLock));
+            this.rotation = DialRotation;
+          
             if (input.LeftMouseClickUp()){
+                this.isInteracting=false;
                 lastRotation = this.rotation;
                 rotating = false;
             }

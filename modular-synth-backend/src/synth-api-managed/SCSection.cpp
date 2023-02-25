@@ -11,7 +11,9 @@ using namespace System;
 // Needs to be changed to the port model, this is a proof of concept
 
 namespace SynthAPI {
-
+    ///<summary> 
+    ///A SuperCollider Section representation, linked to a synth node on the server
+    ///</summary> 
     public ref class SCSection {
     private:
         array< String^ >^ params;
@@ -19,7 +21,9 @@ namespace SynthAPI {
     public:
 
 
-        // Allocate the native object on the C++ Heap via a constructor
+        ///<summary> 
+        ///Allocate the native object on the C++ Heap via a constructor 
+        ///</summary>
         SCSection(String^ synthdef)   {
             try {
                 //Generate the synth on the server.

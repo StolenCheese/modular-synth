@@ -34,10 +34,10 @@ namespace synth_api {
             if (this->controller && inputPort->controller) {
                 // we only have output-to-output if two buses
                 // are linked together
-                if (this->bus && inputPort->bus) {
+                if (this->logicalBus && inputPort->logicalBus) {
                     throw OutputToOutputException((char *) "Binding two inputs linked to outputs", *this, *other);
                 } else {
-                    if (!this->bus) {
+                    if (!this->logicalBus) {
                         // flipping the direction will make this node a
                         // root controller node, and its controller
                         // will become null
@@ -64,22 +64,21 @@ namespace synth_api {
 
     void InputPort::removeLink(Port *other) {
         auto * otherAsInputPort = dynamic_cast<InputPort *>(other);
+        // unsubscribe, then disconnect, so as not to get irrelevant bus rate change information whilst disconnecting
         if (this->controller == other) {
             if (otherAsInputPort) {
                 otherAsInputPort->unsubscribe(this);
             }
             this->controller = nullptr;
-            auto old_bus = this->bus;
-            this->bus = 0;
-            if (old_bus) {
+            if (this->logicalBus) {
+                disconnectFromBus();
                 this->notify();
             }
         } else if (otherAsInputPort->controller == this) {
             otherAsInputPort->controller = nullptr;
             this->unsubscribe(otherAsInputPort);
-            auto old_bus = otherAsInputPort->bus;
-            otherAsInputPort->bus = 0;
-            if (old_bus) {
+            if (otherAsInputPort->logicalBus) {
+                otherAsInputPort->disconnectFromBus();
                 otherAsInputPort->notify();
             }
         }
@@ -95,11 +94,12 @@ namespace synth_api {
             }
         }
         this->controller = other;
+        // connect, then subscribe, so as not to get bus rate information twice
         if (auto * otherAsInput = dynamic_cast<InputPort *>(other)) {
-            this->bus = otherAsInput->bus;
+            connectToBus(otherAsInput->logicalBus);
             otherAsInput->subscribe(this);
         } else if (auto * otherAsOutput = dynamic_cast<OutputPort *>(other)) {
-            this->bus = otherAsOutput->bus;
+            connectToBus(otherAsOutput->logicalBus);
             otherAsOutput->subscribe(this);
         }
         notify();
@@ -132,7 +132,6 @@ namespace synth_api {
 
         // can only make the InputPort a root controller when there are no OutputPorts in the dependency graph
         current->controller = nullptr;
-        current->bus = 0;
         while (next != nullptr) {
             auto * nextController = next->controller;
             if (dynamic_cast<OutputPort *>(nextController)) {
@@ -157,7 +156,11 @@ namespace synth_api {
             InputPort * curr = queue.front();
             queue.pop_front();
             for (InputPort * subscriber : curr->subscribers) {
-                subscriber->bus = curr->bus;
+                if (curr->logicalBus) {
+                    subscriber->connectToBus(logicalBus);
+                } else {
+                    subscriber->disconnectFromBus();
+                }
                 queue.insert(queue.end(), subscriber);
             }
         }
@@ -165,5 +168,33 @@ namespace synth_api {
 
     void InputPort::setDefault(uint64_t value) {
         defaultValue = value;
+    }
+
+    bool InputPort::addAudioRateRequirement() {
+        this->audioRateRequirement++;
+        if (this->audioRateRequirement == 1) {   // we're switching from control to audio
+            return true;
+        }
+        return false;
+    }
+
+    bool InputPort::removeAudioRateRequirement() {
+        this->audioRateRequirement--;
+        if (this->audioRateRequirement == 0) {   // we're switching from audio to control
+            return true;
+        }
+        return false;
+    }
+
+    void InputPort::connectToBus(LogicalBus* logicalBus) {
+        this->logicalBus = logicalBus;
+        logicalBus->addListener(this);
+        //SCOOP setInputBus(logicalBus.bus)
+    }
+
+    void InputPort::disconnectFromBus() {
+        //SCOOP setInputBus(defaultValue)
+        this->logicalBus->removeListener(this);
+        this->logicalBus = nullptr;
     }
 } // synth-api

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>modular_synth_cli</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="synth-api-managed" >
+		<HintPath>..\modular-synth-backend\out\build\x64-Debug\src\synth-api-managed\synth-api-managed.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+
+
+</Project>

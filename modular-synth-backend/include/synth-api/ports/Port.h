@@ -5,15 +5,17 @@
 #ifndef MODULAR_SYNTH_PORT_H
 #define MODULAR_SYNTH_PORT_H
 
-
 #include <cstdint>
 #include <list>
 #include <set>
 
 namespace synth_api {
 
+    class LogicalBus;
     class Port {
-        friend Section;
+        friend class LogicalBus;
+        friend class Section;
+        friend class PortManager;
     public:
         /*
          * Ports can be bound to each other. This is analogous to a
@@ -53,9 +55,8 @@ namespace synth_api {
         void symbolicLinkTo(Port *other);
 
     protected:
-        // SuperCollider bus identifier
-        // TODO @bms53 @ksw40: Refactor into LogicalBus type
-        uint64_t bus;
+        // Logical bus to represent bus connections at a high-level. Abstracts away audio/control rate details.
+        LogicalBus *logicalBus;
 
         // Holds all actual front-end created outgoingConnections (models wires)
         // TODO @bms53: Rename to imply it is bi-directional
@@ -65,7 +66,7 @@ namespace synth_api {
         // TODO @bms53: Rename to imply it is bi-directional
         std::set<Port *> outgoingSymbolicLinks;
 
-        explicit Port(uint64_t bus, const std::list<Port *>::const_iterator identifier) : bus(bus), identifier(identifier) {};
+        explicit Port() : logicalBus(nullptr) {};
 
         /*
          * Checks for cycles existing in the tree - these can cause problems
@@ -79,9 +80,6 @@ namespace synth_api {
          */
         virtual void subscribe(Port *) = 0;
         virtual void unsubscribe(Port *) = 0;
-
-    private:
-        std::list<Port *>::const_iterator identifier;
     };
 
 }

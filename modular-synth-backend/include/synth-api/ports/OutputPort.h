@@ -5,22 +5,26 @@
 #ifndef MODULAR_SYNTH_OUTPUTPORT_H
 #define MODULAR_SYNTH_OUTPUTPORT_H
 
-#include "Port.h"
-#include "InputPort.h"
+
+#include "synth-api/ports/InputPort.h"
+#include "synth-api/ports/Port.h"
+#include "synth-api/ports/_model/LogicalBus.h"
 
 #include <set>
 
 namespace synth_api {
     class OutputPort : public Port {
-        friend InputPort;
+        friend class InputPort;
+        friend class LogicalBus;
     private:
         std::set<InputPort *> subscribers;
     protected:
         void subscribe(Port *other) override;
         void unsubscribe(Port *other) override;
     public:
-        explicit OutputPort(uint64_t bus, std::list<Port *>::const_iterator identifier) : Port(bus, identifier) {
+        explicit OutputPort() {
             subscribers = std::set<InputPort *>();
+            logicalBus = new LogicalBus(this);
         };
     };
 }

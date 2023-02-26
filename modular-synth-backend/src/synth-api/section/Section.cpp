@@ -6,14 +6,19 @@
 #include "synth-api/section/_model/PortManager.h"
 
 namespace synth_api {
-    void Section::generatePortModel(const std::vector<std::pair<std::string, uint64_t>>& inputPortList, const std::vector<std::pair<std::string, uint64_t>>& outputPortList) {
+    
+    void Section::generatePortModel(Section &parent,
+                                    const std::vector<std::pair<std::string, uint64_t>>& inputPortList,
+                                    const std::vector<std::string>& outputPortList) {
+
         for (const auto& p : inputPortList) {
-            InputPort * newInputPort = PortManager::getNewInputPort(p.second);
+            InputPort * newInputPort = PortManager::getNewInputPort(&parent, p.second);
             inputPorts.insert({p.first, newInputPort});
         }
+
         for (const auto& p : outputPortList) {
-            OutputPort * newOutputPort = PortManager::getNewOutputPort(p.second);
-            outputPorts.insert({p.first, newOutputPort});
+            OutputPort * newOutputPort = PortManager::getNewOutputPort(&parent);
+            outputPorts.insert({p, newOutputPort});
         }
 
         for (const auto& outputPair : outputPorts) {
@@ -33,9 +38,16 @@ namespace synth_api {
         return nullptr;
     }
 
-    Section::Section(char *filepath) {
-        std::vector<std::pair<std::string, uint64_t>> inputPortList = {{"pitch", 10}, {"amplification", 20}, {"frequency", 300}};
-        std::vector<std::pair<std::string, uint64_t>> outputPortList = {{"reverb", 1}, {"tonality", 2}};
-        generatePortModel(inputPortList, outputPortList);
+    Section::Section(char *synthDef, const std::vector<std::string>& inputParams,
+                     const std::vector<std::string>& outputParams
+                     ) : synth(SuperColliderController::get().InstantiateSynth(std::string(synthDef))) {
+
+        std::vector<std::pair<std::string, uint64_t>> inputPortSpecification;
+
+        for (const std::string& param : inputParams) {
+            inputPortSpecification.insert(inputPortSpecification.cend(), {param, 0});
+        }
+
+        generatePortModel(*this, inputPortSpecification, outputParams);
     }
 }

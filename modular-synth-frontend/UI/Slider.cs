@@ -22,11 +22,9 @@ internal class Slider : Component
     private int minSliderOffset=0;
     private InputManager input = InputManager.GetInstance();
 
-    public Slider(Vector2 pos, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, String ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false) : base(pos, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
+    public Slider(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, String ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false) : base(modulePos, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
     { 
-        this.modulePos = pos;
-        this.moduleLocalPos = moduleLocalPos;
-        this.track = new Component(pos, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
+        this.track = new Component(modulePos, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
 
         if(vertical){
             maxSliderOffset = track.height/2;
@@ -39,9 +37,9 @@ internal class Slider : Component
     }
 
     //We want the module that this component belongs to to give the component its coordinates
-    public override void UpdatePos(Vector2 pos){
-        track.UpdatePos(pos);
-        this.modulePos = pos;
+    public override void UpdatePos(Vector2 modulePos){
+        track.UpdatePos(modulePos);
+        this.modulePos = modulePos;
     }
 
     //order is important!

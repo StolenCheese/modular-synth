@@ -24,21 +24,21 @@ internal class Component : Interactable
 
     //origin is at the center of the component. Use this to add offset
 
-    public Component(Vector2 pos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1) : base(baseSprite, pos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
         this.width=(int)(this.sprite.Width*this.scale);
-        this.modulePos = pos;
+        this.modulePos = modulePos;
         this.moduleLocalPos = moduleLocalPos;
         this.vertical = vertical;
     }
-    public Component(Vector2 pos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1,bool vertical=false) : base(baseSprite, pos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1,bool vertical=false) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
         this.width=(int)(this.sprite.Width*this.scale);
-        this.modulePos = pos;
+        this.modulePos = modulePos;
         this.moduleLocalPos = moduleLocalPos;
         this.vertical = vertical;
 
@@ -50,8 +50,8 @@ internal class Component : Interactable
         }
     }
     //We want the module that this component belongs to to give the component its coordinates
-    public virtual void UpdatePos(Vector2 pos){
-        this.modulePos = pos;
+    public virtual void UpdatePos(Vector2 modulePos){
+        this.modulePos = modulePos;
     }
     //order is important!
     public virtual void addComponentToEtyMgr(){

@@ -23,11 +23,9 @@ internal class Dial : Component
     private double dialRotationOffset;
     private InputManager input = InputManager.GetInstance();
 
-    public Dial(Vector2 pos, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, String ParameterID,double staticPartScale=1,double dialScale=1) : base(pos, moduleLocalPos, dialSprite, col, ParameterID,dialScale)
+    public Dial(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, String ParameterID,double staticPartScale=1,double dialScale=1) : base(modulePos, moduleLocalPos, dialSprite, col, ParameterID,dialScale)
     { 
-        this.modulePos = pos;
-        this.moduleLocalPos = moduleLocalPos;
-        this.staticPart = new Component(pos, moduleLocalPos, staticPartSprite, col, ParameterID, staticPartScale);
+        this.staticPart = new Component(modulePos, moduleLocalPos, staticPartSprite, col, ParameterID, staticPartScale);
          this.rotation = minRotation;
          this.lastRotation = minRotation;
          this.dialRotation = minRotation;
@@ -35,9 +33,9 @@ internal class Dial : Component
     }
 
     //We want the module that this component belongs to to give the component its coordinates
-    public override void UpdatePos(Vector2 pos){
-        staticPart.UpdatePos(pos);
-        this.modulePos = pos;
+    public override void UpdatePos(Vector2 modulePos){
+        staticPart.UpdatePos(modulePos);
+        this.modulePos = modulePos;
     }
 
     //order is important!
@@ -96,8 +94,11 @@ internal class Dial : Component
                 rotating = true;
                 dialRotationOffset = getAngle(input.MousePosVector() - position);
             }
+        }else{
+            this.isInteracting=false;
         }
         if (rotating){
+            this.isInteracting=true;
             DialRotation = getAngle(input.MousePosVector() - position)- dialRotationOffset+ lastRotation;
             //Console.WriteLine(String.Format("DialRotation:{0},dialRotationOffset:{1},lastRotation:{2},clkWiseLock:{3},aClkWiseLock:{4}",DialRotation*180/Math.PI,dialRotationOffset*180/Math.PI,lastRotation*180/Math.PI,clkWiseLock,aClkWiseLock));
             this.rotation = DialRotation;

@@ -25,7 +25,7 @@ class SuperColliderController : public SuperColliderCommander {
     SuperColliderController(const SuperColliderController&) = delete;
     SuperColliderController(IpEndpointName endpoint);
 
-    inline  static SuperColliderController* s = nullptr;
+    inline static SuperColliderController* s = nullptr;
 
 public:
 

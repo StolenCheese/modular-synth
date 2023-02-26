@@ -4,6 +4,7 @@ class Synth;
 
 #include "sc-controller/Bus.hpp"
 #include "sc-controller/Node.hpp"
+#include "sc-controller/SuperColliderController.hpp"
 #include <map>
 
 class Synth : public Node {

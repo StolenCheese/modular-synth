@@ -8,12 +8,13 @@
 #include "synth-api/ports/InputPort.h"
 #include "synth-api/ports/OutputPort.h"
 #include "synth-api/ports/Port.h"
-#include "synth-api/section/Section.h"
 
 #include <list>
 #include <unordered_map>
 
 namespace synth_api {
+    class Section;
+
     class PortManager {
     private:
         enum Stage {OnStack, Explored};

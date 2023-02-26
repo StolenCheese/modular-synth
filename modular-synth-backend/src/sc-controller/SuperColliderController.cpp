@@ -1,4 +1,5 @@
 #include "sc-controller/SuperColliderController.hpp"
+#include "include/sc-controller/exceptions/UninitializedConnectionException.h"
 #include <fstream>
 #include <map>
 
@@ -34,7 +35,7 @@ void SuperColliderController::Connect(IpEndpointName endpoint)
 SuperColliderController& SuperColliderController::get()
 {
     if (s == nullptr) {
-        throw std::exception("Invalid connection to supercollider server");
+        throw UnitializedConnectionException("Invalid connection to supercollider server");
     }
     return *s;
 }
@@ -52,6 +53,7 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& synthdef)
         std::cout << "Loading for the first time" << std::endl;
 
         std::ifstream def;
+        // TODO: @mp2015 to make this address be computer independent
         auto f = "A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + synthdef + ".scsyndef";
         def.open(f);
 

@@ -24,7 +24,7 @@ namespace synth_api {
     public:
         explicit OutputPort() {
             subscribers = std::set<InputPort *>();
-            logicalBus = new LogicalBus(server, this);
+            logicalBus = new LogicalBus(this);
         };
     };
 }

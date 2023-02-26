@@ -29,9 +29,9 @@ namespace synth_api {
         bool removeAudioRateRequirement(); // returns true iff bus switched from audio to control
 
     public:
-        explicit LogicalBus(SuperColliderController* server, OutputPort* writer)
+        explicit LogicalBus(OutputPort* writer)
             : writer(writer)
-            , audioRateRequirement(0), bus(server->InstantiateBus()) {
+            , audioRateRequirement(0), bus(SuperColliderController::get().InstantiateBus()) {
             };
 
         void addListener(InputPort* inputPort); // connects inputPort to the bus, and iteratively traverses the graph in

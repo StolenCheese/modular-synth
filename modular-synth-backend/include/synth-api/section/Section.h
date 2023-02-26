@@ -42,7 +42,9 @@ protected:
      *      std::vector<std::pair<std::string, uint64_t>> outputPortList: Each string is the parameter name for the output port,
      *                   and the uint64_t is the bus number assigned to that output.
      */
-    void generatePortModel(const std::vector<std::pair<std::string, uint64_t>>& inputPortList, const std::vector<std::pair<std::string, uint64_t>>& outputPortList);
+    void generatePortModel(Section& parent,
+                           const std::vector<std::pair<std::string, uint64_t>>& inputPortList,
+                           const std::vector<std::string>& outputPortList);
 
 public:
     /*
@@ -56,8 +58,9 @@ public:
      *
      * Parameters:
      *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
+     *      inputParams: List of parameter names for front-end to use
      */
-    explicit Section(SuperColliderController* s, char* synthdef);
+    Section(char* synthDef, const std::vector<std::string>& inputParams, const std::vector<std::string>& outputParams);
 
     /*
      * Returns the port object for a given parameter, either corresponding to an output or an input.

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Node.hpp"
+#include "sc-controller/Node.hpp"
 #include <cstdint>
 #include <map>
 #include <string>

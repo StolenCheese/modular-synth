@@ -54,7 +54,7 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& synthdef)
 
         std::ifstream def;
         // TODO: @mp2015 to make this address be computer independent
-        auto f = "A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + synthdef + ".scsyndef";
+        auto f = "synthdefs\\" + synthdef + ".scsyndef";
         def.open(f);
 
         if (def) {

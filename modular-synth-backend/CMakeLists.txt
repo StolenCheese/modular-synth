@@ -5,5 +5,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
  
 add_subdirectory(external_libraries)
 
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/synthdefs
+        DESTINATION
+        ${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(src)

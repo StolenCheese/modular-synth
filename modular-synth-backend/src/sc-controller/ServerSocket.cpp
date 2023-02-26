@@ -1,5 +1,5 @@
 
-#include "ServerSocket.hpp"
+#include "../../include/sc-controller/ServerSocket.hpp"
 
 
 osc::ReceivedMessage ServerSocket::Recv()

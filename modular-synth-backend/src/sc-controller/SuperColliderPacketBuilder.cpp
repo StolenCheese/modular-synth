@@ -1,4 +1,4 @@
-#include "SuperColliderPacketBuilder.hpp"
+#include "../../include/sc-controller/SuperColliderPacketBuilder.hpp"
 
 void SuperColliderPacketBuilder::s_new( std::string definition, int synth, int action, int target, std::vector<std::pair<std::variant<int, std::string>, std::variant<float, int, std::string>>> control)
 {

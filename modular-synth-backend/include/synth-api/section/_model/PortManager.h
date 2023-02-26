@@ -5,27 +5,36 @@
 #ifndef MODULAR_SYNTH_PORTMANAGER_H
 #define MODULAR_SYNTH_PORTMANAGER_H
 
-#include "../../ports/InputPort.h"
-#include "../../ports/OutputPort.h"
-#include "../../ports/Port.h"
+#include "synth-api/ports/InputPort.h"
+#include "synth-api/ports/OutputPort.h"
+#include "synth-api/ports/Port.h"
+#include "synth-api/section/Section.h"
+
 #include <list>
+#include <unordered_map>
 
 namespace synth_api {
-class PortManager {
-private:
-    static std::list<Port*> ports;
+    class PortManager {
+    private:
+        enum Stage {OnStack, Explored};
+        static std::unordered_map<Port *, Section *> parentMap;
 
-public:
-    Port* in;
+    public:
+        Port* in;
 
-    Port* out;
+        Port* out;
 
-    // TODO @bms53: Make these thread safe with locks!
-    static InputPort* getNewInputPort(uint64_t defaultValue);
-    static OutputPort* getNewOutputPort(uint64_t defaultBus);
+        // TODO @bms53: Make these thread safe with locks!
+        static InputPort* getNewInputPort(Section *parent, uint64_t defaultValue);
+        static OutputPort* getNewOutputPort(Section *parent);
 
-    // TODO @ksw40: Add single-pass "toposort" logic
-};
+        /*
+         * Update the server-side order-of-evaluation of the synths so that new synth-to-synth dependencies are respected.
+         * To do this, we walk backwards from the root, towards the sources, finding a local topological ordering of the
+         * synths that the root depends on.
+         */
+        static void reorder(OutputPort *root);
+    };
 
 }
 

@@ -10,7 +10,7 @@
 #include <string>
 #include <mutex>
 
-#include <WinSock2.h>
+#include <winsock2.h>
 #include <array>
 #include <map>
 #include <thread>

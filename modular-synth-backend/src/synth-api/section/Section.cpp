@@ -2,8 +2,8 @@
 // Created by bmsyi on 11/02/2023.
 //
 
-#include "section/Section.h"
-#include "section/_model/PortManager.h"
+#include "synth-api/section/Section.h"
+#include "synth-api/section/_model/PortManager.h"
 
 namespace synth_api {
     

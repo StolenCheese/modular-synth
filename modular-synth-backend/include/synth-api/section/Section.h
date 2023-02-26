@@ -5,9 +5,10 @@
 #ifndef MODULAR_SYNTH_SECTION_H
 #define MODULAR_SYNTH_SECTION_H
 
-#include "ports/InputPort.h"
-#include "ports/OutputPort.h"
-#include "Synth.hpp"
+#include "synth-api/ports/InputPort.h"
+#include "synth-api/ports/OutputPort.h"
+#include "synth-api/section/_model/PortManager.h"
+#include "sc-controller/Synth.hpp"
 #include <map>
 #include <string>
 #include <vector>
@@ -20,6 +21,7 @@ namespace synth_api {
  * (TODO @mp2015: spread knowledge of UI file so we're on the same page about what is actually in it as I'm guessing here)
  */
 class Section {
+    friend class PortManager;
 
 private:
     Synth* synth;

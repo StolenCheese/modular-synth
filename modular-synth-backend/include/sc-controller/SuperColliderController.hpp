@@ -2,10 +2,11 @@ class SuperColliderController;
 
 #pragma once
 
-#include "SuperColliderCommander.hpp"
-#include "Synth.hpp"
-#include "Group.hpp"
-#include "Bus.hpp"
+#include "sc-controller/SuperColliderCommander.hpp"
+#include "sc-controller/Synth.hpp"
+#include "sc-controller/Group.hpp"
+#include "sc-controller/Bus.hpp"
+
 #include <set>
 
 class SuperColliderController : public SuperColliderCommander {

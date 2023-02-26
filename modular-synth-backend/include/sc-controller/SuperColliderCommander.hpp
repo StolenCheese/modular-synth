@@ -1,5 +1,5 @@
 
-#include "ServerSocket.hpp"
+#include "sc-controller/ServerSocket.hpp"
 #include "osc/OscOutboundPacketStream.h"
 #include "osc/OscReceivedElements.h"
 #include "osc/OscPacketListener.h"

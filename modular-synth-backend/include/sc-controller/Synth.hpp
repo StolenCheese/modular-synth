@@ -2,9 +2,9 @@ class Synth;
 
 #pragma once
 
-#include "Bus.hpp"
-#include "Node.hpp"
-#include "SuperColliderController.hpp"
+#include "sc-controller/Bus.hpp"
+#include "sc-controller/Node.hpp"
+#include "sc-controller/SuperColliderController.hpp"
 #include <map>
 
 class Synth : public Node {

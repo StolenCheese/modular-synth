@@ -5,10 +5,9 @@
 #ifndef MODULAR_SYNTH_INPUTPORT_H
 #define MODULAR_SYNTH_INPUTPORT_H
 
-#include "Port.h"
+#include "synth-api/ports/Port.h"
 
 #include <cstdint>
-#include <iterator>
 #include <set>
 
 namespace synth_api {
@@ -16,6 +15,7 @@ namespace synth_api {
     enum Rate {control, audio, dependent};
 
     class InputPort : public Port {
+        friend class PortManager;
         friend class LogicalBus;
 
     private:
@@ -69,7 +69,7 @@ namespace synth_api {
     public:
         const Rate rate;
 
-        explicit InputPort(uint64_t defaultValue, Rate rate, const std::list<Port *>::const_iterator identifier) : Port(identifier), controller(nullptr), defaultValue(defaultValue), rate(rate), audioRateRequirement(0) {
+        explicit InputPort(uint64_t defaultValue, Rate rate) : controller(nullptr), defaultValue(defaultValue), rate(rate), audioRateRequirement(0) {
             subscribers = std::set<InputPort *>();
         };
         void linkTo(Port *other) override;

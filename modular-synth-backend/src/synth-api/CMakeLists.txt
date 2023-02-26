@@ -9,5 +9,5 @@ target_include_directories(synthapi PUBLIC
                             "${CMAKE_SOURCE_DIR}"
                             "${CMAKE_SOURCE_DIR}/src/sc-controller" 
                           "${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0" 
-                            "${CMAKE_SOURCE_DIR}/include/synth-api" 
+                            "${CMAKE_SOURCE_DIR}/include"
                           )

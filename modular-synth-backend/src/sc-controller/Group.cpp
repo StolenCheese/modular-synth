@@ -1,7 +1,7 @@
-#include "Group.hpp"
+#include "../../include/sc-controller/Group.hpp"
 #include <iostream>
 
-#include "SuperColliderController.hpp"
+#include "../../include/sc-controller/SuperColliderController.hpp"
 
 void Group::syncTree()
 {

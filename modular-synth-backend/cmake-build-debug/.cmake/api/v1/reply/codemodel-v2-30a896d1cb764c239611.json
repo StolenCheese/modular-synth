@@ -1,0 +1,208 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "external_libraries",
+					"childIndexes" : 
+					[
+						2
+					],
+					"jsonFile" : "directory-external_libraries-Debug-98a97bb7891f1ca0b419.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "external_libraries"
+				},
+				{
+					"build" : "external_libraries/oscpack_1_1_0",
+					"jsonFile" : "directory-external_libraries.oscpack_1_1_0-Debug-d3104319747cbedef24b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "external_libraries/oscpack_1_1_0",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						4,
+						5,
+						6,
+						7
+					],
+					"jsonFile" : "directory-src-Debug-c94b7c2814d5a21df52c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src"
+				},
+				{
+					"build" : "src/sc-controller",
+					"jsonFile" : "directory-src.sc-controller-Debug-13665c4c6fb2c26ea620.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/sc-controller",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "src/synth-api",
+					"jsonFile" : "directory-src.synth-api-Debug-ad14994d7a3772718fe6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/synth-api",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "src/console",
+					"jsonFile" : "directory-src.console-Debug-b6256c3ffbfb6d476db7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/console",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "src/synth-api-managed",
+					"jsonFile" : "directory-src.synth-api-managed-Debug-3dc583c110779b185755.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 0,
+					"source" : "src/synth-api-managed",
+					"targetIndexes" : 
+					[
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					],
+					"name" : "modular_synth_backend",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 6,
+					"id" : "controller_debug::@7da3e4a066c0d323d8f8",
+					"jsonFile" : "target-controller_debug-Debug-313a33f1d305315f8eed.json",
+					"name" : "controller_debug",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "oscpack::@965eb01b8c4ec03f14ad",
+					"jsonFile" : "target-oscpack-Debug-f2a532559248f6b216d9.json",
+					"name" : "oscpack",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "servercommander::@83b50cf2e96170b01fc8",
+					"jsonFile" : "target-servercommander-Debug-b4447a0351b28ebd483a.json",
+					"name" : "servercommander",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 7,
+					"id" : "synth-api-managed::@581d0b7c166db13e340c",
+					"jsonFile" : "target-synth-api-managed-Debug-988f36000a6e8c1fa4ce.json",
+					"name" : "synth-api-managed",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "synthapi::@0555ce21110bc7d9df6b",
+					"jsonFile" : "target-synthapi-Debug-548e785bbd153b577bc5.json",
+					"name" : "synthapi",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/REPOS/modular-synth/modular-synth-backend/cmake-build-debug",
+		"source" : "D:/REPOS/modular-synth/modular-synth-backend"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

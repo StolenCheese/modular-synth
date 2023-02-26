@@ -1,4 +1,4 @@
-#include "../../include/sc-controller/SuperColliderController.hpp"
+#include "sc-controller/SuperColliderController.hpp"
 #include <fstream>
 #include <map>
 

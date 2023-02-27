@@ -33,8 +33,7 @@ namespace SynthAPI {
         // Allocate the native object on the C++ Heap via a constructor
         SCSection(String^ synthdef)  {
             try {
-                std::string 
-                    ;
+                std::string cppsynthdef = msclr::interop::marshal_as<std::string>(synthdef);
                 m_section = new synth_api::Section(cppsynthdef.c_str());
                 // Generate the synth on the server.
                 // TODO @mp2015: Currently blocking, in future will use a bool valid

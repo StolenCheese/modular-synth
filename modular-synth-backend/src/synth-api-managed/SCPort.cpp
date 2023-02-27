@@ -47,17 +47,16 @@ namespace SynthAPI {
             }
         }
 
-        void setDefault(Single^ value) {
-            float cppvalue = msclr::interop::marshal_as<float>(value);
+        void setDefault(float value) {
             try {
-                this->m_port->setDefault(cppvalue);
+                this->m_port->setDefault(float(value));
             }
             catch (std::exception& e) {
                 throw defaultException(e);
             }
         }
 
-        Single^ getValue() {
+        float getValue() {
             float cppvalue;
             try {
                 float cppvalue = m_port->getValue();
@@ -65,7 +64,7 @@ namespace SynthAPI {
             catch (std::exception& e) {
                 throw defaultException(e);
             }
-            return gcnew Single(cppvalue);
+            return cppvalue;
         }
     };
 }

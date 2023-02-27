@@ -42,8 +42,10 @@ internal class Module : Interactable
         if (dragging)
         {
             position = input.MousePosVector() + clickOffset;
-            //TODO: turn red if invalid placement
+            
             //TODO: also check for invalid placement
+
+
 
             if(invalidPos)
             {

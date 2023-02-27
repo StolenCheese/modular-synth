@@ -20,7 +20,7 @@ public class ModularSynth : Game
 
     public const int menuBarHeight = 42;
     public const int dividerHeight = 9;
-    public const int RAILNUM = 3;
+    public const int RAILNUM = 2;
 
     Texture2D moduleTexture;
     Texture2D spawnTexture;

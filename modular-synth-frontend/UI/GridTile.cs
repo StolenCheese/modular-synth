@@ -11,4 +11,9 @@ internal class GridTile
 {
     public bool occupied;
     private Rectangle tile;
+
+    public GridTile()
+    {
+        occupied = false;
+    }
 }

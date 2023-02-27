@@ -1,11 +1,12 @@
+#include "sc-controller/ServerSocket.hpp"
+#include "sc-controller/exceptions/UnexpectedBundleException.h"
 
-#include "ServerSocket.hpp"
-
+#include <exception>
 
 osc::ReceivedMessage ServerSocket::Recv()
 {
-	size_t size = 0; 
-		
+	size_t size = 0;
+
 	while ((size = ReceiveFrom(_endpoint, _inBuf.data(), OUTPUT_BUFFER_SIZE)) != -1) {
 
 		osc::ReceivedPacket p(_inBuf.data(), size);
@@ -14,7 +15,7 @@ osc::ReceivedMessage ServerSocket::Recv()
 				return osc::ReceivedMessage(p);
 			}
 			else {
-				throw std::exception("Received bundle when shouldn't");
+				throw UnexpectedBundleException("Received bundle when shouldn't");
 			}
 		}
 		catch (osc::MalformedPacketException& p) {

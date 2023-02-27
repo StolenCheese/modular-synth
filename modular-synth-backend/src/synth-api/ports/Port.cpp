@@ -2,8 +2,8 @@
 // Created by bmsyi on 09/02/2023.
 //
 
-#include "ports/Port.h"
-#include "exception/LinkException.hpp"
+#include "synth-api/ports/Port.h"
+#include "synth-api/exception/LinkException.hpp"
 
 #include <set>
 #include <list>

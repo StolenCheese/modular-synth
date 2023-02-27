@@ -2,7 +2,7 @@
 // compile with: /clr /LD 
 #include <vcclr.h>
 
- #include "SuperColliderController.hpp"
+#include "sc-controller/SuperColliderController.hpp"
 #include <msclr\marshal_cppstd.h>
 #using <System.dll>
  

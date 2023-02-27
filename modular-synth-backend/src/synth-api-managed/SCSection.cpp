@@ -1,8 +1,8 @@
 // wrap_native_class_for_mgd_consumption.cpp
 // compile with: /clr /LD
 #include <vcclr.h>
-#include <Synth.hpp>
-#include <msclr\marshal_cppstd.h>
+#include "sc-controller/Synth.hpp"
+#include <msclr/marshal_cppstd.h>
 #using <System.dll>
 
 using namespace System;

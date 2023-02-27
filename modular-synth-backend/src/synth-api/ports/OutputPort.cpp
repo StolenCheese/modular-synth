@@ -2,7 +2,7 @@
 // Created by bmsyi on 14/02/2023.
 //
 
-#include "ports/OutputPort.h"
+#include "synth-api/ports/OutputPort.h"
 
 namespace synth_api {
     void OutputPort::subscribe(synth_api::Port *other) {

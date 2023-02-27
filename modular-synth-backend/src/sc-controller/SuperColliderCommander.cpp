@@ -1,4 +1,5 @@
-#include "SuperColliderCommander.hpp"  
+#include "sc-controller/SuperColliderCommander.hpp"
+
 SuperColliderCommander::SuperColliderCommander(IpEndpointName endpoint) : ServerSocket(endpoint)
 {
 }

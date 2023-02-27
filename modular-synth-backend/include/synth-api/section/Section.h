@@ -5,9 +5,10 @@
 #ifndef MODULAR_SYNTH_SECTION_H
 #define MODULAR_SYNTH_SECTION_H
 
-#include "ports/InputPort.h"
-#include "ports/OutputPort.h"
-#include "Synth.hpp"
+#include "synth-api/ports/InputPort.h"
+#include "synth-api/ports/OutputPort.h"
+#include "synth-api/section/_model/PortManager.h"
+#include "sc-controller/Synth.hpp"
 #include <map>
 #include <string>
 #include <vector>
@@ -20,6 +21,7 @@ namespace synth_api {
  * (TODO @mp2015: spread knowledge of UI file so we're on the same page about what is actually in it as I'm guessing here)
  */
 class Section {
+    friend class PortManager;
 
 private:
     Synth* synth;
@@ -40,7 +42,9 @@ protected:
      *      std::vector<std::pair<std::string, uint64_t>> outputPortList: Each string is the parameter name for the output port,
      *                   and the uint64_t is the bus number assigned to that output.
      */
-    void generatePortModel(const std::vector<std::pair<std::string, uint64_t>>& inputPortList, const std::vector<std::pair<std::string, uint64_t>>& outputPortList);
+    void generatePortModel(Section& parent,
+                           const std::vector<std::pair<std::string, uint64_t>>& inputPortList,
+                           const std::vector<std::string>& outputPortList);
 
 public:
     /*
@@ -54,8 +58,9 @@ public:
      *
      * Parameters:
      *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
+     *      inputParams: List of parameter names for front-end to use
      */
-    explicit Section(SuperColliderController* s, char* synthdef);
+    Section(char* synthDef, const std::vector<std::string>& inputParams, const std::vector<std::string>& outputParams);
 
     /*
      * Returns the port object for a given parameter, either corresponding to an output or an input.

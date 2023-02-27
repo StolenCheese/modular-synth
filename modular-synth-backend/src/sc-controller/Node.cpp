@@ -1,5 +1,5 @@
-#include "Node.hpp"
-#include "SuperColliderController.hpp"
+#include "sc-controller/Node.hpp"
+#include "sc-controller/SuperColliderController.hpp"
 
 Node::Node( int32_t index) : index(index) {
 

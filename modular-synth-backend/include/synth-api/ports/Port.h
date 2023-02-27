@@ -15,6 +15,7 @@ namespace synth_api {
     class Port {
         friend class LogicalBus;
         friend class Section;
+        friend class PortManager;
     public:
         /*
          * Ports can be bound to each other. This is analogous to a
@@ -65,7 +66,7 @@ namespace synth_api {
         // TODO @bms53: Rename to imply it is bi-directional
         std::set<Port *> outgoingSymbolicLinks;
 
-        explicit Port(const std::list<Port *>::const_iterator identifier) : logicalBus(nullptr), identifier(identifier) {};
+        explicit Port() : logicalBus(nullptr) {};
 
         /*
          * Checks for cycles existing in the tree - these can cause problems
@@ -79,9 +80,6 @@ namespace synth_api {
          */
         virtual void subscribe(Port *) = 0;
         virtual void unsubscribe(Port *) = 0;
-
-    private:
-        std::list<Port *>::const_iterator identifier;
     };
 
 }

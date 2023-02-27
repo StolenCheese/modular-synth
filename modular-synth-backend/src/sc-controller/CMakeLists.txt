@@ -9,6 +9,6 @@ ADD_LIBRARY(servercommander
 target_include_directories(servercommander PUBLIC
                             "${CMAKE_SOURCE_DIR}"
                             "${CMAKE_SOURCE_DIR}/src/sc-controller"
-                          "${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0" 
+                          "${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0"
+                            "${CMAKE_SOURCE_DIR}/include"
                           )
-

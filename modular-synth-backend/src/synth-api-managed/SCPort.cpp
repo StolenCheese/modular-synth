@@ -7,6 +7,8 @@
 
 #using <System.dll>
 
+using namespace System;
+
 namespace SynthAPI {
 
     public ref class SCPort {
@@ -15,6 +17,10 @@ namespace SynthAPI {
 
     public:
         SCPort(synth_api::Port *port) : m_port(port) {};
+
+        /* (Back-end) Important: We do NOT deallocate m_port! That is deallocated by the SECTION, as SCPort is just a temporary wrapper and not something we re-use. 
+        Multiple wrappers may be used for the same port! */
+        ~SCPort() {};
 
         void linkTo(SCPort^ other) {
             try {
@@ -28,6 +34,7 @@ namespace SynthAPI {
             }
         }
 
+
         void removeLink(SCPort^ other) {
             try {
                 this->m_port->linkTo(other->m_port);
@@ -38,6 +45,27 @@ namespace SynthAPI {
             catch (std::exception& e) {
                 throw defaultException(e);
             }
+        }
+
+        void setDefault(Single^ value) {
+            float cppvalue = msclr::interop::marshal_as<float>(value);
+            try {
+                this->m_port->setDefault(cppvalue);
+            }
+            catch (std::exception& e) {
+                throw defaultException(e);
+            }
+        }
+
+        Single^ getValue() {
+            float cppvalue;
+            try {
+                float cppvalue = m_port->getValue();
+            }
+            catch (std::exception& e) {
+                throw defaultException(e);
+            }
+            return gcnew Single(cppvalue);
         }
     };
 }

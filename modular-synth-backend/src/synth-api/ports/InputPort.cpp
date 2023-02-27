@@ -166,7 +166,7 @@ namespace synth_api {
         }
     }
 
-    void InputPort::setDefault(uint64_t value) {
+    void InputPort::setDefault(float value) {
         defaultValue = value;
     }
 

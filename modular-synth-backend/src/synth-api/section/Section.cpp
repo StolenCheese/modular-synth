@@ -8,7 +8,7 @@
 namespace synth_api {
     
     void Section::generatePortModel(Section &parent,
-                                    const std::vector<std::pair<std::string, uint64_t>>& inputPortList,
+                                    const std::vector<std::pair<std::string, float>>& inputPortList,
                                     const std::vector<std::string>& outputPortList) {
 
         for (const auto& p : inputPortList) {
@@ -38,12 +38,10 @@ namespace synth_api {
         return nullptr;
     }
 
-    Section::Section(const char *synthDef) : synth(SuperColliderController::get().InstantiateSynth(std::string(synthDef))) {
+    Section::Section(const char *synthDef) : synth(SuperColliderController::get().InstantiateSynth(std::string(synthDef))), outputPorts(), inputPorts() {
 
-        std::vector<std::pair<std::string, uint64_t>> inputPortSpecification;
+        std::vector<std::pair<std::string, float>> inputPortSpecification;
         std::vector<std::string> outputPortSpecification;
-
-        auto size = synth->controls.size();
 
         for (const auto& key_value_pair : synth->controls) {
             if (key_value_pair.first.rfind("out", 0) == 0) {
@@ -51,10 +49,20 @@ namespace synth_api {
             }
             else {
                 inputPortSpecification.insert(inputPortSpecification.cend(),
-                                              {key_value_pair.first.c_str(), std::get<int>(key_value_pair.second)});
+                                              {key_value_pair.first.c_str(), std::get<float>(key_value_pair.second)});
             }
         }
 
         generatePortModel(*this, inputPortSpecification, outputPortSpecification);
+    }
+
+    Section::~Section() {
+        delete synth;
+        for (const auto& p : outputPorts) {
+            delete p.second;
+        }
+        for (const auto& p : inputPorts) {
+            delete p.second;
+        }
     }
 }

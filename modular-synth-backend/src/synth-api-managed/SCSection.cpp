@@ -1,7 +1,9 @@
 // wrap_native_class_for_mgd_consumption.cpp
 // compile with: /clr /LD0
+#include "synth-api/ports/Port.h"
 #include "synth-api/section/Section.h"
 #include "sc-controller/Synth.hpp"
+#include "SCPort.cpp"
 
 #include <msclr/marshal_cppstd.h>
 #include <vcclr.h>
@@ -19,13 +21,20 @@ namespace SynthAPI {
     private:
         synth_api::Section* m_section;
         array<String^>^ params;
+
+        /* TODO @mp2015: Is this safe in the context of buses? */
+        float GetValueOf(String^ param) {
+            auto s = msclr::interop::marshal_as<std::string>(param);
+            return std::get<float>(m_section->synth->get(s));
+        }
     public:
 
 
         // Allocate the native object on the C++ Heap via a constructor
         SCSection(String^ synthdef)  {
             try {
-                std::string cppsynthdef = msclr::interop::marshal_as<std::string>(synthdef);
+                std::string 
+                    ;
                 m_section = new synth_api::Section(cppsynthdef.c_str());
                 // Generate the synth on the server.
                 // TODO @mp2015: Currently blocking, in future will use a bool valid
@@ -48,6 +57,11 @@ namespace SynthAPI {
             }
         }
 
+        /*
+        FRONT-END: _EXTREMELY_ important that, when you delete an SCSection object, you've already removed all links connecting to its ports! Otherwise you'll get use-after-free.
+        If this is too inconvenient then you'll have to speak to Kofi. (Kofi: OutputPort has heap-allocated LogicalBus, right? You'd need to propagate down a removed LB *before*
+        delete of LB if we want front-end to think less about it)
+        */
         // Deallocate the native object on a destructor
         ~SCSection() {
             delete m_section->synth;
@@ -58,10 +72,19 @@ namespace SynthAPI {
     protected:
         // Deallocate the native object on the finalizer just in case no destructor is called
         !SCSection() {
-            delete m_section->synth;
+            delete m_section;
         }
 
     public:
+
+        SCPort^ getPortFor(String^ param) {
+            auto s = msclr::interop::marshal_as<std::string>(param);
+            synth_api::Port* port = m_section->getPortFor(s);
+            if (port) {
+                return gcnew SCPort(port);
+            }
+            return nullptr;
+        }
 
         //Currently a null check, in future will also show if the node exists on the server yet
         bool Valid() {
@@ -71,11 +94,6 @@ namespace SynthAPI {
         void Set(String^ param, float value) {
             auto s = msclr::interop::marshal_as<std::string>(param);
             m_section->synth->set(s, value);
-        }       
-
-        float Get(String^ param) {
-            auto s = msclr::interop::marshal_as<std::string>(param);
-            return std::get<float>(m_section->synth->get(s));
         }
 
         property array<String^>^ controls {

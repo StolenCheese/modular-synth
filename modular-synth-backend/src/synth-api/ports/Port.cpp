@@ -79,4 +79,12 @@ namespace synth_api {
     void Port::symbolicLinkTo(Port *other) {
         outgoingSymbolicLinks.insert(other);
     }
+
+    void Port::setDefault(float value) {
+        throw std::runtime_error("Cannot set default value of non-InputPort!");
+    }
+
+    float Port::getValue() {
+        return 100;
+    }
 }

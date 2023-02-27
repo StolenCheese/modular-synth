@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <list>
 #include <set>
+#include <stdexcept>
 
 namespace synth_api {
 
@@ -53,6 +54,17 @@ namespace synth_api {
          *      Port other: Port to connect to
          */
         void symbolicLinkTo(Port *other);
+
+        /*
+         * Sets the default value of the port if the port is an InputPort
+         */
+        virtual void setDefault(float value);
+
+        /*
+         * Returns the value in the bus of this port
+         * TODO @mp2015 || @ksw40: Implement this in relevant subclasses
+         */
+        virtual float getValue();
 
     protected:
 

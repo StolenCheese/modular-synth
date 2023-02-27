@@ -34,7 +34,7 @@ protected:
      *                   and the uint64_t is the bus number assigned to that output.
      */
     void generatePortModel(Section& parent,
-                           const std::vector<std::pair<std::string, uint64_t>>& inputPortList,
+                           const std::vector<std::pair<std::string, float>>& inputPortList,
                            const std::vector<std::string>& outputPortList);
 
 public:
@@ -51,17 +51,13 @@ public:
     /*
      * Generates a Section object from a given section definition file.
      *
-     * TODO (@bms53 || @ksw40) && @mp2015: Currently, this just outputs a standard _model with three inputs and two outputs.
-     *  We need actual parsing, not this random nonsense that's here currently!
-     *
-     * NOTE @jw2190: This should be suitable for testing. You can mess around with the dummy section I've set up
-     * as the filepath parameter is arbitrary.
-     *
      * Parameters:
      *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
      *      inputParams: List of parameter names for front-end to use
      */
     explicit Section(const char* synthDef);
+
+    ~Section();
 
     /*
      * Returns the port object for a given parameter, either corresponding to an output or an input.

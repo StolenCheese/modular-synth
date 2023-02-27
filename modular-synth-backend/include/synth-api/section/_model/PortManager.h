@@ -26,7 +26,7 @@ namespace synth_api {
         Port* out;
 
         // TODO @bms53: Make these thread safe with locks!
-        static InputPort* getNewInputPort(Section *parent, uint64_t defaultValue);
+        static InputPort* getNewInputPort(Section *parent, float defaultValue);
         static OutputPort* getNewOutputPort(Section *parent);
 
         /*

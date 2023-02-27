@@ -38,16 +38,23 @@ namespace synth_api {
         return nullptr;
     }
 
-    Section::Section(char *synthDef, const std::vector<std::string>& inputParams,
-                     const std::vector<std::string>& outputParams
-                     ) : synth(SuperColliderController::get().InstantiateSynth(std::string(synthDef))) {
+    Section::Section(const char *synthDef) : synth(SuperColliderController::get().InstantiateSynth(std::string(synthDef))) {
 
         std::vector<std::pair<std::string, uint64_t>> inputPortSpecification;
+        std::vector<std::string> outputPortSpecification;
 
-        for (const std::string& param : inputParams) {
-            inputPortSpecification.insert(inputPortSpecification.cend(), {param, 0});
+        auto size = synth->controls.size();
+
+        for (const auto& key_value_pair : synth->controls) {
+            if (key_value_pair.first.rfind("out", 0) == 0) {
+                outputPortSpecification.insert(outputPortSpecification.cend(), key_value_pair.first.c_str());
+            }
+            else {
+                inputPortSpecification.insert(inputPortSpecification.cend(),
+                                              {key_value_pair.first.c_str(), std::get<int>(key_value_pair.second)});
+            }
         }
 
-        generatePortModel(*this, inputPortSpecification, outputParams);
+        generatePortModel(*this, inputPortSpecification, outputPortSpecification);
     }
 }

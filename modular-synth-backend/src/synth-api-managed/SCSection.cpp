@@ -1,8 +1,11 @@
 // wrap_native_class_for_mgd_consumption.cpp
-// compile with: /clr /LD
-#include <vcclr.h>
+// compile with: /clr /LD0
+#include "synth-api/section/Section.h"
 #include "sc-controller/Synth.hpp"
+
 #include <msclr/marshal_cppstd.h>
+#include <vcclr.h>
+
 #using <System.dll>
 
 using namespace System;
@@ -14,27 +17,27 @@ namespace SynthAPI {
 
     public ref class SCSection {
     private:
-        array< String^ >^ params;
-        Synth* m_Impl;
+        synth_api::Section* m_section;
+        array<String^>^ params;
     public:
 
 
         // Allocate the native object on the C++ Heap via a constructor
-        SCSection(String^ synthdef)   {
+        SCSection(String^ synthdef)  {
             try {
-                //Generate the synth on the server.
-                //Currently blocking, in future will use a bool valid
-                m_Impl = SuperColliderController::get().InstantiateSynth(msclr::interop::marshal_as<std::string>(synthdef));
-                auto size = m_Impl->controls.size();
+                std::string cppsynthdef = msclr::interop::marshal_as<std::string>(synthdef);
+                m_section = new synth_api::Section(cppsynthdef.c_str());
+                // Generate the synth on the server.
+                // TODO @mp2015: Currently blocking, in future will use a bool valid
+                auto size = m_section->synth->controls.size();
                  params = gcnew array< String^ >(size);
                 int i = 0;
 
                 // Cache the params of the function locally, to save lots of re-generating of strings
        
-                for (auto it = m_Impl->controls.begin(); it != m_Impl->controls.end(); ++it) {
+                for (auto it = m_section->synth->controls.begin(); it != m_section->synth->controls.end(); ++it) {
                     params[i] = gcnew String(it->first.c_str());
-
-                    i++;
+                    ++i;
                 }
                  
 
@@ -47,47 +50,46 @@ namespace SynthAPI {
 
         // Deallocate the native object on a destructor
         ~SCSection() {
-            delete m_Impl;
+            delete m_section->synth;
+            // TODO: Delete section, implement section destructor
+            // implement port destructor too
         }
 
     protected:
         // Deallocate the native object on the finalizer just in case no destructor is called
         !SCSection() {
-            delete m_Impl;
+            delete m_section->synth;
         }
 
     public:
 
         //Currently a null check, in future will also show if the node exists on the server yet
         bool Valid() {
-            return m_Impl != nullptr;
+            return m_section->synth != nullptr;
         }
 
-        //This all works with the old model, but without any wire attachments its pretty much useless
         void Set(String^ param, float value) {
             auto s = msclr::interop::marshal_as<std::string>(param);
-            m_Impl->set(s, value);
+            m_section->synth->set(s, value);
         }       
 
         float Get(String^ param) {
             auto s = msclr::interop::marshal_as<std::string>(param);
-            return std::get<float>(m_Impl->get(s));
+            return std::get<float>(m_section->synth->get(s));
         }
 
-        property array<String^>^  controls {
+        property array<String^>^ controls {
             
             array<String^>^ get(){ return params; }
          
         }
 
         property int index {
-
-            int get() { return m_Impl->index; }
-
+            int get() { return m_section->synth->index; }
         }
 
         void Run(bool run) {
-            m_Impl->Run(run);
+            m_section->synth->Run(run);
         }
 
     };

@@ -19,7 +19,7 @@ class SuperColliderController : public SuperColliderCommander {
     Bus outL = Bus(this, 0);
     Bus outR = Bus(this, 1);
     Bus inL = Bus(this, 2);
-    Bus inR = Bus( this,3 );
+    Bus inR = Bus(this, 3);
 
 
     SuperColliderController(const SuperColliderController&) = delete;
@@ -29,7 +29,7 @@ class SuperColliderController : public SuperColliderCommander {
 
 public:
 
-     Group root{  0 };
+     Group root{ 0 };
 
 
      static void Connect(IpEndpointName endpoint);
@@ -41,7 +41,7 @@ public:
     // Create a synth from a synthdef
     // Will return when Synth class has been fully populated, as apparently the port mechanism requires
     // all parameters to be known in advance
-    Synth* InstantiateSynth(const std::string& synthdef);
+    Synth *InstantiateSynth(const std::string& synthdef);
 
     // Create new bus with no listeners or sources
     // Represents a supercollider control or audio bus
@@ -49,6 +49,6 @@ public:
 
     //Synconsize a group to the server
     // Will instanciate any new synths or buses found
-    void SyncGroup( Group * g);
+    void SyncGroup(Group * g);
      
 };

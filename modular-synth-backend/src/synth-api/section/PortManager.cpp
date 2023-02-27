@@ -3,15 +3,14 @@
 //
 
 #include "synth-api/section/_model/PortManager.h"
-
-#include "synth-api/ports/InputPort.h"
-#include "synth-api/ports/OutputPort.h"
 #include "synth-api/section/Section.h"
 
 #include <unordered_map>
 #include <list>
 
 namespace synth_api {
+    std::unordered_map<Port*, Section*> PortManager::parentMap = std::unordered_map<Port*, Section*>();
+
     InputPort *PortManager::getNewInputPort(Section *parent, uint64_t defaultValue) {
         auto * inp = new InputPort(defaultValue, Rate::control);
         parentMap[inp] = parent;

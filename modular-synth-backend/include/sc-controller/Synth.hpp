@@ -1,11 +1,10 @@
-class Synth;
-
 #pragma once
 
 #include "sc-controller/Bus.hpp"
 #include "sc-controller/Node.hpp"
-#include "sc-controller/SuperColliderController.hpp"
+
 #include <map>
+#include <variant>
 
 class Synth : public Node {
     friend class SuperColliderController;
@@ -32,5 +31,5 @@ public:
     void set(const std::string& param, const Bus& v);
 
     // DO NOT WRITE TO THIS, IT WON'T WORK, just to be looked at
-    std::map<std::string, std::variant<int, float, Bus>> controls{};
+    std::map<std::string, std::variant<int, float, Bus>> controls;
 };

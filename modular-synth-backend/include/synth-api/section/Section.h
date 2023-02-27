@@ -9,6 +9,7 @@
 #include "synth-api/ports/OutputPort.h"
 #include "synth-api/section/_model/PortManager.h"
 #include "sc-controller/Synth.hpp"
+
 #include <map>
 #include <string>
 #include <vector>
@@ -16,22 +17,12 @@
 namespace synth_api {
 
 /*
- * Use this to model a section on a modular synth.
+ * Use this to _model a section on a modular synth.
  * You can query for specific ports via parameters, which will be defined in section definition file
  * (TODO @mp2015: spread knowledge of UI file so we're on the same page about what is actually in it as I'm guessing here)
  */
 class Section {
     friend class PortManager;
-
-private:
-    Synth* synth;
-
-    // Mapping of parameter name to corresponding Output that provides it
-    // Parameter names kept as a convenience to programmers
-    std::map<std::string, OutputPort*> outputPorts;
-
-    // Mapping of parameter name to Input that links to it
-    std::map<std::string, InputPort*> inputPorts;
 
 protected:
     /*
@@ -47,10 +38,20 @@ protected:
                            const std::vector<std::string>& outputPortList);
 
 public:
+
+    Synth* synth;
+
+    // Mapping of parameter name to corresponding Output that provides it
+    // Parameter names kept as a convenience to programmers
+    std::map<std::string, OutputPort*> outputPorts;
+
+    // Mapping of parameter name to Input that links to it
+    std::map<std::string, InputPort*> inputPorts;
+    
     /*
      * Generates a Section object from a given section definition file.
      *
-     * TODO (@bms53 || @ksw40) && @mp2015: Currently, this just outputs a standard model with three inputs and two outputs.
+     * TODO (@bms53 || @ksw40) && @mp2015: Currently, this just outputs a standard _model with three inputs and two outputs.
      *  We need actual parsing, not this random nonsense that's here currently!
      *
      * NOTE @jw2190: This should be suitable for testing. You can mess around with the dummy section I've set up
@@ -60,7 +61,7 @@ public:
      *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
      *      inputParams: List of parameter names for front-end to use
      */
-    Section(char* synthDef, const std::vector<std::string>& inputParams, const std::vector<std::string>& outputParams);
+    explicit Section(const char* synthDef);
 
     /*
      * Returns the port object for a given parameter, either corresponding to an output or an input.

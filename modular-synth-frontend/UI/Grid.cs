@@ -125,16 +125,21 @@ internal class Grid
     {
         return gridTiles[new Vector2(x, y)].occupied;
     } 
-    
-    /*
+   
     public bool AreTilesOccupied(Vector2 corner, int width)
     {
-        Vector2 leftCornerPlacement = GetNearestRightEdgeTileSnap(corner);
-        for(int i = 0; i < width; i++) { 
-            
+        //Assumes that tiles are going from top of rail (correct if used correctly)
+        corner = ScreenToWorldCoords(corner);
+
+        for(int i = 0; i < width; i++) {
+            //Assuming all modules are the same height (an invariant we established already - this should work)
+            if (IsTileOccupied((int)corner.X + i, (int)corner.Y))
+            {
+                return true;
+            }
         }
+        return false;
     }
-    */
 
     public void OccupyTiles(int width, Vector2 topLeftCorner)
     {
@@ -177,6 +182,13 @@ internal class Grid
         //TODO: Add some knowledge of offset from base screen pos from Modular Synth script
 
         int x = (int)Math.Round(screenCoords.X / gridSideLength);
+        if(x < 0)
+        {
+            x = 0;
+        }
+        else if(x > cols){
+            x = cols - 8;
+        }
 
         int rail = (int)Math.Round((screenCoords.Y - ModularSynth.menuBarHeight) / railHeight);
 

@@ -1,0 +1,60 @@
+{
+  "OscFreqDial": {
+    "XPos": "10",
+    "YPos": "0",
+    "Style": "Dial1",
+    "Colour": "Black",
+    "Size": "20",
+    "ParameterID": "freq"
+  },
+  "FineTuneDial": {
+    "XPos": "30",
+    "YPos": "0",
+    "Style": "Dial2",
+    "Colour": "Black",
+    "Size": "15",
+    "ParameterID": "finetune"
+  },
+  "FmCvDial": {
+    "XPos": "10",
+    "YPos": "30",
+    "Style": "Dial2",
+    "Colour": "Black",
+    "Size": "15",
+    "ParameterID": "FmCv"
+  },
+  "VoltageWireInput": {
+    "XPos": "25",
+    "YPos": "20",
+    "Style": "Wire1",
+    "Colour": "Grey",
+    "ParameterID": "Voltage"
+  },
+  "SquareWaveWireOutput": {
+    "XPos": "35",
+    "YPos": "20",
+    "Style": "Wire1",
+    "Colour": "Grey",
+    "ParameterID": "SquareWave"
+  },
+  "SineWaveWireOutput": {
+    "XPos": "25",
+    "YPos": "30",
+    "Style": "Wire1",
+    "Colour": "Grey",
+    "ParameterID": "SineWave"
+  },
+  "SawWaveWireOutput": {
+    "XPos": "35",
+    "YPos": "30",
+    "Style": "Wire1",
+    "Colour": "Grey",
+    "ParameterID": "SawWave"
+  },
+  "Background": {
+    "Image": "bg1",
+    "XSize": "40",
+    "YSize": "40",
+    "ParameterID": "Background"
+  }
+}

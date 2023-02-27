@@ -1,6 +1,7 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
-
+#include<string>
+#include<iostream>
 //#define MyFunctions ; //macro. Tells the compiler that it is exportable
 #if defined(_MSC_VER)
     //  Microsoft 
@@ -10,9 +11,18 @@
 #define EXPORT __attribute__((visibility("default")))
 #endif
 extern "C" {
+
     EXPORT int addNumbers(int a, int b)
     {
         return a + b;
+    }
+
+    EXPORT int stringInputTest(const char* param)
+    {
+        if(strlen(param)>4){
+            return 1;
+        }
+        else return 0;
     }
 }
 

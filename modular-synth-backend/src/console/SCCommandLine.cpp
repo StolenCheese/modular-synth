@@ -44,14 +44,16 @@ int main(int argc, char* argv[])
     std::cout << "Version:" << std::endl;
     std::cout << server.version().AddressPattern() << std::endl;
 
-    auto s1 = server.InstantiateSynth("sin-kr");
+    auto s1 = server.InstantiateSynth("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\sin-kr.scsyndef");
 
     std::cout << *s1 << std::endl;
 
-    auto s2 = server.InstantiateSynth("sin-ar");
+    auto s2 = server.InstantiateSynth("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\sin-ar.scsyndef");
 
 
     std::cout << *s2 << std::endl;
+
+    auto s3 = server.InstantiateSynth("A:\\Documents\\synth\\midi\\Megalovania.mid");
 
     auto b = server.InstantiateBus();
  

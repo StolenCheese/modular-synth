@@ -22,6 +22,7 @@ internal class Module : Interactable
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2,250),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7));
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2-50,this.sprite.Height/2-50),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7,true));
         components.Add(new Dial(pos, new Vector2(this.sprite.Width/2+50,this.sprite.Height/2-50),Dial.indicator1,Dial.dial1,Color.White,"",0.7,0.7));
+        components.Add(new Port(pos, new Vector2(this.sprite.Width/2,300),Port.port1,Color.White,"",true));
 
         addToEtyMgr();
     }

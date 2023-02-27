@@ -1,4 +1,5 @@
 #include "sc-controller/SuperColliderController.hpp"
+#include "sc-controller/MidiSynth.hpp"
 #include "include/sc-controller/exceptions/UninitializedConnectionException.h"
 #include <fstream>
 #include <map>
@@ -35,10 +36,10 @@ void SuperColliderController::Connect(IpEndpointName endpoint)
 
 SuperColliderController& SuperColliderController::get()
 {
-    if (s == nullptr) {
-        throw std::exception("Invalid connection to supercollider server");
-    }
-    return *s;
+	if (s == nullptr) {
+		throw std::exception("Invalid connection to supercollider server");
+	}
+	return *s;
 }
 
 Synth* SuperColliderController::InstantiateSynth(const std::string& source)
@@ -56,7 +57,7 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& source)
 
 	if (file_type == ".scsyndef") {
 
-		auto synthdef = source.substr(slash+1, dot - slash-1);
+		auto synthdef = source.substr(slash + 1, dot - slash - 1);
 
 
 		//Find a free node id
@@ -68,9 +69,8 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& source)
 		if (!loaded_synthdefs.count(source)) {
 			std::cout << "Loading for the first time" << std::endl;
 
-        std::ifstream def;
-        auto f = "A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + synthdef + ".scsyndef";
-        def.open(f);
+			std::ifstream def;
+			def.open(source);
 
 			if (def) {
 
@@ -86,16 +86,16 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& source)
 				completion.s_new(synthdef, id, 0, 0, {});
 
 				auto m = d_recv(str, completion);
-				 
+
 
 				def.close();
 
 			}
-			else  {
+			else {
 				std::cout << "Could not open " << source << std::endl;
 			}
 		}
-		else if (file_type == ".midi") {
+		else{
 			std::cout << "Already loaded" << std::endl;
 			s_new(synthdef, id, 0, 0, {});
 		}
@@ -104,9 +104,9 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& source)
 
 		return static_cast<Synth*>(root.subtree[id]);
 	}
-	else {
+	else  if (file_type == ".mid") {
 		std::cout << "Loading midi" << std::endl;
-		return nullptr;
+		return static_cast<Synth*>(new MidiSynth(source));
 	}
 }
 

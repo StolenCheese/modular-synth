@@ -4,7 +4,7 @@ set(project_name synth-api-managed)
 add_library(${project_name} SHARED
 	"SCController.cpp" 
 	"SCSection.cpp" 
-	"SCPort.cpp")
+	"SCPort.cpp"  "ManagedLinkException.cpp")
 
 target_link_libraries(${project_name} PUBLIC  oscpack)
 target_link_libraries(${project_name} PUBLIC  servercommander)

@@ -18,7 +18,7 @@ namespace synth_api {
     class PortManager {
     private:
         enum Stage {OnStack, Explored};
-        static std::unordered_map<Port *, Section *> parentMap;
+        static std::unordered_map<Port*, Section*> parentMap;
 
     public:
         Port* in;
@@ -26,7 +26,7 @@ namespace synth_api {
         Port* out;
 
         // TODO @bms53: Make these thread safe with locks!
-        static InputPort* getNewInputPort(Section *parent, uint64_t defaultValue);
+        static InputPort* getNewInputPort(Section *parent, float defaultValue);
         static OutputPort* getNewOutputPort(Section *parent);
 
         /*

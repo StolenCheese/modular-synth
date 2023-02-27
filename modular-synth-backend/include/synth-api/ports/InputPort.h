@@ -21,7 +21,7 @@ namespace synth_api {
     private:
         uint16_t audioRateRequirement;
         Port *controller;
-        uint64_t defaultValue;
+        float defaultValue;
 
         /*
          * Makes this port a root controller.
@@ -69,12 +69,12 @@ namespace synth_api {
     public:
         const Rate rate;
 
-        explicit InputPort(uint64_t defaultValue, Rate rate) : controller(nullptr), defaultValue(defaultValue), rate(rate), audioRateRequirement(0) {
+        explicit InputPort(float defaultValue, Rate rate) : controller(nullptr), defaultValue(defaultValue), rate(rate), audioRateRequirement(0) {
             subscribers = std::set<InputPort *>();
         };
         void linkTo(Port *other) override;
         void removeLink(Port *other) override;
-        void setDefault(uint64_t value);
+        void setDefault(float value) override;
     };
 
 }

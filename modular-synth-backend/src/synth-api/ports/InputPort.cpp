@@ -12,7 +12,7 @@
 
 namespace synth_api {
     void InputPort::linkTo(Port *other) {
-        // IMPORTANT NOTE: Our model stores links with *directionality*
+        // IMPORTANT NOTE: Our _model stores links with *directionality*
         // So the DIRECTION of linkage (this->Port::linkTo(other) and other->Port::linkTo(this)) is important!
 
         // Before we mess with controllers, we check for cycles.
@@ -166,7 +166,7 @@ namespace synth_api {
         }
     }
 
-    void InputPort::setDefault(uint64_t value) {
+    void InputPort::setDefault(float value) {
         defaultValue = value;
     }
 

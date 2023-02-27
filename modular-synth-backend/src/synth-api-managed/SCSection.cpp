@@ -1,98 +1,119 @@
 // wrap_native_class_for_mgd_consumption.cpp
-// compile with: /clr /LD
-#include <vcclr.h>
+// compile with: /clr /LD0
+#include "SCPort.cpp"
 #include "sc-controller/Synth.hpp"
+#include "synth-api/ports/Port.h"
+#include "synth-api/section/Section.h"
+
 #include <msclr/marshal_cppstd.h>
-#using <System.dll>
+#include <vcclr.h>
+
+#using < System.dll>
 
 using namespace System;
 
-//ATM this "Section" uses the lower level synth abstraction
-// Needs to be changed to the port model, this is a proof of concept
+// ATM this "Section" uses the lower level synth abstraction
+//  Needs to be changed to the port model, this is a proof of concept
 
 namespace SynthAPI {
-    ///<summary> 
-    ///A SuperCollider Section representation, linked to a synth node on the server
-    ///</summary> 
-    public ref class SCSection {
-    private:
-        array< String^ >^ params;
-        Synth* m_Impl;
-    public:
+///< summary>
+/// A SuperCollider Section representation, linked to a synth node on the server
+///</summary>
+public
+ref class SCSection {
+private:
+    synth_api::Section* m_section;
+    array<String ^> ^ params;
 
+    /* TODO @mp2015: Is this safe in the context of buses? */
+    float GetValueOf(String ^ param)
+    {
+        auto s = msclr::interop::marshal_as<std::string>(param);
+        return std::get<float>(m_section->synth->get(s));
+    }
 
-        ///<summary> 
-        ///Allocate the native object on the C++ Heap via a constructor 
-        ///</summary>
-        SCSection(String^ synthdef)   {
-            try {
-                //Generate the synth on the server.
-                //Currently blocking, in future will use a bool valid
-                m_Impl = SuperColliderController::get().InstantiateSynth(msclr::interop::marshal_as<std::string>(synthdef));
-                auto size = m_Impl->controls.size();
-                 params = gcnew array< String^ >(size);
-                int i = 0;
+public:
+    ///< summary>
+    /// Allocate the native object on the C++ Heap via a constructor
+    ///</summary>
+    SCSection(String ^ synthdef)
+    {
+        try {
+            std::string cppsynthdef = msclr::interop::marshal_as<std::string>(synthdef);
+            m_section = new synth_api::Section(cppsynthdef.c_str());
+            // Generate the synth on the server.
+            // TODO @mp2015: Currently blocking, in future will use a bool valid
+            auto size = m_section->synth->controls.size();
+            params = gcnew array<String ^>(size);
+            int i = 0;
 
-                // Cache the params of the function locally, to save lots of re-generating of strings
-       
-                for (auto it = m_Impl->controls.begin(); it != m_Impl->controls.end(); ++it) {
-                    params[i] = gcnew String(it->first.c_str());
+            // Cache the params of the function locally, to save lots of re-generating of strings
 
-                    i++;
-                }
-                 
-
+            for (auto it = m_section->synth->controls.begin(); it != m_section->synth->controls.end(); ++it) {
+                params[i] = gcnew String(it->first.c_str());
+                ++i;
             }
-            catch (std::exception& ex) {
-                //standard conversion from native to managed exception
-                throw gcnew System::Exception(gcnew System::String(ex.what()));
-            }
+
+        } catch (std::exception& ex) {
+            // standard conversion from native to managed exception
+            throw gcnew System::Exception(gcnew System::String(ex.what()));
         }
+    }
 
-        // Deallocate the native object on a destructor
-        ~SCSection() {
-            delete m_Impl;
+    /*
+    FRONT-END: _EXTREMELY_ important that, when you delete an SCSection object, you've already removed all links connecting to its ports! Otherwise you'll get use-after-free.
+    If this is too inconvenient then you'll have to speak to Kofi. (Kofi: OutputPort has heap-allocated LogicalBus, right? You'd need to propagate down a removed LB *before*
+    delete of LB if we want front-end to think less about it)
+    */
+    // Deallocate the native object on a destructor
+    ~SCSection()
+    {
+        delete m_section->synth;
+        // TODO: Delete section, implement section destructor
+        // implement port destructor too
+    }
+
+protected:
+    // Deallocate the native object on the finalizer just in case no destructor is called
+    !SCSection()
+    {
+        delete m_section;
+    }
+
+public:
+    SCPort ^ getPortFor(String ^ param) {
+        auto s = msclr::interop::marshal_as<std::string>(param);
+        synth_api::Port* port = m_section->getPortFor(s);
+        if (port) {
+            return gcnew SCPort(port);
         }
+        return nullptr;
+    }
 
-    protected:
-        // Deallocate the native object on the finalizer just in case no destructor is called
-        !SCSection() {
-            delete m_Impl;
-        }
+        // Currently a null check, in future will also show if the node exists on the server yet
+        bool Valid()
+    {
+        return m_section->synth != nullptr;
+    }
 
-    public:
+    void Set(String ^ param, float value)
+    {
+        auto s = msclr::interop::marshal_as<std::string>(param);
+        m_section->synth->set(s, value);
+    }
 
-        //Currently a null check, in future will also show if the node exists on the server yet
-        bool Valid() {
-            return m_Impl != nullptr;
-        }
+    property array<String ^> ^ controls {
+        array<String ^> ^ get() { return params; }
+    }
 
-        //This all works with the old model, but without any wire attachments its pretty much useless
-        void Set(String^ param, float value) {
-            auto s = msclr::interop::marshal_as<std::string>(param);
-            m_Impl->set(s, value);
-        }       
+        property int index
+    {
+        int get() { return m_section->synth->index; }
+    }
 
-        float Get(String^ param) {
-            auto s = msclr::interop::marshal_as<std::string>(param);
-            return std::get<float>(m_Impl->get(s));
-        }
-
-        property array<String^>^  controls {
-            
-            array<String^>^ get(){ return params; }
-         
-        }
-
-        property int index {
-
-            int get() { return m_Impl->index; }
-
-        }
-
-        void Run(bool run) {
-            m_Impl->Run(run);
-        }
-
-    };
+    void Run(bool run)
+    {
+        m_section->synth->Run(run);
+    }
+};
 }

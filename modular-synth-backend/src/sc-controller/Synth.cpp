@@ -1,4 +1,5 @@
 #include "sc-controller/Synth.hpp"
+#include "sc-controller/SuperColliderController.hpp"
 
 Synth::Synth( int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls)
     : Node( index)

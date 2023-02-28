@@ -3,6 +3,7 @@
 //
 
 #include "synth-api/ports/OutputPort.h"
+#include "synth-api/exception/LinkException.hpp"
 
 namespace synth_api {
     void OutputPort::subscribe(synth_api::Port *other) {
@@ -16,6 +17,17 @@ namespace synth_api {
         auto loc = subscribers.find(otherAsInput);
         if (loc != subscribers.cend()) {
             subscribers.erase(otherAsInput);
+        }
+    }
+
+    void OutputPort::linkTo(Port *other) {
+        Port* otherCopy(other);
+        if (dynamic_cast<OutputPort *>(otherCopy) != nullptr) {
+            throw OutputToOutputException((char *) "Cannot connect two outputs directly!", *this, *other);
+        } else if (dynamic_cast<InputPort *>(other)) {
+                other->linkTo(this);
+        } else {
+            throw FatalOutputControllerException((char *) "Cannot link a port to a null pointer!");
         }
     }
 }

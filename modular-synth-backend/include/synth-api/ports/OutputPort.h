@@ -26,6 +26,7 @@ namespace synth_api {
             subscribers = std::set<InputPort *>();
             logicalBus = new LogicalBus(this);
         };
+        void linkTo(Port* other) override;
     };
 }
 #endif //MODULAR_SYNTH_OUTPUTPORT_H

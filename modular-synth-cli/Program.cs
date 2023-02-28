@@ -30,12 +30,17 @@ while (true)
 			break;
 
 		case ["get", String sid, String param]:
-			Console.WriteLine(synths[int.Parse(sid)].Get(param));
+			//Console.WriteLine(synths[int.Parse(sid)].Get(param));
 
 			break;
 
 		case ["set", String sid, String param, String v]:
 			synths[int.Parse(sid)].Set(param, float.Parse(v));
+
+			break;
+
+		case ["connect", String sidSrc, String sidDst, String srcParam, String dstParam]:
+			synths[int.Parse(sidSrc)].getPortFor(srcParam).linkTo(synths[int.Parse(sidDst)].getPortFor(dstParam));
 
 			break;
 	};

@@ -75,6 +75,8 @@ namespace synth_api {
         void linkTo(Port *other) override;
         void removeLink(Port *other) override;
         void setDefault(float value) override;
+
+        ~InputPort() override;
     };
 
 }

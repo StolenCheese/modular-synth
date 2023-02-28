@@ -88,4 +88,10 @@ namespace synth_api {
     float Port::getValue() {
         return 100;
     }
+
+    Port::~Port() {
+        for (const auto &p : outgoingConnections) {
+            Port::removeLink(p);
+        }
+    };
 }

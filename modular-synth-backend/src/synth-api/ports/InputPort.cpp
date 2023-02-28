@@ -198,4 +198,10 @@ namespace synth_api {
         this->logicalBus->removeListener(this);
         this->logicalBus = nullptr;
     }
+
+    InputPort::~InputPort() {
+        for (const auto &p : outgoingConnections) {
+            InputPort::removeLink(p);
+        }
+    }
 } // synth-api

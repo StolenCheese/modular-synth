@@ -66,6 +66,8 @@ namespace synth_api {
          */
         virtual float getValue();
 
+        virtual ~Port();
+
     protected:
 
         explicit Port() : logicalBus(nullptr) {};

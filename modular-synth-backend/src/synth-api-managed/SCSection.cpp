@@ -55,12 +55,7 @@ namespace SynthAPI {
                 throw gcnew System::Exception(gcnew System::String(ex.what()));
             }
         }
-
-        /*
-        FRONT-END: _EXTREMELY_ important that, when you delete an SCSection object, you've already removed all links connecting to its ports! Otherwise you'll get use-after-free.
-        If this is too inconvenient then you'll have to speak to Kofi. (Kofi: OutputPort has heap-allocated LogicalBus, right? You'd need to propagate down a removed LB *before*
-        delete of LB if we want front-end to think less about it)
-        */
+        
         // Deallocate the native object on a destructor
         ~SCSection() {
             delete m_section->synth;

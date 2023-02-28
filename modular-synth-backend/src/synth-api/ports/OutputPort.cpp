@@ -30,4 +30,11 @@ namespace synth_api {
             throw FatalOutputControllerException((char *) "Cannot link a port to a null pointer!");
         }
     }
+
+    OutputPort::~OutputPort() {
+        for (const auto &p : outgoingConnections) {
+            Port::removeLink(p);
+        }
+        delete logicalBus;
+    }
 }

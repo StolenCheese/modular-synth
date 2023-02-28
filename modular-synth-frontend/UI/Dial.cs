@@ -85,7 +85,7 @@ internal class Dial : Component
         return r;
     }
 
-    public override void Update(){    
+    public override void Update(){ 
         this.position = modulePos + moduleLocalPos; 
         if (boundingBox.Contains(input.MousePosition()))
         {

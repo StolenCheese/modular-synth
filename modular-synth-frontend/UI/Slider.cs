@@ -25,7 +25,6 @@ internal class Slider : Component
     public Slider(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, String ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false) : base(modulePos, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
     { 
         this.track = new Component(modulePos, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
-
         if(vertical){
             maxSliderOffset = track.height/2;
             minSliderOffset = -track.height/2;

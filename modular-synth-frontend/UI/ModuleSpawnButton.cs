@@ -21,7 +21,7 @@ internal class ModuleSpawnButton : Interactable
 
     public Module Spawn()
     {
-        return new Module(moduleSprite, input.MousePosVector(),_spriteBatch); //TODO: spawn mouse on middle of sprite not on top (so set some kind of centre position on the module class defintion or something)
+        return new Module(moduleSprite, input.MousePosVector()); //TODO: spawn mouse on middle of sprite not on top (so set some kind of centre position on the module class defintion or something)
     }
 
     public override void Update()

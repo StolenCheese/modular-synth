@@ -23,7 +23,8 @@ internal class Port : Component
     private Wire outGoingWire;
     private Wire inComingWire;
 
-    private bool wireMade = false;
+    private bool wireIpLinked = false;
+    private bool wireOpLinked = false;
 
     public Port(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID,bool isInput, double scale=1) : base(modulePos, moduleLocalPos, sprite, col, ParameterID,scale)
     { 
@@ -53,10 +54,6 @@ internal class Port : Component
     //temporary fix to problem with adding wire to entity manager
     public override void Draw(SpriteBatch spriteBatch){
         base.Draw(spriteBatch);
-
-        if(this.outGoingWire != null){
-            this.outGoingWire.Draw(spriteBatch);
-        }
     } 
 
     public override void Update(){    
@@ -71,39 +68,41 @@ internal class Port : Component
                 clickOffset = position - input.MousePosVector();
 
                 //Create/toggle visibility of wire if we click on the port
-                if(!wireMade){
+                if(!wireIpLinked){
 
                     //Placeholder args here for now
                     this.outGoingWire = new Wire(modulePos,moduleLocalPos,sprite,Color.White,"",0.1);
+                    wireIpLinked = true;
                     
                     //For some reason this crashes the entity manager. TODO: find out why
                     //this.outGoingWire.addComponentToEtyMgr();
                     
-                    
                     //We are using the isInteracting bool on wires to check if they are currently being dragged
                     outGoingWire.isInteracting = true;
                     
-                } else{
-
+                } else if(outGoingWire!=null){
+                    //Don't make another wire if we made one already. Just make it visible
                     this.outGoingWire.visible=true;
 
                 }
-            }  else if(input.LeftMouseClickUp()&&!dragging){
                 //If we aren't dragging a wire then we may have a wire about to be connected to us
+            }  else if(input.LeftMouseClickUp()&&!dragging&&!wireOpLinked){
                 this.inComingWire = getDraggedWire();
-                if(this.inComingWire != null){
+
+                if(this.inComingWire != null&&(isInput||!wireIpLinked)){
+                    Console.WriteLine("--------------{0}----------------",dragging);
+                    wireOpLinked = true;
                     inComingWire.isConnected = true;
                     inComingWire.isInteracting = false;
                 }
-            
-                }
+            }
         }else{
             this.isInteracting=false;
         }
 
         if (dragging){
+            //Console.WriteLine("drag");
             this.isInteracting=true;
-
             if(!this.outGoingWire.isConnected){
                 this.outGoingWire.wireEndPosition = input.MousePosVector() + clickOffset;
 
@@ -125,7 +124,6 @@ internal class Port : Component
                 this.inComingWire.visible=true;
             }
         }
-
 
         if(this.outGoingWire != null){
             this.outGoingWire.UpdatePos(this.modulePos);

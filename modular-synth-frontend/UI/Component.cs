@@ -53,7 +53,7 @@ internal class Component : Interactable
     public virtual void UpdatePos(Vector2 modulePos){
         this.modulePos = modulePos;
     }
-    //order is important!
+
     public virtual void addComponentToEtyMgr(){
         EntityManager.entities.Add(this);
     }
@@ -64,8 +64,8 @@ internal class Component : Interactable
         //For reding hitbox
         //spriteBatch.Draw(Slider.slider1, boundingBox,colour);
 
-        //Using position instead of rect due to strange behaviour
-        spriteBatch.Draw(sprite, position,null, colour, (float)rotation,  new Vector2(this.sprite.Width/2,this.sprite.Height/2),(float)this.scale,SpriteEffects.None,1.0f);
+        //Using position instead of rect due to strange behaviour when rotating sliders to be vertical
+        spriteBatch.Draw(sprite, position, null, colour, (float)rotation, new Vector2(this.sprite.Width/2,this.sprite.Height/2), (float)this.scale, SpriteEffects.None,1.0f);
     }
     public override void Update(){
         this.position = modulePos + moduleLocalPos;

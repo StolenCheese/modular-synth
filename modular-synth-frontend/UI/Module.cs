@@ -9,7 +9,7 @@ namespace modular_synth_frontend.UI;
 internal class Module : Interactable
 {
     private InputManager input = InputManager.GetInstance();
-    private bool dragging;
+    private bool dragging=false;
     private Vector2 clickOffset;
 
     private List<Component> components = new List<Component>();
@@ -17,12 +17,13 @@ internal class Module : Interactable
     public Module(Texture2D sprite) : base(sprite)
     { }
 
-    public Module(Texture2D sprite, Vector2 pos,SpriteBatch spriteBatch) : base(sprite, pos)
+    public Module(Texture2D sprite, Vector2 pos) : base(sprite, pos)
     { 
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2,250),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7));
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2-50,this.sprite.Height/2-50),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7,true));
         components.Add(new Dial(pos, new Vector2(this.sprite.Width/2+50,this.sprite.Height/2-50),Dial.indicator1,Dial.dial1,Color.White,"",0.7,0.7));
-        components.Add(new Port(pos, new Vector2(this.sprite.Width/2,300),Port.port1,Color.White,"",true));
+        components.Add(new Port(pos, new Vector2(this.sprite.Width/2-50,300),Port.port1,Color.White,"",true));
+        components.Add(new Port(pos, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"",false));
 
         addToEtyMgr();
     }
@@ -39,19 +40,19 @@ internal class Module : Interactable
         }
     }
 
-    private bool isHoveringOverComponent(){
+    private bool isInteractingWithComponent(){
         foreach(Component c in components){
             if(c.isInteracting) {
+                //Console.WriteLine(c.GetType());
                 return true;
             }
         }
         return false;
     }
 
-
     public override void Update()
     {
-        if(!isHoveringOverComponent()){
+        if(!isInteractingWithComponent()){
 
             if (boundingBox.Contains(input.MousePosition()))
             {

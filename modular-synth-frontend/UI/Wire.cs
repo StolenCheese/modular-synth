@@ -51,7 +51,6 @@ internal class Wire : Component
         for(int i=0;i<spriteNum+1;i++){
             node = new Rectangle((int)(position.X+i*(wireLine.X/spriteNum)),(int)(position.Y+i*(wireLine.Y/spriteNum)), width, height);
 
-            //-1 to render on front
             spriteBatch.Draw(sprite, node,null, colour,0,new Vector2(this.sprite.Width/2,this.sprite.Height/2),SpriteEffects.None,0);
         }       
         //For reding hitbox
@@ -62,7 +61,7 @@ internal class Wire : Component
     }
 
 
-    public override void Update(){    
+    public override void Update(){  
         this.position = modulePos + moduleLocalPos; 
     }
 }

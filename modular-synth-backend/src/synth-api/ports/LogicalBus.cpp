@@ -35,9 +35,12 @@ namespace synth_api {
             }
         }
 
+        inputPort->setParam(bus);
     }
 
     void LogicalBus::removeListener(InputPort *inputPort) {
+        inputPort->setParam(inputPort->defaultValue);
+
         // INVARIANT: inputPort->bus == this
         std::list<InputPort *> queue;
         if (inputPort->rate == audio || inputPort->audioRateRequirement) {
@@ -98,11 +101,10 @@ namespace synth_api {
         while (!queue.empty()) {
             InputPort *curr = queue.front();
             queue.pop_front();
-            //SCOOP curr.setInputBus(this.bus)
+            curr->setParam(bus);
             for (InputPort *subscriber : curr->subscribers) {
                 queue.insert(queue.end(), subscriber);
             }
         }
     }
-
 }

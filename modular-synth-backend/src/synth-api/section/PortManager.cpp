@@ -4,6 +4,7 @@
 
 #include "synth-api/section/_model/PortManager.h"
 #include "synth-api/section/Section.h"
+#include "sc-controller/SetterFunctor.h"
 
 #include <unordered_map>
 #include <list>
@@ -11,8 +12,8 @@
 namespace synth_api {
     std::unordered_map<Port*, Section*> PortManager::parentMap = std::unordered_map<Port*, Section*>();
 
-    InputPort *PortManager::getNewInputPort(Section *parent, float defaultValue) {
-        auto * inp = new InputPort(defaultValue, Rate::control);
+    InputPort *PortManager::getNewInputPort(Section *parent, SetterFunctor setter, float defaultValue) {
+        auto * inp = new InputPort(setter, Rate::control, defaultValue);
         parentMap[inp] = parent;
         return inp;
     }

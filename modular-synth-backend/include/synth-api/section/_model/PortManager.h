@@ -8,6 +8,7 @@
 #include "synth-api/ports/InputPort.h"
 #include "synth-api/ports/OutputPort.h"
 #include "synth-api/ports/Port.h"
+#include "sc-controller/SetterFunctor.h"
 
 #include <list>
 #include <unordered_map>
@@ -26,7 +27,7 @@ namespace synth_api {
         Port* out;
 
         // TODO @bms53: Make these thread safe with locks!
-        static InputPort* getNewInputPort(Section *parent, float defaultValue);
+        static InputPort* getNewInputPort(Section *parent, SetterFunctor setter, float defaultValue);
         static OutputPort* getNewOutputPort(Section *parent);
 
         /*

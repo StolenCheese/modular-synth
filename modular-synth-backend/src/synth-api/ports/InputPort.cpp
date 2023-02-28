@@ -61,7 +61,7 @@ namespace synth_api {
                 this->Port::linkTo(inputPort);
             }
         }
-    };
+    }
 
     void InputPort::removeLink(Port *other) {
         auto * otherAsInputPort = dynamic_cast<InputPort *>(other);
@@ -84,7 +84,7 @@ namespace synth_api {
             }
         }
         Port::removeLink(other);
-    };
+    }
 
     void InputPort::follow(Port *other) {
         if (this->controller != nullptr) {
@@ -169,6 +169,7 @@ namespace synth_api {
 
     void InputPort::setDefault(float value) {
         defaultValue = value;
+        if (logicalBus == nullptr) setParam(value);
     }
 
     bool InputPort::addAudioRateRequirement() {
@@ -190,11 +191,9 @@ namespace synth_api {
     void InputPort::connectToBus(LogicalBus* logicalBus) {
         this->logicalBus = logicalBus;
         logicalBus->addListener(this);
-        //SCOOP setInputBus(logicalBus.bus)
     }
 
     void InputPort::disconnectFromBus() {
-        //SCOOP setInputBus(defaultValue)
         this->logicalBus->removeListener(this);
         this->logicalBus = nullptr;
     }

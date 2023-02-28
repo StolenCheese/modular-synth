@@ -34,7 +34,8 @@ namespace synth_api {
         // Time & Space Complexity: O(n) where n is the number of ports across sections.
         std::list<Port *> queue;
         std::set<Port *> visited;
-        queue.insert(queue.end(), target);
+        queue.insert(queue.cend(), this);
+        visited.insert(this);
         while (!queue.empty()) {
             Port *next_node = queue.front();
 

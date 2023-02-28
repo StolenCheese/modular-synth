@@ -10,7 +10,7 @@ class Synth : public Node {
     friend class SuperColliderController;
     friend std::ostream& operator<<(std::ostream& os, const Synth& g);
 
-private:
+protected:
 
     // Create a new synth based on params from the server
     Synth(  int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls);

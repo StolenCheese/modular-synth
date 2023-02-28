@@ -16,6 +16,76 @@
 
 #define OUTPUT_BUFFER_SIZE 1024
 
+void midi_test() {
+    auto& server = SuperColliderController::get();
+
+    auto s3 = server.InstantiateSynth("A:\\Documents\\synth\\midi\\talus.mid");
+
+
+    for (size_t i = 0; i < 16; i++)
+    {
+        // two organs per channel
+        auto s1 = server.InstantiateSynth("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\organ.scsyndef");
+
+        auto b1 = s3->get("out" + std::to_string(i) + "_0");
+        s1->set("freq", std::get<Bus>(b1));
+       
+        auto s2 = server.InstantiateSynth("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\organ.scsyndef");
+
+        auto b2 = s3->get("out" + std::to_string(i) + "_1");
+        s2->set("freq", std::get<Bus>(b2));
+    }
+
+
+
+    std::string s;
+    std::cin >> s;
+
+    delete s3; 
+}
+
+void osc_test() {
+
+    auto& server = SuperColliderController::get();
+
+    server.g_deepFree({ 0 });
+
+    auto s1 = server.InstantiateSynth("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\sin-kr.scsyndef");
+
+    std::cout << *s1 << std::endl;
+
+    auto s2 = server.InstantiateSynth("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\sin-ar.scsyndef");
+
+
+    std::cout << *s2 << std::endl;
+
+
+    auto b = server.InstantiateBus();
+
+
+    std::cout << "Linking synths:" << std::endl;
+    s1->set("out", b.index);
+    s1->set("add", 440);
+    s1->set("mul", 100);
+    s1->set("freq", 1);
+
+    s2->set("freq", b);
+
+
+    std::cout << *s1 << std::endl;
+    std::cout << *s2 << std::endl;
+
+    std::string s;
+    std::cin >> s;
+
+
+
+    delete s1;
+    delete s2;
+
+}
+
+
 int main(int argc, char* argv[])
 {
 
@@ -44,91 +114,11 @@ int main(int argc, char* argv[])
     std::cout << "Version:" << std::endl;
     std::cout << server.version().AddressPattern() << std::endl;
 
-    auto s1 = server.InstantiateSynth("sin-kr");
-
-    std::cout << *s1 << std::endl;
-
-    auto s2 = server.InstantiateSynth("sin-ar");
 
 
-    std::cout << *s2 << std::endl;
-
-    auto b = server.InstantiateBus();
- 
-
-    std::cout << "Linking synths:" << std::endl;
-    s1->set("out", b.index); 
-    s1->set("add", 440);
-    s1->set("mul", 100);
-    s1->set("freq", 1);
-
-    s2->set("freq", b);
-
-
-    std::cout << *s1 << std::endl;
-    std::cout << *s2 << std::endl;
-
-    std::string s;
-    std::cin >> s;
-
-    
-
-    delete s1;
-    delete s2;
-
-
-    {
-       
-
-       // std::map<int, std::pair<std::string, std::vector<std::pair<std::string, osc::ReceivedMessageArgument*>>>> tree{};
-
-      //  osc::ReceivedMessage::const_iterator arg = m.ArgumentsBegin();
-
-
-        //bool flag = (arg++)->AsBool();
-        //int nodeID = (arg++)->AsInt32();
-        //int childCount = (arg++)->AsInt32();
-        //
-        //int i = 3;
-
-        //while (i < m.ArgumentCount()) {
-        //    int n_id = (arg++)->AsInt32();
-        //    int children = (arg++)->AsInt32();
-        //    if (children == -1) 
-        //    {
-        //        const char* s_type = (arg++)->AsString();
-        //        if (flag)
-        //        {
-        //           int M = (arg++)->AsInt32();
-        //          // std::vector<std::pair<std::string, osc::ReceivedMessageArgument*>> args{M};
-  
-        //           //TODO:
-        //            for (size_t j = 0; j < M; j++)
-        //           {
-        //                                (arg++);
-        //                                (arg++);
-        //               //args.push_back(std::make_pair((arg++)->AsString(), new osc::ReceivedMessageArgument(&(arg++))))
-        //           }
-        //
-        //               i += 4 + M * 2;
-        //           tree.emplace(n_id, std::make_pair(s_type, NULL));
-        //        }
-        //        else
-        //        {
-        //            i += 3;
-        //             tree.emplace(n_id, std::make_pair(s_type, NULL));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        i += 2;
-        //    }
-        //}
-
-        //if (arg != m.ArgumentsEnd())
-        //    throw osc::ExcessArgumentException();
-    }
+    midi_test();
      
 }
+
 
 

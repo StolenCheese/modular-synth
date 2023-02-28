@@ -112,7 +112,9 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& source)
 
 Bus SuperColliderController::InstantiateBus()
 {
-	return Bus(this, next_bus_id++);
+	// Max polyphony of 8 - maybe
+	next_bus_id += 8;
+	return Bus(next_bus_id);
 }
 
 void SuperColliderController::SyncGroup(Group* g)
@@ -151,7 +153,7 @@ void SuperColliderController::SyncGroup(Group* g)
 						controls.insert({ cs,it->AsFloat() });
 					}
 					else {
-						controls.insert({ cs,Bus(this, std::stoi(it->AsString())) });
+						controls.insert({ cs,Bus( std::stoi(it->AsString()+1)) });
 					}
 					it++;
 				}

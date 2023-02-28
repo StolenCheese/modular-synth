@@ -19,3 +19,6 @@ target_include_directories(servercommander PUBLIC
                           "${CMAKE_SOURCE_DIR}/external_libraries"
                             "${CMAKE_SOURCE_DIR}/include"
                           )
+
+                          
+target_link_libraries(servercommander PRIVATE  libremidi)

@@ -16,10 +16,10 @@ class SuperColliderController : public SuperColliderCommander {
     int next_node_id { 100 };
     int next_bus_id { 10 };
 
-    Bus outL = Bus(this, 0);
-    Bus outR = Bus(this, 1);
-    Bus inL = Bus(this, 2);
-    Bus inR = Bus(this, 3);
+    Bus outL = Bus( 0);
+    Bus outR = Bus(1);
+    Bus inL = Bus(2);
+    Bus inR = Bus(3);
 
 
     SuperColliderController(const SuperColliderController&) = delete;

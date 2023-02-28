@@ -20,6 +20,7 @@ std::variant<int, float, Bus> Synth::get(const std::string& param)
     return controls[param];
 }
 
+
 void Synth::set(const std::string& param, const float v)
 {
     controls[param] = v;

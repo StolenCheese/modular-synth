@@ -7,30 +7,33 @@ class Bus;
 #include<variant> 
 
 enum class BusRate {
-    CONTROL,
-    AUDIO
+	CONTROL,
+	AUDIO
 };
 
-class SuperColliderController; 
+class SuperColliderController;
 
 class Bus {
-    friend class SuperColliderController; 
+	friend class SuperColliderController;
 
 private:
-    SuperColliderController* s;
 
-    Bus(SuperColliderController* s, int index);
+	Bus(int index);
 
 public:
-    BusRate rate{ BusRate::CONTROL };
-   const int index;
-    // a symbol consisting of the letter 'c' or 'a' (for control or audio) followed by the bus's index. This may be used when setting a synth node's control inputs to map the input to the control bus.
-    std::string asMap();
+	Bus(); 
 
-    std::variant<int, float> get();
+	BusRate rate{ BusRate::CONTROL };
+	int index;
+	// a symbol consisting of the letter 'c' or 'a' (for control or audio) followed by the bus's index. This may be used when setting a synth node's control inputs to map the input to the control bus.
+	std::string asMap();
 
-    // Associates to /b_set
-    void set(const float v);
-    // Associates to /b_set
-    void set(const int v);
+	std::variant<int, float> get();
+
+	// Associates to /c_set
+	void set(const float v);
+	// Associates to /c_set
+	void set(const int v);
+
+
 };

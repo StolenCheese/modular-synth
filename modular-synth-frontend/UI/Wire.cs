@@ -10,15 +10,24 @@ using System.Threading.Tasks;
 namespace modular_synth_frontend.UI;
 internal class Wire : Component
 {
+    //This is required by ports to get the wire that is about to be connected to them
+    public static List<Wire> wires = new List<Wire>();
     private InputManager input = InputManager.GetInstance();
     public Vector2 wireEndPosition;
     Vector2 wireLine;
     int spriteNum = 10;
     Rectangle node;
+    public bool isConnected = false;
 
     public Wire(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1) : base(modulePos, moduleLocalPos, sprite, col, ParameterID,scale)
     { 
-        this.visible = false;
+        //set to true as wire is made when someone clicks on a port
+        this.visible = true;
+
+        //TODO: use an alternative? as this seems quite inefficient
+        Wire.wires.Add(this);
+
+        
     }
 
     //We want the module that this component belongs to to give the component its coordinates
@@ -41,7 +50,9 @@ internal class Wire : Component
 
         for(int i=0;i<spriteNum+1;i++){
             node = new Rectangle((int)(position.X+i*(wireLine.X/spriteNum)),(int)(position.Y+i*(wireLine.Y/spriteNum)), width, height);
-            spriteBatch.Draw(sprite, node,null, colour);
+
+            //-1 to render on front
+            spriteBatch.Draw(sprite, node,null, colour,0,new Vector2(this.sprite.Width/2,this.sprite.Height/2),SpriteEffects.None,0);
         }       
         //For reding hitbox
         //spriteBatch.Draw(Slider.slider1, boundingBox,colour);

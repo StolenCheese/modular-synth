@@ -18,6 +18,9 @@ internal class Wire : Component
     int spriteNum = 10;
     Rectangle node;
     public bool isConnected = false;
+public Vector2 Position {private get{return position;} set {this.position = value;}}
+    public Port inputPort;
+    public Port outputPort;
 
     public Wire(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1) : base(modulePos, moduleLocalPos, sprite, col, ParameterID,scale)
     { 
@@ -30,9 +33,14 @@ internal class Wire : Component
         
     }
 
+    
+
     //We want the module that this component belongs to to give the component its coordinates
-    public override void UpdatePos(Vector2 modulePos){
+    public void UpdateModulePos(Vector2 modulePos){
         this.modulePos = modulePos;
+    }
+    public void updatePos(Vector2 pos){
+        this.position = pos;
     }
 
     //order is important!

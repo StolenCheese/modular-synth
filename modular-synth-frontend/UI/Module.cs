@@ -12,18 +12,26 @@ internal class Module : Interactable
     private bool dragging=false;
     private Vector2 clickOffset;
 
+    //this is for ports to check if they are on the same module
+    private static int modules = 0;
+    public int ModuleId { get; private set; }
     private List<Component> components = new List<Component>();
+
 
     public Module(Texture2D sprite) : base(sprite)
     { }
 
     public Module(Texture2D sprite, Vector2 pos) : base(sprite, pos)
     { 
+        this.ModuleId = modules++;
+
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2,250),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7));
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2-50,this.sprite.Height/2-50),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7,true));
         components.Add(new Dial(pos, new Vector2(this.sprite.Width/2+50,this.sprite.Height/2-50),Dial.indicator1,Dial.dial1,Color.White,"",0.7,0.7));
-        components.Add(new Port(pos, new Vector2(this.sprite.Width/2-50,300),Port.port1,Color.White,"",true));
-        components.Add(new Port(pos, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"",false));
+        
+        //we give all ports the parent module so that they know if they are on the same module. Stops connecting wires to same module (not a nice fix)
+        components.Add(new Port(pos, new Vector2(this.sprite.Width/2-50,300),Port.port1,Color.White,"",true,ModuleId));
+        components.Add(new Port(pos, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"",false,ModuleId));
 
         addToEtyMgr();
     }
@@ -49,6 +57,10 @@ internal class Module : Interactable
         }
         return false;
     }
+
+    
+
+    
 
     public override void Update()
     {

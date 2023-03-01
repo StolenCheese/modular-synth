@@ -28,8 +28,11 @@ public class EntityManager{
 
         //render wires at the front by calling this last
         }
-        foreach(Wire wire in Wire.wires){
-            if (wire.visible){wire.Draw(spriteBatch);}
+        foreach(Port port in Port.ports){
+            if(port.portConnectedTo!=null||port.dragging){
+                port.wire.Draw(spriteBatch);
+            }
         }
+
     }
 }

@@ -13,12 +13,12 @@ internal class Wire : Component
     //This is required by ports to get the wire that is about to be connected to them
     public static List<Wire> wires = new List<Wire>();
     private InputManager input = InputManager.GetInstance();
-    public Vector2 wireEndPosition;
+    public Vector2 endPosition;
     Vector2 wireLine;
     int spriteNum = 10;
     Rectangle node;
     public bool isConnected = false;
-public Vector2 Position {private get{return position;} set {this.position = value;}}
+    public Vector2 Position {private get{return position;} set {this.position = value;}}
     public Port inputPort;
     public Port outputPort;
 
@@ -33,16 +33,6 @@ public Vector2 Position {private get{return position;} set {this.position = valu
         
     }
 
-    
-
-    //We want the module that this component belongs to to give the component its coordinates
-    public void UpdateModulePos(Vector2 modulePos){
-        this.modulePos = modulePos;
-    }
-    public void updatePos(Vector2 pos){
-        this.position = pos;
-    }
-
     //order is important!
     public override void addComponentToEtyMgr(){
         EntityManager.entities.Add(this);
@@ -51,7 +41,7 @@ public Vector2 Position {private get{return position;} set {this.position = valu
     //unique Draw method required to draw wire sprite from start to end positions
     public override void Draw(SpriteBatch spriteBatch)
     {
-        wireLine = wireEndPosition - this.position;
+        wireLine = endPosition - this.position;
 
         //quick and easy way to get a number of sprites to render that is suitably proportional to line length
         spriteNum = MathHelper.Max((int)Math.Abs(wireLine.X),(int)Math.Abs(wireLine.Y));
@@ -70,6 +60,6 @@ public Vector2 Position {private get{return position;} set {this.position = valu
 
 
     public override void Update(){  
-        this.position = modulePos + moduleLocalPos; 
+        
     }
 }

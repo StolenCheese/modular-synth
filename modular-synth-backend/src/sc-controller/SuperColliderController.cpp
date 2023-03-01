@@ -67,7 +67,7 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& source)
 		const int id = next_node_id++;
 
 		if (!loaded_synthdefs.count(source)) {
-			std::cout << "Loading for the first time" << std::endl;
+			std::cout << "Loading" << source<< "for the first time" << std::endl;
 
 			std::ifstream def;
 			def.open(source);

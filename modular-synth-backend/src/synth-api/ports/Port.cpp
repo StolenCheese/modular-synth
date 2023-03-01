@@ -7,11 +7,14 @@
 
 #include <set>
 #include <list>
+#include <iostream>
 
 namespace synth_api {
     void Port::linkTo(Port *other) {
         // Ensure that the requested link is not already in the chain for this element.
         cyclicCheck(other);
+         
+
         this->outgoingConnections.insert(other);
         other->outgoingConnections.insert(this);
     }

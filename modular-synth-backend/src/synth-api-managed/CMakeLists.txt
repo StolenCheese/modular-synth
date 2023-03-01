@@ -4,7 +4,9 @@ set(project_name synth-api-managed)
 add_library(${project_name} SHARED
 	"SCController.cpp" 
 	"SCSection.cpp" 
-	"SCPort.cpp"  "ManagedLinkException.cpp")
+	"SCPort.cpp" 
+	"ManagedLinkException.cpp"
+)
 
 target_link_libraries(${project_name} PUBLIC  oscpack)
 target_link_libraries(${project_name} PUBLIC  servercommander)
@@ -15,7 +17,7 @@ target_include_directories(${project_name} PUBLIC
                             "${CMAKE_SOURCE_DIR}"
                             "${CMAKE_SOURCE_DIR}/src/sc-controller"
                             "${CMAKE_SOURCE_DIR}/include/synthapi"
-                          "${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0" 
+							"${CMAKE_SOURCE_DIR}/external_libraries/oscpack_1_1_0" 
                           )
 
 

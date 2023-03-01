@@ -1,9 +1,9 @@
 // wrap_native_class_for_mgd_consumption.cpp
 // compile with: /clr /LD0
-#include "SCPort.cpp"
-#include "sc-controller/Synth.hpp"
-#include "synth-api/ports/Port.h"
 #include "synth-api/section/Section.h"
+#include "synth-api/ports/Port.h"
+
+#include "SCPort.hpp" 
 
 #include <msclr/marshal_cppstd.h>
 #include <vcclr.h>
@@ -40,7 +40,7 @@ public:
     {
         try {
             std::string cppsynthdef = msclr::interop::marshal_as<std::string>(synthdef);
-            m_section = new synth_api::Section(cppsynthdef.c_str());
+            m_section = new synth_api::Section(cppsynthdef);
             // Generate the synth on the server.
             // TODO @mp2015: Currently blocking, in future will use a bool valid
             auto size = m_section->synth->controls.size();

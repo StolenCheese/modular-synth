@@ -1,3 +1,5 @@
+# pragma once
+
 #include "sc-controller/Synth.hpp"
 #include "sc-controller/Bus.hpp"
 #include <thread>

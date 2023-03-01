@@ -1,4 +1,4 @@
-
+# pragma once
 #include "sc-controller/ServerSocket.hpp"
 #include "osc/OscOutboundPacketStream.h"
 #include "osc/OscReceivedElements.h"

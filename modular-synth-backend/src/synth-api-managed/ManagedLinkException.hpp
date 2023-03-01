@@ -1,7 +1,7 @@
-#include "synth-api/exception/LinkException.hpp"
+#pragma once
 
-#include <msclr/marshal_cppstd.h>
-#include <vcclr.h>
+#include "synth-api/exception/LinkException.hpp"
+ 
 
 #using <System.dll>
 
@@ -13,44 +13,44 @@ namespace SynthAPI {
 
     public ref class LinkException_t : public System::Exception {
     public:
-        explicit LinkException_t(const char* message) : System::Exception(gcnew System::String(message)) {}
+        explicit LinkException_t(const char* message);
 
     };
 
     public ref class AddedLinkException_t : public LinkException_t {
     public:
-        AddedLinkException_t(const char* message) : LinkException_t(message) { }
+        AddedLinkException_t(const char* message);
     };
 
     public ref class OutputToOutputException_t : public AddedLinkException_t {
     public:
-        OutputToOutputException_t(const char * message) : AddedLinkException_t(message) { };
+        OutputToOutputException_t(const char* message);
     };
 
     public ref class AlreadyBoundInputException_t : public AddedLinkException_t {
     public:
-        AlreadyBoundInputException_t(const char* message) : AddedLinkException_t(message) { };
+        AlreadyBoundInputException_t(const char* message);
     };
 
     public ref class CyclicLinksException_t : public AddedLinkException_t {
     public:
-        CyclicLinksException_t(const char* message) : AddedLinkException_t(message) { };
+        CyclicLinksException_t(const char* message);
     };
 
 
     public ref class RemovedLinkException_t : public LinkException_t {
     public:
-        RemovedLinkException_t(const char* message) : LinkException_t(message) { };
+        RemovedLinkException_t(const char* message);
     };
 
     public ref class NoSuchConnectionException_t : public RemovedLinkException_t {
     public:
-        NoSuchConnectionException_t(const char* message) : RemovedLinkException_t(message) { };
+        NoSuchConnectionException_t(const char* message);
     };
 
 
     public ref class FatalOutputControllerException_t : public System::Exception {
     public:
-        explicit FatalOutputControllerException_t(const char* message) : System::Exception(gcnew System::String(message)) {};
+        explicit FatalOutputControllerException_t(const char* message);
     };
 }

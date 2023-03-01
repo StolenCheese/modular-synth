@@ -22,9 +22,9 @@ internal class Slider : Component
     private int minSliderOffset=0;
     private InputManager input = InputManager.GetInstance();
 
-    public Slider(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, String ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false) : base(modulePos, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
+    public Slider(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, String ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false) : base(modulePos, parentModuleId, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
     { 
-        this.track = new Component(modulePos, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
+        this.track = new Component(modulePos, parentModuleId, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
         if(vertical){
             maxSliderOffset = track.height/2;
             minSliderOffset = -track.height/2;

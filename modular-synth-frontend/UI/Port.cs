@@ -21,8 +21,6 @@ public class Port : Component
 
     public bool dragging = false;
 
-    public int parentModuleId;
-
 
     public Port portConnectedFrom;
     public Port portConnectedTo;
@@ -31,12 +29,11 @@ public class Port : Component
 
 
 
-    public Port(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID,bool isInput, int parentModuleId, double scale=1) : base(modulePos, moduleLocalPos, sprite, col, ParameterID,scale)
+    public Port(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID,bool isInput, double scale=1) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale)
     { 
         this.isInput = isInput;
 
-        this.parentModuleId = parentModuleId;
-        this.wire = new Wire(modulePos,moduleLocalPos,sprite,Color.White,"",0.2);
+        this.wire = new Wire(modulePos,parentModuleId,moduleLocalPos,sprite,Color.White,"",0.2);
 
 
         ports.Add(this);

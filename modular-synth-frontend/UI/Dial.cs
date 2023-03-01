@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using modular_synth_frontend.API;
 
 namespace modular_synth_frontend.UI;
 internal class Dial : Component
@@ -23,12 +24,15 @@ internal class Dial : Component
     private double dialRotationOffset;
     private InputManager input = InputManager.GetInstance();
 
-    public Dial(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, String ParameterID,double staticPartScale=1,double dialScale=1) : base(modulePos, moduleLocalPos, dialSprite, col, ParameterID,dialScale)
+    public Dial(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, string parameterID,double staticPartScale=1,double dialScale=1) : base(modulePos, parentModuleId, moduleLocalPos, dialSprite, col, parameterID,dialScale)
     { 
-        this.staticPart = new Component(modulePos, moduleLocalPos, staticPartSprite, col, ParameterID, staticPartScale);
-         this.rotation = minRotation;
-         this.lastRotation = minRotation;
-         this.dialRotation = minRotation;
+        this.staticPart = new Component(modulePos, parentModuleId, moduleLocalPos, staticPartSprite, col, parameterID, staticPartScale);
+        this.rotation = minRotation;
+        this.lastRotation = minRotation;
+        this.dialRotation = minRotation;
+
+        //this should not be necessary. For some reason the parameterID is read as null when set in Components
+        this.parameterID = parameterID;
 
     }
 
@@ -42,6 +46,15 @@ internal class Dial : Component
     public override void addComponentToEtyMgr(){
         staticPart.addComponentToEtyMgr();
         EntityManager.entities.Add(this);
+    }
+
+    public override void sendValToServer(){
+        if(this.rotation>maxRotation||this.rotation<minRotation){
+            Console.WriteLine("Rotation is greater than max allowed!! skipping send");
+        } else {
+            float val = (float)(rotation*(maxValueForServer-minValueForServer)/(maxRotation-minRotation));
+            API.API.setValue(this.parentModuleId, this.parameterID, val);
+        }
     }
 
     private double DialRotation{
@@ -65,7 +78,7 @@ internal class Dial : Component
                 }
             }
             lastVal = value;
-            Console.WriteLine("value:{0},dialRotation:{1},deltaR:{2}",value*180/Math.PI,dialRotation*180/Math.PI,deltaR*180/Math.PI);
+            //Console.WriteLine("value:{0},dialRotation:{1},deltaR:{2}",value*180/Math.PI,dialRotation*180/Math.PI,deltaR*180/Math.PI);
         }
     }
 
@@ -108,6 +121,8 @@ internal class Dial : Component
                 lastRotation = this.rotation;
                 rotating = false;
             }
+        //only make an api call when we are rotating
+        sendValToServer();
         }
     }
 }

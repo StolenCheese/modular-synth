@@ -12,6 +12,9 @@ public class Component : Interactable
 {
     protected Vector2 moduleLocalPos;
     protected Vector2 modulePos;
+    public int parentModuleId;
+    public string parameterID;
+
     //TODO: make slider offsets based on StationaryComponent
     public bool isInteracting=false;
     protected double scale;
@@ -21,19 +24,24 @@ public class Component : Interactable
     public int height;
     public int width;
     public bool vertical = false;
+    protected double maxValueForServer=1;
+    protected double minValueForServer=0;
 
     //origin is at the center of the component. Use this to add offset
 
-    public Component(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string ParameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
         this.width=(int)(this.sprite.Width*this.scale);
         this.modulePos = modulePos;
         this.moduleLocalPos = moduleLocalPos;
+        this.parentModuleId = parentModuleId;
+        this.parameterID = parameterID;
+
     }
 
-    public Component(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1,bool vertical=false) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string parameterID,double scale=1,bool vertical=false) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
@@ -41,6 +49,8 @@ public class Component : Interactable
         this.modulePos = modulePos;
         this.moduleLocalPos = moduleLocalPos;
         this.vertical = vertical;
+        this.parentModuleId = parentModuleId;
+        this.parameterID = parameterID;
 
         if(vertical){
             this.rotation = Math.PI/2;
@@ -53,6 +63,9 @@ public class Component : Interactable
     public virtual void UpdatePos(Vector2 modulePos){
         this.modulePos = modulePos;
     }
+
+    //override this for subclasses with itneraction with the sc server who need to sync values (dials, sliders)
+    public virtual void sendValToServer(){}
 
     public virtual void addComponentToEtyMgr(){
         EntityManager.entities.Add(this);

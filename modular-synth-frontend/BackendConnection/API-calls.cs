@@ -32,7 +32,9 @@ public static class API {
             Console.WriteLine("attempting section creation");
             m.scSection = new SCSection(absPathToSynthDefs+m.function+".scsyndef");
 
-            Console.WriteLine($"Created new synth i={m.scSection} with controls [{System.String.Join(',', m.scSection.controls)}]");
+            synths[m.ModuleId] = m.scSection;
+
+            Console.WriteLine($"Created new synth {m.scSection} (ID:{m.ModuleId}) with controls [{System.String.Join(',', m.scSection.controls)}]");
         } else{
             Console.WriteLine("attempted section recreation of module with section!");
         }
@@ -41,6 +43,15 @@ public static class API {
 
     public static void linkPorts(Port portFrom, Port portTo){
         //synths[int.Parse(sidSrc)].getPortFor(srcParam).linkTo(synths[int.Parse(sidDst)].getPortFor(dstParam));
+    }
+
+    public static void setValue(int modueleID,string property,float value){
+        Console.WriteLine($"params: ID:{modueleID},property:{property},value:{value}");
+        if(value!=null&&property!=null&&modueleID!=null){
+            synths[modueleID].Set(property, value);
+        } else {
+            
+        }
     }
 
     

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace modular_synth_frontend.UI;
-internal class Port : Component
+public class Port : Component
 {
     
     public static Texture2D port1;
@@ -108,7 +108,6 @@ internal class Port : Component
             this.isInteracting=false;
         }
         wire.Position=this.Position;
-        this.modulePos = modulePos;
         if(dragging){
             this.isInteracting=true;
             this.wire.endPosition = input.MousePosVector() + clickOffset;

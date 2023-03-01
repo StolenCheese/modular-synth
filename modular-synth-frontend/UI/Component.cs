@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace modular_synth_frontend.UI;
-internal class Component : Interactable
+public class Component : Interactable
 {
     protected Vector2 moduleLocalPos;
     protected Vector2 modulePos;
@@ -31,8 +31,8 @@ internal class Component : Interactable
         this.width=(int)(this.sprite.Width*this.scale);
         this.modulePos = modulePos;
         this.moduleLocalPos = moduleLocalPos;
-        this.vertical = vertical;
     }
+
     public Component(Vector2 modulePos, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, String ParameterID,double scale=1,bool vertical=false) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;

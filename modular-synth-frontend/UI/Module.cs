@@ -4,18 +4,24 @@ using modular_synth_frontend.Core;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-
+using SynthAPI;
+using modular_synth_frontend.API;
 namespace modular_synth_frontend.UI;
-internal class Module : Interactable
+public class Module : Interactable
 {
     private InputManager input = InputManager.GetInstance();
     private bool dragging=false;
     private Vector2 clickOffset;
 
-    //this is for ports to check if they are on the same module
+    //this is used for api calls and ports to check if they are on the same module
     private static int modules = 0;
     public int ModuleId { get; private set; }
+
     private List<Component> components = new List<Component>();
+
+    public SCSection scSection;
+
+    public string function;
 
 
     public Module(Texture2D sprite) : base(sprite)
@@ -24,6 +30,8 @@ internal class Module : Interactable
     public Module(Texture2D sprite, Vector2 pos) : base(sprite, pos)
     { 
         this.ModuleId = modules++;
+
+        function = "sin-ar";
 
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2,250),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7));
         components.Add(new Slider(pos, new Vector2(this.sprite.Width/2-50,this.sprite.Height/2-50),Slider.rail1,Slider.slider2,Color.White,"",0.7,0.7,true));
@@ -34,7 +42,10 @@ internal class Module : Interactable
         components.Add(new Port(pos, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"",false,ModuleId));
 
         addToEtyMgr();
+
+        API.API.createSection(this);
     }
+
 
     public void addToEtyMgr(){
         EntityManager.entities.Add(this);

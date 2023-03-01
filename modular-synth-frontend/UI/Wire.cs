@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace modular_synth_frontend.UI;
-internal class Wire : Component
+public class Wire : Component
 {
     //This is required by ports to get the wire that is about to be connected to them
     public static List<Wire> wires = new List<Wire>();

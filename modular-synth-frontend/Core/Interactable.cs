@@ -4,7 +4,7 @@ using System;
 
 namespace modular_synth_frontend.Core;
 
-internal abstract class Interactable : Entity
+public abstract class Interactable : Entity
 {
     protected Texture2D sprite;
     protected Color colour;

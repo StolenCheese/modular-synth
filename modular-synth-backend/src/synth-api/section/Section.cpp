@@ -40,7 +40,7 @@ namespace synth_api {
         return nullptr;
     }
 
-    Section::Section(const char *synthDef) : synth(SuperColliderController::get().InstantiateSynth(std::string(synthDef))), outputPorts(), inputPorts() {
+    Section::Section(std::string& synthDef) : synth(SuperColliderController::get().InstantiateSynth(synthDef)), outputPorts(), inputPorts() {
 
         std::vector<std::pair<std::string, float>> inputPortSpecification;
         std::vector<std::string> outputPortSpecification;

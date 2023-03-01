@@ -52,10 +52,10 @@ public:
      * Generates a Section object from a given section definition file.
      *
      * Parameters:
-     *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
+     *      std::string& synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
      *      inputParams: List of parameter names for front-end to use
      */
-    explicit Section(const char* synthDef);
+    explicit Section(std::string& synthDef);
 
     ~Section();
 

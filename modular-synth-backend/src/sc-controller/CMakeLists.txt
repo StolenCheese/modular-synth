@@ -10,6 +10,7 @@ ADD_LIBRARY(servercommander
     Group.cpp
     SuperColliderPacketBuilder.cpp
     MidiSynth.cpp
+    SetterFunctor.cpp
 )
 
 target_include_directories(servercommander PUBLIC

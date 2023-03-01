@@ -59,7 +59,6 @@ namespace synth_api {
 }
         }
         // SCOOP server.pushNodesToStartOfEvalOrder(order); // i.e. the /n_order command with add action 0, use root group
-        SuperColliderController controller = SuperColliderController::get();
-        controller.n_order(0, 0, order);
+        SuperColliderController::get().n_order(0, 0, order);
     }
 }

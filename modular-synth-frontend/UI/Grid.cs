@@ -30,7 +30,7 @@ internal class Grid
             for(int j = 0; j < cols; j++)
             {
                 Rectangle rect = new Rectangle(gridSquareSide*j,gridSquareSide*i + ModularSynth.menuBarHeight,gridSquareSide,gridSquareSide);
-                spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+                spriteBatch.Draw(gridTexture, rect,null, Color.LightYellow,0,new Vector2(0,0),SpriteEffects.None,0.8f);
             }
         }
 
@@ -39,7 +39,7 @@ internal class Grid
             for (int j = 0; j < cols; j++)
             {
                 Rectangle rect = new Rectangle(gridSquareSide * j, gridSquareSide * i + ModularSynth.menuBarHeight + ModularSynth.dividerHeight + ROWS*gridSquareSide, gridSquareSide, gridSquareSide);
-                spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+                spriteBatch.Draw(gridTexture, rect,null, Color.LightYellow,0,new Vector2(0,0),SpriteEffects.None,0.8f);
             }
         }
 
@@ -48,7 +48,7 @@ internal class Grid
             for (int j = 0; j < cols; j++)
             {
                 Rectangle rect = new Rectangle(gridSquareSide * j, gridSquareSide * i + +ModularSynth.menuBarHeight + 2*(ModularSynth.dividerHeight + ROWS * gridSquareSide), gridSquareSide, gridSquareSide);
-                spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+                spriteBatch.Draw(gridTexture, rect, null,Color.LightYellow,0,new Vector2(0,0),SpriteEffects.None,0.8f);
             }
         }
     }

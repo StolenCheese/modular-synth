@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace modular_synth_frontend.UI;
 
-internal class ModuleSpawnButton : Interactable
+internal class ModuleSpawnButton : Button
 {
     private Texture2D _texture; 
     private Texture2D moduleSprite; //at some point this will store an actual module but atm i just need it to spawn an image so

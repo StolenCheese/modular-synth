@@ -7,7 +7,7 @@ internal abstract class Interactable : Entity
 {
     protected Texture2D sprite;
     protected Color colour;
-    protected Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
+    private Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
     protected Rectangle boundingBox;
 
     public Interactable(Texture2D sprite)
@@ -54,4 +54,21 @@ internal abstract class Interactable : Entity
         spriteBatch.Draw(sprite, new Rectangle((int)position.X, (int)position.Y, width, height), colour);
     }
     */
+    public Vector2 GetPosition()
+    {
+        return position;
+    }
+
+    public void SetPosition(Vector2 pos)
+    {
+        position = pos;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, boundingBox.Width, boundingBox.Height);
+    }
+
+    public void ShiftPosition(int x, int y)
+    {
+        position.X += x;
+        position.Y += y;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, boundingBox.Width, boundingBox.Height);
+    }
 }

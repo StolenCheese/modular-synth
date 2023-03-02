@@ -33,7 +33,6 @@ internal class Grid
                 for (int j = 0; j < cols; j++)
                 {
                     Vector2 worldPosCoords = new Vector2(j,i + k*ROWS);
-                    Debug.WriteLine(worldPosCoords);
                     gridTiles.Add(worldPosCoords, new GridTile());
                 }
             }

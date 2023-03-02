@@ -31,9 +31,6 @@ internal class Dial : Component
         this.lastRotation = minRotation;
         this.dialRotation = minRotation;
 
-        //this should not be necessary. For some reason the parameterID is read as null when set in Components
-        this.parameterID = parameterID;
-
     }
 
     //We want the module that this component belongs to to give the component its coordinates

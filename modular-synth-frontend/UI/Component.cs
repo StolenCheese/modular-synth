@@ -31,7 +31,7 @@ public class Component : Interactable
 
     //origin is at the center of the component. Use this to add offset
 
-    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string ParameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string parameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);

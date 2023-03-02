@@ -53,7 +53,10 @@ internal class Slider : Component
             //translate value relative to this range to value relative to server range
             //Console.WriteLine($"SliderOffset:{SliderOffset},svRange:{svRange},thisRange:{thisRange},minValueForServer:{minValueForServer},minSliderOffset:{minSliderOffset}");
             float val = (float)((SliderOffset-minSliderOffset)*svRange/thisRange+minValueForServer);
-            API.API.setValue(this.parentModuleId, this.parameterID, val);
+            if(val!=lastSentVal){
+                API.API.setValue(this.parentModuleId, this.parameterID, val);
+                lastSentVal=val;
+            }
         }
     }
 

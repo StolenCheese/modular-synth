@@ -57,7 +57,10 @@ internal class Dial : Component
             //translate value relative to this range to value relative to server range
             //Console.WriteLine($"SliderOffset:{SliderOffset},svRange:{svRange},thisRange:{thisRange},minValueForServer:{minValueForServer},minSliderOffset:{minSliderOffset}");
             float val = (float)((rotation-minRotation)*svRange/thisRange+minValueForServer);
-            API.API.setValue(this.parentModuleId, this.parameterID, val);
+            if(val!=lastSentVal){
+                API.API.setValue(this.parentModuleId, this.parameterID, val);
+                lastSentVal=val;
+            }
         }
     }
 
@@ -71,17 +74,33 @@ internal class Dial : Component
                 value -= 2*Math.PI;
             }
 
+            Console.WriteLine($"value:{value}");
+
             double deltaR = value - lastVal;
 
-            //ignore unreasonably high changes in deltaR in a frame or no changes at all ()
-            if(deltaR!=0&&Math.Abs(deltaR)<20*Math.PI/180){
-                if(deltaR<minRotation&&minRotation<dialRotation){
-                    dialRotation += deltaR;
-                }else if(deltaR>0&&dialRotation<maxRotation){
-                    dialRotation += deltaR;
+            Console.WriteLine($"deltaR:{deltaR},lastVal<maxRotation:{lastVal<maxRotation},value>maxRotation:{value>maxRotation}");
+
+            //check we are not trying to go past limits. delta can only be this big when we get to limits at rotation wrap border
+            if(deltaR<-3*maxRotation/4||(lastVal<maxRotation&&value>maxRotation)){
+                    dialRotation = maxRotation;
+                } else if(deltaR>3*maxRotation/4||(lastVal>minRotation&&value<minRotation)){
+                    dialRotation = minRotation;
                 }
+            //ignore unreasonably high changes in deltaR in a frame or no changes at all ()
+            if(deltaR!=0&&Math.Abs(deltaR)<Math.PI/7){
+                
+                if(deltaR<0){
+                    //clamp probably not necessary but left for extra safety
+                    dialRotation = MathHelper.Max((float)(value),(float)minRotation);
+                } else if(deltaR>0){
+                    
+                    
+                    dialRotation = MathHelper.Min((float)(value),(float)maxRotation);
+                
+                }
+                lastVal = value;
             }
-            lastVal = value;
+            
             //Console.WriteLine("value:{0},dialRotation:{1},deltaR:{2}",value*180/Math.PI,dialRotation*180/Math.PI,deltaR*180/Math.PI);
         }
     }
@@ -110,6 +129,20 @@ internal class Dial : Component
             if (input.LeftMouseClickDown()){
                 rotating = true;
                 dialRotationOffset = getAngle(input.MousePosVector() - position);
+            } else if(input.MouseWheelUp()){
+                Console.WriteLine("MouseWheelUp");
+                DialRotation += Math.PI/8;
+
+                this.rotation = DialRotation;
+                sendValToServer();
+                lastRotation = this.rotation;
+            } else if(input.MouseWheelDown()){
+                Console.WriteLine("MouseWheelDown");
+                DialRotation -= Math.PI/8;
+
+                this.rotation = DialRotation;
+                sendValToServer();
+                lastRotation = this.rotation;
             }
         }else{
             this.isInteracting=false;

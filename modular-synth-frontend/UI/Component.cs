@@ -19,6 +19,7 @@ public class Component : Interactable
     public bool isInteracting=false;
     protected double scale;
     public double rotation = 0;
+    
 
     //TODO: remove these 2
     public int height;
@@ -26,6 +27,7 @@ public class Component : Interactable
     public bool vertical = false;
     protected double maxValueForServer=1;
     protected double minValueForServer=0;
+    protected double lastSentVal = -1111; //set to value that will never be used to make sure all components sync at start
 
     //origin is at the center of the component. Use this to add offset
 

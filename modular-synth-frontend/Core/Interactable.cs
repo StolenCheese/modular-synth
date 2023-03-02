@@ -8,7 +8,7 @@ public abstract class Interactable : Entity
 {
     protected Texture2D sprite;
     protected Color colour;
-    private Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
+    protected Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
     protected Rectangle boundingBox;
     private int xOffset=0;
     private int yOffset=0;

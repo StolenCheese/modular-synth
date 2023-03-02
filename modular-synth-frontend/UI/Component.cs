@@ -43,7 +43,7 @@ public class Component : Interactable
 
     }
 
-    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string parameterID,double scale=1,bool vertical=false) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string paramID,double scale=1,bool vertical=false) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
@@ -52,7 +52,7 @@ public class Component : Interactable
         this.moduleLocalPos = moduleLocalPos;
         this.vertical = vertical;
         this.parentModuleId = parentModuleId;
-        this.parameterID = parameterID;
+        this.parameterID = paramID;
 
         if(vertical){
             this.rotation = Math.PI/2;

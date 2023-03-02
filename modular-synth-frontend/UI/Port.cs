@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using modular_synth_frontend.API;
 
 namespace modular_synth_frontend.UI;
 public class Port : Component
@@ -21,7 +22,8 @@ public class Port : Component
 
     public bool dragging = false;
 
-
+    //this should not be necessary. For some reason the parameterID is read as null when set in Components
+    public new string parameterID;
     public Port portConnectedFrom;
     public Port portConnectedTo;
     public Wire wire;
@@ -29,12 +31,15 @@ public class Port : Component
 
 
 
-    public Port(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID,bool isInput, double scale=1) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale)
+    public Port(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, string ParamID,bool isInput, double scale=1) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParamID,scale)
     { 
         this.isInput = isInput;
 
         this.wire = new Wire(modulePos,parentModuleId,moduleLocalPos,sprite,Color.White,"",0.2);
 
+        //this should not be necessary. For some reason the parameterID is read as null when set in Components
+        this.parameterID = ParamID;
+        Console.WriteLine(this.parameterID);
 
         ports.Add(this);
         
@@ -98,6 +103,7 @@ public class Port : Component
                         Console.WriteLine("worked");
                         portToConnect.portConnectedTo = this;
                         this.portConnectedFrom = portToConnect;
+                        API.API.linkPorts(portToConnect,this);
                     }
                 }                 
             }

@@ -42,15 +42,15 @@ public static class API {
     }
 
     public static void linkPorts(Port portFrom, Port portTo){
-        //synths[int.Parse(sidSrc)].getPortFor(srcParam).linkTo(synths[int.Parse(sidDst)].getPortFor(dstParam));
+        synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).linkTo(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
     }
 
     public static void setValue(int modueleID,string property,float value){
         //Console.WriteLine($"params: ID:{modueleID},property:{property},value:{value}");
-        if(value!=null&&property!=null&&modueleID!=null){
+        if(property!=null){
             synths[modueleID].Set(property, value);
         } else {
-            
+            Console.WriteLine("Tried setValue API call with null property!");
         }
     }
 

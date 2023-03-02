@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace modular_synth_frontend.UI;
 
-internal class ModuleSpawnButton : Interactable
+internal class ModuleSpawnButton : Button
 {
     private Texture2D _texture; 
     private Texture2D moduleSprite; //at some point this will store an actual module but atm i just need it to spawn an image so
@@ -19,9 +19,15 @@ internal class ModuleSpawnButton : Interactable
         _spriteBatch = spriteBatch;
     }
 
+    public ModuleSpawnButton(Texture2D sprite, Vector2 position) : base(sprite, position)
+    {
+        _texture = sprite;
+        moduleSprite = sprite;
+    }
+
     public Module Spawn()
     {
-        return new Module(moduleSprite, input.MousePosVector()); //TODO: spawn mouse on middle of sprite not on top (so set some kind of centre position on the module class defintion or something)
+        return new Module(moduleSprite, input.MousePosVector()); //TODO: spawn mouse on middle of sprite not on top - can use half of module width * gridsidelenth and all modules are same height so that's easy
     }
 
     public override void Update()

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace modular_synth_frontend.Core;
 
@@ -24,6 +25,7 @@ public abstract class Entity
     public abstract void Update();
     //public abstract void Destroy();
     public abstract void Draw(SpriteBatch spriteBatch);
+    //public abstract void Draw(SpriteBatch spriteBatch, int width, int height);
 }
 
 

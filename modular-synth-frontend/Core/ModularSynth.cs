@@ -17,15 +17,15 @@ public class ModularSynth : Game
     private SpriteBatch _spriteBatch;
     private InputManager input;
     private Grid grid;
+    private Menu menu;
 
     public const int menuBarHeight = 42;
     public const int dividerHeight = 9;
+    public const int RAILNUM = 2;
 
-    Texture2D cardTexture;
-    Texture2D spawnTexture;
     Texture2D gridTexture;
- 
-    ModuleSpawnButton button;
+    Texture2D handleTexture;
+    Texture2D boxTexture;
 
     public Texture2D slider;
 
@@ -40,7 +40,7 @@ public class ModularSynth : Game
         _graphics.ApplyChanges();
 
         input = InputManager.GetInstance();
-        grid = new Grid();
+        grid = Grid.GetInstance();
 
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -49,6 +49,7 @@ public class ModularSynth : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        Debug.WriteLine(grid.GetGridSideLength());
         base.Initialize();
     }
 
@@ -57,9 +58,10 @@ public class ModularSynth : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
-        cardTexture = Content.Load<Texture2D>("Neutral Card Smol");
-        spawnTexture = Content.Load<Texture2D>("uwu spawn");
         gridTexture = Content.Load<Texture2D>("gridtile");
+        handleTexture = Content.Load<Texture2D>("handletemp");
+        boxTexture = Content.Load<Texture2D>("menubox");
+
         Slider.rail1 = Content.Load<Texture2D>("Rail1");
         Slider.slider1 = Content.Load<Texture2D>("Slider1");
         Slider.slider2 = Content.Load<Texture2D>("Slider2");
@@ -67,8 +69,8 @@ public class ModularSynth : Game
         Dial.indicator1 = Content.Load<Texture2D>("indicator1");
         Port.port1 = Content.Load<Texture2D>("port1");
 
-        button = new ModuleSpawnButton(spawnTexture, cardTexture, new Vector2(10,-10),_spriteBatch);
-
+        menu = new Menu(boxTexture,handleTexture, new Vector2(viewport.Width / 2 - handleTexture.Width/2, 0));
+        menu.LoadContent();
     }
 
     protected override void Update(GameTime gameTime)
@@ -78,26 +80,36 @@ public class ModularSynth : Game
 
         input.Update();
         EntityManager.Update();
-        button.Update();
-        
+        menu.Update();
+
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.DarkSeaGreen);
+        GraphicsDevice.Clear(Color.Gray);
 
-        // TODO: Add your drawing code here
         _spriteBatch.Begin();
-   
-        _spriteBatch.Draw(gridTexture, new Rectangle(0, 0, viewport.Width, menuBarHeight), Color.White);
 
-        _spriteBatch.Draw(gridTexture, new Rectangle(0, ((viewport.Height - menuBarHeight)/3 + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
-        _spriteBatch.Draw(gridTexture, new Rectangle(0, (((viewport.Height - menuBarHeight) / 3)*2 + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
-        _spriteBatch.Draw(gridTexture, new Rectangle(0, viewport.Height - dividerHeight, viewport.Width, dividerHeight), Color.White);
+        //Drawing Static UI
+        /*
+        for (int i = 1; i <= RAILNUM; i++)
+        {
+            _spriteBatch.Draw(gridTexture, new Rectangle(0, (((viewport.Height - menuBarHeight) / RAILNUM) * i + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
+        }
+        */
+
+        //Drawing Grid (Furthest Back Dynamic UI)
         grid.Draw(_spriteBatch, gridTexture);
-        button.Draw(_spriteBatch);
+
+        //Drawing all Entities: Modules -> Components -> Wires
         EntityManager.Draw(_spriteBatch);
+
+        //Drawing the Menu (needs to cover Entities so it is drawn last)
+        menu.Draw(_spriteBatch);
+
+        //TODO: Maybe in Entity Manager? Add concept of active entity, i.e: one currently being dragged that is drawn over everything else
+
         _spriteBatch.End();
 
         base.Draw(gameTime);

@@ -11,8 +11,11 @@ osc::ReceivedMessage ServerSocket::Recv()
 
 		osc::ReceivedPacket p(_inBuf.data(), size);
 		try {
-			if (p.IsMessage()) {
-				return osc::ReceivedMessage(p);
+			if (p.IsMessage() ) {
+				auto m = osc::ReceivedMessage(p);
+				if (!overridePacketReception(m)) {
+					return m;
+				}
 			}
 			else {
 				throw UnexpectedBundleException("Received bundle when shouldn't");
@@ -27,6 +30,9 @@ osc::ReceivedMessage ServerSocket::Recv()
 }
 
 
+bool ServerSocket::overridePacketReception(osc::ReceivedMessage& msg) {
+	return false;
+}
 
 ServerSocket::ServerSocket(IpEndpointName endpoint) : 
 	_endpoint(endpoint), UdpSocket() {

@@ -1,5 +1,5 @@
 #include "synth-api/exception/LinkException.hpp"
-#include "ManagedLinkException.hpp" 
+#include "synth-api-managed/ManagedLinkException.hpp" 
 #include <vcclr.h> 
 
 #using <System.dll>

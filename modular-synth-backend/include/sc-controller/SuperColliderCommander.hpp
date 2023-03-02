@@ -253,7 +253,11 @@ public:
     //Create a new synth from a synth definition, give it an ID, and add it to the tree of nodes. There are four ways to add the node to the tree as determined by the add action argument which is defined as follows:
     //
     //add actions:
-    //0add the new node to the head of the group specified by the add target ID.1add the new node to the tail of the group specified by the add target ID.2add the new node just before the node specified by the add target ID.3add the new node just after the node specified by the add target ID.4the new node replaces the node specified by the add target ID. The target node is freed.
+    //0 - add the new node to the head of the group specified by the add target ID.
+    //1 - add the new node to the tail of the group specified by the add target ID.
+    //2 - add the new node just before the node specified by the add target ID.
+    //3 - add the new node just after the node specified by the add target ID.
+    //4 - the new node replaces the node specified by the add target ID. The target node is freed.
     //
     //Controls may be set when creating the synth. The control arguments are the same as for the n_set command.
     //
@@ -268,7 +272,7 @@ public:
     //:param:target: - add target ID
     //:param:control: - a control index or name
     //:param:interpreted: - floating point and integer arguments are interpreted as control value.  a symbol argument consisting of the letter 'c' or 'a' (for control or audio) followed by the bus's index.    
-    void s_new(std::string definition, int synth, int action, int target, std::vector<std::pair<std::variant<int, std::string>, std::variant<float, int, std::string>>> control);
+    void s_new(std::string definition, int synth, int action, int target, std::vector<std::pair<std::variant<int, std::string>, std::variant<int, float, std::string>>> control);
 
 
     //Get control value(s).

@@ -1,178 +1,232 @@
 #include "sc-controller/SuperColliderController.hpp"
-#include "sc-controller/MidiSynth.hpp"
 #include "include/sc-controller/exceptions/UninitializedConnectionException.h"
+#include "sc-controller/MidiSynth.hpp"
 #include <fstream>
 #include <map>
 
 void print(osc::ReceivedMessage& m)
 {
-	std::cout << m.AddressPattern() << ": ";
+    std::cout << m.AddressPattern() << ": ";
 
-	for (auto it = m.ArgumentsBegin(); it != m.ArgumentsEnd(); ++it) {
-		auto& element = *it;
+    for (auto it = m.ArgumentsBegin(); it != m.ArgumentsEnd(); ++it) {
+        auto& element = *it;
 
-		switch (element.TypeTag()) {
-		case 'i':
-			std::cout << element.AsInt32() << " ";
-			break;
+        switch (element.TypeTag()) {
+        case 'i':
+            std::cout << element.AsInt32() << " ";
+            break;
 
-		default:
-			std::cout << " (type: " << element.TypeTag() << ") ";
-		}
-	}
+        default:
+            std::cout << " (type: " << element.TypeTag() << ") ";
+        }
+    }
 
-	std::cout << std::endl;
+    std::cout << std::endl;
 }
 
 SuperColliderController::SuperColliderController(IpEndpointName endpoint)
-	: SuperColliderCommander(endpoint)
+    : SuperColliderCommander(endpoint)
 {
 }
 
 void SuperColliderController::Connect(IpEndpointName endpoint)
 {
-	s = new SuperColliderController(endpoint);
+    s = new SuperColliderController(endpoint);
 }
 
 SuperColliderController& SuperColliderController::get()
 {
-	if (s == nullptr) {
-		throw std::exception("Invalid connection to supercollider server");
-	}
-	return *s;
+    if (s == nullptr) {
+        throw std::exception("Invalid connection to supercollider server");
+    }
+    return *s;
 }
 
-Synth* SuperColliderController::InstantiateSynth(const std::string& source)
+std::string extractSynthdef(std::string const& path)
 {
-	auto dot = source.find('.');
-	auto slash = source.find_last_of('\\');
+    auto dot = path.find('.');
+    auto slash = path.find_last_of('\\');
+    if (dot != std::string::npos && slash != std::string::npos)
+        return path.substr(slash + 1, dot - slash - 1);
+    return "";
+}
 
-	if (dot == std::string::npos || slash == std::string::npos) {
-		throw std::invalid_argument("source path invalid");
-	}
+bool SuperColliderController::loadSynthDefFile(const std::string& source, SuperColliderPacketBuilder* completion)
+{
 
-	auto file_type = source.substr(dot);
+    if (!loaded_synthdefs.count(source)) {
+        auto dot = source.find('.');
+        auto slash = source.find_last_of('\\');
 
-	std::cout << file_type << std::endl;
+        if (dot == std::string::npos || slash == std::string::npos) {
+            throw std::invalid_argument("source path invalid");
+        }
 
-	if (file_type == ".scsyndef") {
+        auto file_type = source.substr(dot);
 
-		auto synthdef = source.substr(slash + 1, dot - slash - 1);
+        if (file_type == ".scsyndef") {
 
+            auto synthdef = source.substr(slash + 1, dot - slash - 1);
 
-		//Find a free node id
-		while (root.subtree.count(next_node_id)) {
-			next_node_id++;
-		}
-		const int id = next_node_id++;
+            std::cout << "Loading" << source << "for the first time" << std::endl;
 
-		if (!loaded_synthdefs.count(source)) {
-			std::cout << "Loading" << source<< "for the first time" << std::endl;
+            std::ifstream def;
+            def.open(source);
 
-			std::ifstream def;
-			def.open(source);
+            if (def) {
 
-			if (def) {
+                std::string str((std::istreambuf_iterator<char>(def)),
+                    std::istreambuf_iterator<char>());
 
-				std::string str((std::istreambuf_iterator<char>(def)),
-					std::istreambuf_iterator<char>());
+                if (completion == nullptr) {
+                    auto m = d_recv(str);
+                } else {
+                    auto m = d_recv(str, *completion);
+                }
 
-				std::array<char, 100> completion_buf{};
+                def.close();
 
-				loaded_synthdefs.insert(synthdef);
+                loaded_synthdefs.insert(source);
 
-				SuperColliderPacketBuilder completion{ completion_buf.data(), completion_buf.size() };
+                return true;
+            } else {
+                throw std::invalid_argument("Could not open " + source);
+            }
+        } else {
+            throw std::invalid_argument("Could not open " + source + ": Incorrect file format " + file_type);
+        }
+    } else {
+        // File good, but already exists in the server's collection
+        return false;
+    }
+}
 
-				completion.s_new(synthdef, id, 0, 0, {});
+MidiSynth* SuperColliderController::InstantiateMidiSynth(const std::string& midi_source)
+{
+    std::cout << "Loading midi" << std::endl;
+    return new MidiSynth(midi_source);
+}
 
-				auto m = d_recv(str, completion);
+int SuperColliderController::allocateSynthID()
+{
+    // Find a free node id
+    while (root.subtree.count(next_node_id)) {
+        next_node_id++;
+    }
+    return next_node_id++;
+}
 
+Synth* SuperColliderController::InstantiateSynth(const std::string& audio_source, const std::string& control_source)
+{
+    // Find a free node id
+    while (root.subtree.count(next_node_id)) {
+        next_node_id++;
+    }
+    const int id = allocateSynthID();
 
-				def.close();
+    std::array<char, 100> completion_buf {};
 
-			}
-			else {
-				std::cout << "Could not open " << source << std::endl;
-			}
-		}
-		else{
-			std::cout << "Already loaded" << std::endl;
-			s_new(synthdef, id, 0, 0, {});
-		}
+    SuperColliderPacketBuilder completion { completion_buf.data(), completion_buf.size() };
 
-		SyncGroup(&root);
+    auto audio_synth = extractSynthdef(audio_source);
+    auto control_synth = extractSynthdef(control_source);
 
-		return static_cast<Synth*>(root.subtree[id]);
-	}
-	else  if (file_type == ".mid") {
-		std::cout << "Loading midi" << std::endl;
-		return static_cast<Synth*>(new MidiSynth(source));
-	}
+    auto s = new Synth(id, audio_synth, control_synth);
+    root.subtree[id] = s;
+
+    if (audio_synth != "") {
+
+        completion.s_new(audio_synth, id, 0, 0, {});
+
+        if (!loadSynthDefFile(audio_source, &completion)) {
+            s_new(audio_synth, id, 0, 0, {});
+        }
+
+        // Of course possible to have both. This could be included in completion, but I'm lazy
+        if (control_synth != "") {
+            loadSynthDefFile(control_source, nullptr);
+        }
+    } else if (control_synth != "") {
+        completion.s_new(control_synth, id, 0, 0, {});
+
+        if (!loadSynthDefFile(control_source, &completion)) {
+            s_new(audio_synth, id, 0, 0, {});
+        }
+    } else {
+        throw std::invalid_argument("Synth must have either valid control or audio synthdef to be instantiated!");
+    }
+
+    SyncGroup(&root);
+
+    return s;
 }
 
 Bus SuperColliderController::InstantiateBus()
 {
-	// Max polyphony of 8 - maybe
-	next_bus_id += 8;
-	return Bus(next_bus_id);
+    // Max polyphony of 8 - maybe
+    next_bus_id += 8;
+    return Bus(next_bus_id);
+}
+
+bool SuperColliderController::overridePacketReception(osc::ReceivedMessage& msg)
+{
+    if (std::string("/fail").compare(msg.AddressPattern()) == 0) {
+
+        std::cout << "Intercepted Failure" << std::endl;
+
+        return true;
+    } else if (msg.AddressPattern() == "/g_queryTree.reply") {
+
+        return false;
+    }
+
+    return false;
 }
 
 void SuperColliderController::SyncGroup(Group* g)
 {
-	auto m = g_queryTree({ { g->index, 1 } });
-	std::cout << m.AddressPattern() << std::endl;
-	auto it = m.ArgumentsBegin();
+    auto m = g_queryTree({ { g->index, 1 } });
 
-	int32_t flag = (it++)->AsInt32();
-	int32_t gNodeID = (it++)->AsInt32();
+    auto it = m.ArgumentsBegin();
 
-	assert(gNodeID == g->index);
+    int32_t flag = (it++)->AsInt32();
+    int32_t gNodeID = (it++)->AsInt32();
 
-	int32_t children = (it++)->AsInt32();
+    assert(gNodeID == g->index);
 
-	for (size_t i = 0; i < children; i++)
-	{
+    int32_t children = (it++)->AsInt32();
 
-		Node* data;
+    for (size_t i = 0; i < children; i++) {
 
-		int32_t nodeID = (it++)->AsInt32();
-		int32_t children = (it++)->AsInt32();
+        int32_t nodeID = (it++)->AsInt32();
+        int32_t children = (it++)->AsInt32();
 
-		if (children == -1) {
-			//This is a synth
+        if (children == -1) {
+            // This is a synth
 
-			auto synthdef = (it++)->AsString();
-			std::map<std::string, std::variant<  int, float, Bus>> controls;
+            auto synthdef = (it++)->AsString();
+            std::map<std::string, std::variant<int, float, Bus>> controls;
 
-			if (flag) {
-				int controlCount = (it++)->AsInt32();
-				for (size_t j = 0; j < controlCount; j++)
-				{
-					auto cs = (it++)->AsString();
-					if (it->IsFloat()) {
-						controls.insert({ cs,it->AsFloat() });
-					}
-					else {
-						controls.insert({ cs,Bus( std::stoi(it->AsString()+1)) });
-					}
-					it++;
-				}
-			}
+            if (flag) {
+                int controlCount = (it++)->AsInt32();
+                for (size_t j = 0; j < controlCount; j++) {
+                    auto cs = (it++)->AsString();
+                    if (it->IsFloat()) {
+                        controls.insert({ cs, it->AsFloat() });
+                    } else {
+                        controls.insert({ cs, Bus(std::stoi(it->AsString() + 1)) });
+                    }
+                    it++;
+                }
+            }
 
-			if (!g->subtree.count(nodeID))
-				data = new Synth(nodeID, controls);
-		}
-		else {
-			if (!g->subtree.count(nodeID))
-				data = new Group(nodeID);
-		}
+            static_cast<Synth*>(g->subtree[nodeID])->loadControls(controls);
 
-		g->subtree.insert({ nodeID, data });
+        } else {
+            if (!g->subtree.count(nodeID))
+                g->subtree.insert({ nodeID, new Group(nodeID) });
+        }
 
-		//else, This is another group
-
-	}
-
+        // else, This is another group
+    }
 }
-
-

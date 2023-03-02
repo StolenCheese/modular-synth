@@ -328,10 +328,10 @@ void SuperColliderCommander::s_new(
     std::vector<
         std::pair<
             std::variant<int, std::string>, 
-            std::variant<float, int, std::string>
+            std::variant<int, float, std::string>
     >> control) {
 
-    p.s_new(definition, synth, action, target,control);
+    p.s_new(definition, synth, action, target, control);
 
      Send();
 }

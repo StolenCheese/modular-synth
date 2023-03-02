@@ -193,7 +193,7 @@ void MidiSynth::ControlLoop(std::string const& source)
 	}
 }
 
-MidiSynth::MidiSynth(std::string const& source) : control(&MidiSynth::ControlLoop, this, source), Synth(-1, {})
+MidiSynth::MidiSynth(std::string const& source) : control(&MidiSynth::ControlLoop, this, source), Synth(-1, "", "")
 {
 	// Create a new thread to handle midi enable/disable commands
 	// Can't wait to cause every race condition

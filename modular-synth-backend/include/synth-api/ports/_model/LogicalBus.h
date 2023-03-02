@@ -21,14 +21,23 @@ namespace synth_api {
         OutputPort* writer;
     public:
         Bus bus;
-    private:
-        void
-        propagateRateChangeForward(); // when the bus's rate changes, tell the writer and all listeners by
-                                      // traversing the graph forwards (in the direction of control), starting
-                                      // from the writing `OutputPort`
 
-        bool addAudioRateRequirement(); // returns true iff bus switched from control to audio
-        bool removeAudioRateRequirement(); // returns true iff bus switched from audio to control
+    private:
+        /*
+         * When the bus's rate changes, tell the writer and all listeners by traversing the graph forwards (in the
+         * direction of control), starting from the writing OutputPort.
+         */
+        void propagateRateChangeForward();
+
+        /*
+         * Returns true iff the LogicalBus switched from control rate to audio rate.
+         */
+        bool addAudioRateRequirement();
+
+        /*
+        * Returns true iff the LogicalBus switched from audio rate to control rate.
+        */
+        bool removeAudioRateRequirement();
 
     public:
         explicit LogicalBus(OutputPort* writer)
@@ -36,10 +45,16 @@ namespace synth_api {
             , audioRateRequirement(0), bus(SuperColliderController::get().InstantiateBus()) {
             };
 
-        void addListener(InputPort* inputPort); // connects inputPort to the bus, and iteratively traverses the graph in
-                                                // the backwards direction (towards audio sources), updating the rates of
-                                                // depended-upon ports and buses
+        /*
+         * Connects inputPort to the LogicalBus and iteratively traverses the graph in the backwards direction
+         * (towards audio sources), updating the rates of depended-upon ports and buses.
+         */
+        void addListener(InputPort* inputPort);
 
+        /*
+         * Disconnects inputPort from the LogicalBus and iteratively traverses the graph in the backwards direction
+         * (towards audio sources), updating the rates of depended-upon ports and buses.
+         */
         void removeListener(InputPort* inputPort);
 };
 }

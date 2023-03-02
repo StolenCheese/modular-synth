@@ -4,18 +4,19 @@
 
 #include "synth-api/section/Section.h"
 #include "synth-api/section/_model/PortManager.h"
+#include "sc-controller/SetterFunctor.h"
 
 namespace synth_api {
 
-void Section::generatePortModel(Section& parent,
-    const std::vector<std::pair<std::string, float>>& inputPortList,
-    const std::vector<std::string>& outputPortList)
-{
+void Section::generatePortModel(Section &parent,
+								const std::vector<std::pair<std::string, float>>& inputPortList,
+								const std::vector<std::string>& outputPortList) {
 
-    for (const auto& p : inputPortList) {
-        InputPort* newInputPort = PortManager::getNewInputPort(&parent, p.second);
-        inputPorts.insert({ p.first, newInputPort });
-    }
+	for (const auto& p : inputPortList) {
+		SetterFunctor setter = SetterFunctor(p.first, synth);
+		InputPort * newInputPort = PortManager::getNewInputPort(&parent, setter, p.second);
+		inputPorts.insert({p.first, newInputPort});
+	}
 
     for (const auto& p : outputPortList) {
         OutputPort* newOutputPort = PortManager::getNewOutputPort(&parent);

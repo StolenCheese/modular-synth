@@ -8,6 +8,7 @@
 #include "synth-api/ports/InputPort.h"
 #include "synth-api/ports/OutputPort.h"
 #include "synth-api/ports/Port.h"
+#include "sc-controller/SetterFunctor.h"
 
 #include <list>
 #include <unordered_map>
@@ -16,6 +17,8 @@ namespace synth_api {
     class Section;
 
     class PortManager {
+    friend class LogicalBus;
+
     private:
         enum Stage {OnStack, Explored};
         static std::unordered_map<Port*, Section*> parentMap;
@@ -26,7 +29,7 @@ namespace synth_api {
         Port* out;
 
         // TODO @bms53: Make these thread safe with locks!
-        static InputPort* getNewInputPort(Section *parent, float defaultValue);
+        static InputPort* getNewInputPort(Section *parent, SetterFunctor setter, float defaultValue);
         static OutputPort* getNewOutputPort(Section *parent);
 
         /*

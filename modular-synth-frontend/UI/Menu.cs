@@ -11,7 +11,7 @@ internal class Menu : Interactable
     private Texture2D boxSprite;
 
     private List<Button> ActiveButtons;
-    public bool open;
+    private bool open;
 
     private Texture2D moduleTexture;
     private Texture2D spawnTexture;

@@ -104,9 +104,7 @@ internal class Grid
             rail = ModularSynth.RAILNUM - 1;
         }
 
-        Debug.WriteLine("Rail Number: " + rail);
         int y = rail * (railHeight) + ModularSynth.menuBarHeight;
-        Debug.WriteLine("Placing at: " + y);
         return new Vector2(x,y);
     }
 
@@ -122,6 +120,12 @@ internal class Grid
 
     public bool IsTileOccupied(int x, int y)
     {
+        if(!gridTiles.ContainsKey(new Vector2(x, y))){
+            for(int i = 0;i < ROWS; i++) { 
+                gridTiles.Add(new Vector2(x, y + i), new GridTile());
+                Debug.WriteLine("Adding new tile at: ", x + "," + (y+i));
+            }       
+        }
         return gridTiles[new Vector2(x, y)].occupied;
     } 
    
@@ -149,11 +153,7 @@ internal class Grid
         {
             for (int j = 0; j < width; j++)
             {
-                if (x + j < cols)
-                {
-                    //TODO: remove if and just have it add extra tiles
-                    gridTiles[new Vector2(x + j, i + rail * ROWS)].occupied = true;
-                }
+                gridTiles[new Vector2(x + j, i + rail * ROWS)].occupied = true;
             }
         }
     }
@@ -167,11 +167,7 @@ internal class Grid
         {
             for (int j = 0; j < width; j++)
             {
-                if (x + j < cols)
-                {
-                    //TODO: remove if and just have it add extra tiles
-                    gridTiles[new Vector2(x + j, i + rail * ROWS)].occupied = false;
-                }
+                gridTiles[new Vector2(x + j, i + rail * ROWS)].occupied = false;
             }
         }
     }
@@ -181,13 +177,6 @@ internal class Grid
         //TODO: Add some knowledge of offset from base screen pos from Modular Synth script
 
         int x = (int)Math.Round(screenCoords.X / gridSideLength);
-        if(x < 0)
-        {
-            x = 0;
-        }
-        else if(x > cols){
-            x = cols - 8;
-        }
 
         int rail = (int)Math.Round((screenCoords.Y - ModularSynth.menuBarHeight) / railHeight);
 

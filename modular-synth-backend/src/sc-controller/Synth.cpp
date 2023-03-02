@@ -8,7 +8,6 @@ Synth::Synth( int32_t index, std::string audio_rate_synth, std::string control_r
     valid(false),
     outputRate(BusRate::AUDIO)
 {
-  
     if (audio_rate_synth == "" && control_rate_synth != "") {
         outputRate = BusRate::CONTROL;
     } 
@@ -16,7 +15,7 @@ Synth::Synth( int32_t index, std::string audio_rate_synth, std::string control_r
 
 
 Synth::Synth()
-    : Node( -1), valid(false), outputRate(BusRate::AUDIO)
+    : Node( -1), valid(false), outputRate(BusRate::CONTROL)
 {
  
 }

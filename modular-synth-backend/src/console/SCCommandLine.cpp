@@ -1,4 +1,5 @@
 #include "sc-controller/SuperColliderController.hpp"
+#include "synth-api/section/Section.h"
 
 #include "osc/OscOutboundPacketStream.h"
 #include "osc/OscReceivedElements.h"
@@ -44,6 +45,28 @@ void midi_test() {
     std::cin >> s;
 
     delete s3; 
+}
+
+void midi_section_test() { 
+
+   synth_api::Section s3{ "A:\\Documents\\synth\\midi\\Bonetrousle.mid" };
+
+
+    for (size_t i = 0; i < 16; i++)
+    {
+        // two organs per channel
+        synth_api::Section* s1 = new synth_api::Section{"A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\organ.scsyndef", ""};
+
+        s3.getPortFor("out" + std::to_string(i) + "_0")->linkTo(s1->getPortFor("freq"));
+
+        synth_api::Section* s2 = new synth_api::Section{ "A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\organ.scsyndef", "" };
+
+        s3.getPortFor("out" + std::to_string(i) + "_1")->linkTo(s2->getPortFor("freq"));
+
+    }
+      
+    std::string s;
+    std::cin >> s;
 }
 
 void osc_test() {
@@ -136,9 +159,9 @@ int main(int argc, char* argv[])
     std::cout << server.version().AddressPattern() << std::endl;
 
 
-
+    midi_section_test();
     //midi_test();
-    osc_test();
+    //osc_test();
      
 }
 

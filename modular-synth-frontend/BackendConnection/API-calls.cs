@@ -30,7 +30,7 @@ public static class API {
     public static void createSection(Module m){
         if(m.scSection==null){
             Console.WriteLine("attempting section creation");
-            m.scSection = new SCSection(absPathToSynthDefs+m.function+".scsyndef");
+            m.scSection = SCSection.FromSynthdef(absPathToSynthDefs+m.function+".scsyndef","");
 
             synths[m.ModuleId] = m.scSection;
 

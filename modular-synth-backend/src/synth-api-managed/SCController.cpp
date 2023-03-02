@@ -33,18 +33,26 @@ namespace SynthAPI {
         ///<summary>
         /// Connect to a supercollider server
         /// Currently has to be running locally
+        /// Returns true if succesfull
         ///</summary>
-        static void Connect(String^ addr, int port) {
+        static bool Connect(String^ addr, int port) {
             auto s = msclr::interop::marshal_as<std::string>(addr);
 
             auto endpoint = IpEndpointName(s.c_str(), port);
 
             SuperColliderController::Connect(endpoint);
+             
+            try {
+                SuperColliderController::get().g_deepFree({ 0 });
+                //confirm communications
+                auto status = SuperColliderController::get().status();
+            }
+            catch (std::exception& e) {
+                return false;
+            }
+            return true;
 
-            //TODO: Design choice - do we allow for reconnection, or rely on save/load?
-
-            SuperColliderController::get().g_deepFree({ 0 });
-        }
+            }
 
         ///<summary>
         /// Display incoming OSC messages.

@@ -4,7 +4,8 @@ using SynthAPI;
 // See https://aka.ms/new-console-template for more information
 Console.WriteLine("Hello, World!");
 
-SCController.Connect("127.0.0.1", 58000);
+if (!SCController.Connect("127.0.0.1", 58000))
+	throw new Exception("Failed to connect");
 
 SCController.DumpOSC(1);
 

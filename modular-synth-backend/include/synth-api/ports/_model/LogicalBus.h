@@ -19,8 +19,9 @@ namespace synth_api {
     private:
         uint16_t audioRateRequirement;
         OutputPort* writer;
+    public:
         Bus bus;
-
+    private:
         void
         propagateRateChangeForward(); // when the bus's rate changes, tell the writer and all listeners by
                                       // traversing the graph forwards (in the direction of control), starting

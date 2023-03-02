@@ -7,11 +7,14 @@
 
 #include <set>
 #include <list>
+#include <iostream>
 
 namespace synth_api {
     void Port::linkTo(Port *other) {
         // Ensure that the requested link is not already in the chain for this element.
         cyclicCheck(other);
+         
+
         this->outgoingConnections.insert(other);
         other->outgoingConnections.insert(this);
     }
@@ -34,7 +37,8 @@ namespace synth_api {
         // Time & Space Complexity: O(n) where n is the number of ports across sections.
         std::list<Port *> queue;
         std::set<Port *> visited;
-        queue.insert(queue.end(), target);
+        queue.insert(queue.cend(), this);
+        visited.insert(this);
         while (!queue.empty()) {
             Port *next_node = queue.front();
 
@@ -87,4 +91,10 @@ namespace synth_api {
     float Port::getValue() {
         return 100;
     }
+
+    Port::~Port() {
+        for (const auto &p : outgoingConnections) {
+            Port::removeLink(p);
+        }
+    };
 }

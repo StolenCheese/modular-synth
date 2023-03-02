@@ -131,6 +131,21 @@ namespace modular_synth_frontend.Core;
         }
     }
 
+    public bool MouseWheelUp(){
+        if(newState.ScrollWheelValue > oldState.ScrollWheelValue){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public bool MouseWheelDown(){
+        if(newState.ScrollWheelValue < oldState.ScrollWheelValue){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public Point MousePosition()
     {
         return newState.Position;

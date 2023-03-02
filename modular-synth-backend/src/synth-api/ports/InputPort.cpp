@@ -20,7 +20,8 @@ namespace synth_api {
 
         // dynamic cast outputs nullptr when the cast is invalid on a virtual class
         // this only works with *virtual* classes, however!
-        auto * outputPort = dynamic_cast<OutputPort *>(other);
+        auto * otherCopy(other);
+        auto * outputPort = dynamic_cast<OutputPort *>(otherCopy);
         auto * inputPort = dynamic_cast<InputPort *>(other);
         if (outputPort) {
             if (this->controller) {
@@ -196,5 +197,11 @@ namespace synth_api {
         //SCOOP setInputBus(defaultValue)
         this->logicalBus->removeListener(this);
         this->logicalBus = nullptr;
+    }
+
+    InputPort::~InputPort() {
+        for (const auto &p : outgoingConnections) {
+            InputPort::removeLink(p);
+        }
     }
 } // synth-api

@@ -1,9 +1,9 @@
 // wrap_native_class_for_mgd_consumption.cpp
-// compile with: /clr /LD 
-#include <vcclr.h>
-
+// compile with: /clr /LD  
 #include "sc-controller/SuperColliderController.hpp"
 #include <msclr\marshal_cppstd.h>
+#include <vcclr.h>
+
 #using <System.dll>
  
 

@@ -82,7 +82,7 @@ void MidiSynth::ControlLoop(std::string const& source)
 
 		int note;
 
-		std::cout << "Event at " << tick << " : ";
+		//std::cout << "Event at " << tick << " : ";
 		if (msg.is_meta_event())
 		{
 			switch (msg.get_meta_event_type())
@@ -93,24 +93,25 @@ void MidiSynth::ControlLoop(std::string const& source)
 
 				int tempo = 0;
 
-				std::cout << "Tempo change to ";
+				//std::cout << "Tempo change to ";
+
 				for (size_t i = 0; i < len; i++)
 				{
-					std::cout << std::to_string(msg.bytes[3 + i]) << " ";
+					//std::cout << std::to_string(msg.bytes[3 + i]) << " ";
 					tempo <<= 8;
 					tempo += msg.bytes[3 + i];
 				}
-				std::cout << " = " << tempo;
+				//std::cout << " = " << tempo;
 
 				bps = (60000000.0 / tempo) / 60;
 
-				std::cout << ", bps = " << bps;
+				//std::cout << ", bps = " << bps;
 
 				break;
 			}
 
 			default:
-				std::cout << "Meta event";
+			//	std::cout << "Meta event";
 				break;
 			}
 		}
@@ -120,10 +121,10 @@ void MidiSynth::ControlLoop(std::string const& source)
 			{
 			case libremidi::message_type::NOTE_ON:
 				note = (int)msg.bytes[1];
-				std::cout << "Note ON: "
-					<< "channel " << msg.get_channel() << ' '
-					<< "note " << note << ' '
-					<< "velocity " << (int)msg.bytes[2] << ' ';
+				//std::cout << "Note ON: "
+				//	<< "channel " << msg.get_channel() << ' '
+				//	<< "note " << note << ' '
+				//	<< "velocity " << (int)msg.bytes[2] << ' ';
 
 				if (playing[next][0] == 0) {
 					playing[next][0] = note;
@@ -134,17 +135,17 @@ void MidiSynth::ControlLoop(std::string const& source)
 					channels[next][1].set(from_midi_note(note));
 				}
 				else {
-					std::cout << "- Missed the note!";
+					//std::cout << "- Missed the note!";
 				}
 
 				break;
 			case libremidi::message_type::NOTE_OFF:
 				
 				note = (int)msg.bytes[1];
-				std::cout << "Note OFF: "
-					<< "channel " << msg.get_channel() << ' '
-					<< "note " << note << ' '
-					<< "velocity " << (int)msg.bytes[2] << ' ';
+				//std::cout << "Note OFF: "
+				//	<< "channel " << msg.get_channel() << ' '
+				//	<< "note " << note << ' '
+				//	<< "velocity " << (int)msg.bytes[2] << ' ';
 
 				if (playing[next][0] == note) {
 					playing[next][0] = 0;
@@ -155,39 +156,39 @@ void MidiSynth::ControlLoop(std::string const& source)
 				}
 
 				break;
-			case libremidi::message_type::CONTROL_CHANGE:
-				std::cout << "Control: "
-					<< "channel " << msg.get_channel() << ' '
-					<< "control " << (int)msg.bytes[1] << ' '
-					<< "value " << (int)msg.bytes[2] << ' ';
-				break;
-			case libremidi::message_type::PROGRAM_CHANGE:
-				std::cout << "Program: "
-					<< "channel " << msg.get_channel() << ' '
-					<< "program " << (int)msg.bytes[1] << ' ';
-				break;
-			case libremidi::message_type::AFTERTOUCH:
-				std::cout << "Aftertouch: "
-					<< "channel " << msg.get_channel() << ' '
-					<< "value " << (int)msg.bytes[1] << ' ';
-				break;
-			case libremidi::message_type::POLY_PRESSURE:
-				std::cout << "Poly pressure: "
-					<< "channel " << msg.get_channel() << ' '
-					<< "note " << (int)msg.bytes[1] << ' '
-					<< "value " << (int)msg.bytes[2] << ' ';
-				break;
-			case libremidi::message_type::PITCH_BEND:
-				std::cout << "Poly pressure: "
-					<< "channel " << msg.get_channel() << ' '
-					<< "bend " << (int)(msg.bytes[1] << 7 + msg.bytes[2]) << ' ';
-				break;
+			//case libremidi::message_type::CONTROL_CHANGE:
+			//	std::cout << "Control: "
+			//		<< "channel " << msg.get_channel() << ' '
+			//		<< "control " << (int)msg.bytes[1] << ' '
+			//		<< "value " << (int)msg.bytes[2] << ' ';
+			//	break;
+			//case libremidi::message_type::PROGRAM_CHANGE:
+			//	std::cout << "Program: "
+			//		<< "channel " << msg.get_channel() << ' '
+			//		<< "program " << (int)msg.bytes[1] << ' ';
+			//	break;
+			//case libremidi::message_type::AFTERTOUCH:
+			//	std::cout << "Aftertouch: "
+			//		<< "channel " << msg.get_channel() << ' '
+			//		<< "value " << (int)msg.bytes[1] << ' ';
+			//	break;
+			//case libremidi::message_type::POLY_PRESSURE:
+			//	std::cout << "Poly pressure: "
+			//		<< "channel " << msg.get_channel() << ' '
+			//		<< "note " << (int)msg.bytes[1] << ' '
+			//		<< "value " << (int)msg.bytes[2] << ' ';
+			//	break;
+			//case libremidi::message_type::PITCH_BEND:
+			//	std::cout << "Poly pressure: "
+			//		<< "channel " << msg.get_channel() << ' '
+			//		<< "bend " << (int)(msg.bytes[1] << 7 + msg.bytes[2]) << ' ';
+			//	break;
 			default:
-				std::cout << "Unsupported.";
+				//std::cout << "Unsupported.";
 				break;
 			}
 		}
-		std::cout << '\n';
+	//	std::cout << '\n';
 
 	}
 }

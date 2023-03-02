@@ -5,10 +5,10 @@
 #ifndef MODULAR_SYNTH_SECTION_H
 #define MODULAR_SYNTH_SECTION_H
 
+#include "sc-controller/Synth.hpp"
 #include "synth-api/ports/InputPort.h"
 #include "synth-api/ports/OutputPort.h"
 #include "synth-api/section/_model/PortManager.h"
-#include "sc-controller/Synth.hpp"
 
 #include <map>
 #include <string>
@@ -34,11 +34,10 @@ protected:
      *                   and the uint64_t is the bus number assigned to that output.
      */
     void generatePortModel(Section& parent,
-                           const std::vector<std::pair<std::string, float>>& inputPortList,
-                           const std::vector<std::string>& outputPortList);
+        const std::vector<std::pair<std::string, float>>& inputPortList,
+        const std::vector<std::string>& outputPortList);
 
 public:
-
     Synth* synth;
 
     // Mapping of parameter name to corresponding Output that provides it
@@ -47,12 +46,12 @@ public:
 
     // Mapping of parameter name to Input that links to it
     std::map<std::string, InputPort*> inputPorts;
-    
+
     /*
      * Generates a Section object from a given section definition file.
      *
      * Parameters:
-     *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
+     *      std::string& synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
      *      inputParams: List of parameter names for front-end to use
      */
     explicit Section(const std::string& audio_source, const std::string& control_source);

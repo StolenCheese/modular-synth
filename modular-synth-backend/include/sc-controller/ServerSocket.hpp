@@ -15,6 +15,7 @@
 #include <map>
 #include <thread>
 #include <variant> 
+# pragma once
 #include "SuperColliderPacketBuilder.hpp"
 
 #define ADDRESS "127.0.0.1"

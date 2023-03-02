@@ -17,6 +17,8 @@ namespace synth_api {
     class Section;
 
     class PortManager {
+    friend class LogicalBus;
+
     private:
         enum Stage {OnStack, Explored};
         static std::unordered_map<Port*, Section*> parentMap;

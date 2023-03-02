@@ -25,7 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="synth-api-managed" >
-		<HintPath>..\modular-synth-backend\out\build\x64-Debug\src\synth-api-managed\synth-api-managed.dll</HintPath>
+		<HintPath>synth-api-managed.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

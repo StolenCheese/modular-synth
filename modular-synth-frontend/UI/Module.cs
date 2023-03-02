@@ -34,16 +34,16 @@ public class Module : Interactable
         function = "sin-ar";
 
         components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2,250),Slider.rail1,Slider.slider2,Color.White,"add",0.7,0.7));
-        components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2-50,this.sprite.Height/2-50),Slider.rail1,Slider.slider2,Color.White,"freq",0.7,0.7,true));
+        //components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2-50,this.sprite.Height/2-50),Slider.rail1,Slider.slider2,Color.White,"freq",0.7,0.7,true));
         components.Add(new Dial(pos, ModuleId, new Vector2(this.sprite.Width/2+50,this.sprite.Height/2-50),Dial.indicator1,Dial.dial1,Color.White,"mul",0.7,0.7));
         
-        //we give all ports the parent module so that they know if they are on the same module. Stops connecting wires to same module (not a nice fix)
         components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2-50,300),Port.port1,Color.White,"",true));
-        components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"out",false));
+        //components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"out",false));
 
         addToEtyMgr();
 
         API.API.createSection(this);
+        sendInitialComponentValsToServer();
     }
 
 
@@ -67,6 +67,12 @@ public class Module : Interactable
             }
         }
         return false;
+    }
+
+    private void sendInitialComponentValsToServer(){
+        foreach(Component c in components){
+            c.sendValToServer();
+        }
     }
 
     public override void Update()

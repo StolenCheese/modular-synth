@@ -32,6 +32,9 @@ internal class Slider : Component
             maxSliderOffset = track.width/2;
             minSliderOffset = -track.width/2;
         }
+
+        // this.minValueForServer = 1;
+        // this.maxValueForServer = 10;
         
     }
 
@@ -39,6 +42,19 @@ internal class Slider : Component
     public override void UpdatePos(Vector2 modulePos){
         track.UpdatePos(modulePos);
         this.modulePos = modulePos;
+    }
+
+    public override void sendValToServer(){
+        if(SliderOffset>maxSliderOffset||SliderOffset<minSliderOffset){
+            Console.WriteLine($"Slider offset of {SliderOffset} is greater than max allowed!! skipping send");
+        } else {
+            double svRange = maxValueForServer-minValueForServer;
+            double thisRange = maxSliderOffset-minSliderOffset;
+            //translate value relative to this range to value relative to server range
+            //Console.WriteLine($"SliderOffset:{SliderOffset},svRange:{svRange},thisRange:{thisRange},minValueForServer:{minValueForServer},minSliderOffset:{minSliderOffset}");
+            float val = (float)((SliderOffset-minSliderOffset)*svRange/thisRange+minValueForServer);
+            API.API.setValue(this.parentModuleId, this.parameterID, val);
+        }
     }
 
     //order is important!
@@ -52,7 +68,8 @@ internal class Slider : Component
         set {this.sliderOffset = MathHelper.Clamp(value,minSliderOffset,maxSliderOffset);}
     }
 
-    public override void Update(){     
+    public override void Update(){  
+        //Console.WriteLine($"SliderOffset: {SliderOffset}");   
         if (boundingBox.Contains(input.MousePosition()))
         {
             this.isInteracting=true;
@@ -68,8 +85,9 @@ internal class Slider : Component
         {
             this.isInteracting=true;
             if(vertical){
-                SliderOffset = input.MousePosVector().Y + clickOffset - modulePos.Y - moduleLocalPos.Y;
-                this.position.Y = SliderOffset + modulePos.Y + moduleLocalPos.Y;
+                //minus used here to make sliding up increase the value and sliding down decrease
+                SliderOffset = -(input.MousePosVector().Y + clickOffset - modulePos.Y - moduleLocalPos.Y);
+                this.position.Y = -SliderOffset + modulePos.Y + moduleLocalPos.Y;
             }else{
                 SliderOffset = input.MousePosVector().X + clickOffset - modulePos.X - moduleLocalPos.X;
                 this.position.X = SliderOffset + modulePos.X + moduleLocalPos.X;
@@ -78,11 +96,11 @@ internal class Slider : Component
             if (input.LeftMouseClickUp()){
                 dragging = false;
             }
-            
+        sendValToServer();    
         }else{
             this.position = modulePos + moduleLocalPos;
             if(vertical){
-                this.position.Y += SliderOffset;  
+                this.position.Y -= SliderOffset;  
             }else{
                 this.position.X += SliderOffset;  
             }

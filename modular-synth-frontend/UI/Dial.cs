@@ -49,10 +49,14 @@ internal class Dial : Component
     }
 
     public override void sendValToServer(){
-        if(this.rotation>maxRotation||this.rotation<minRotation){
+        if(rotation>maxRotation||rotation<minRotation){
             Console.WriteLine("Rotation is greater than max allowed!! skipping send");
         } else {
-            float val = (float)(rotation*(maxValueForServer-minValueForServer)/(maxRotation-minRotation));
+            double svRange = maxValueForServer-minValueForServer;
+            double thisRange = maxRotation-minRotation;
+            //translate value relative to this range to value relative to server range
+            //Console.WriteLine($"SliderOffset:{SliderOffset},svRange:{svRange},thisRange:{thisRange},minValueForServer:{minValueForServer},minSliderOffset:{minSliderOffset}");
+            float val = (float)((rotation-minRotation)*svRange/thisRange+minValueForServer);
             API.API.setValue(this.parentModuleId, this.parameterID, val);
         }
     }

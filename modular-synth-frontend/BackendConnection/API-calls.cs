@@ -46,7 +46,7 @@ public static class API {
     }
 
     public static void setValue(int modueleID,string property,float value){
-        Console.WriteLine($"params: ID:{modueleID},property:{property},value:{value}");
+        //Console.WriteLine($"params: ID:{modueleID},property:{property},value:{value}");
         if(value!=null&&property!=null&&modueleID!=null){
             synths[modueleID].Set(property, value);
         } else {

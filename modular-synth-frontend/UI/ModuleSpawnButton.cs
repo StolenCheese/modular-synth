@@ -17,6 +17,12 @@ internal class ModuleSpawnButton : Button
         moduleSprite = sprite;
     }
 
+    public ModuleSpawnButton(Texture2D sprite, Vector2 position) : base(sprite, position)
+    {
+        _texture = sprite;
+        moduleSprite = sprite;
+    }
+
     public Module Spawn()
     {
         return new Module(moduleSprite, input.MousePosVector()); //TODO: spawn mouse on middle of sprite not on top - can use half of module width * gridsidelenth and all modules are same height so that's easy

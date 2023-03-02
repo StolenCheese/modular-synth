@@ -83,12 +83,12 @@ public class ModularSynth : Game
         _spriteBatch.Begin();
    
         //Drawing Static UI
-        _spriteBatch.Draw(gridTexture, new Rectangle(0, 0, viewport.Width, menuBarHeight), Color.White);
-
+        /*
         for (int i = 1; i <= RAILNUM; i++)
         {
             _spriteBatch.Draw(gridTexture, new Rectangle(0, (((viewport.Height - menuBarHeight) / RAILNUM) * i + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
         }
+        */
 
         //Drawing Grid (Furthest Back Dynamic UI)
         grid.Draw(_spriteBatch, gridTexture);

@@ -38,7 +38,7 @@ public class EntityManager{
     {
         foreach(Entity entity in entities)
         {
-            entity.enabled = false;
+            entity.enabled = true;
         }
     }
 }

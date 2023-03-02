@@ -38,6 +38,13 @@ internal class Module : Interactable
                 originalPosition = GetPosition();
                 clickOffset = GetPosition() - input.MousePosVector();
             }
+
+            if(input.RightMouseClickDown())
+            {
+                //EntityManager.entities.Remove(this);
+                //God I hope that makes this garbage collect and we don't have a memory leak TODO: Check that lol
+                //TODO: once merged update how entity manager actually works such that can alter list
+            }
         }
 
         if (dragging)

@@ -1,6 +1,6 @@
 
-#include "ManagedLinkException.hpp"
-#include "SCPort.hpp"
+#include "synth-api-managed/ManagedLinkException.hpp"
+#include "synth-api-managed/SCPort.hpp"
 #using <System.dll>
 
 using namespace System;

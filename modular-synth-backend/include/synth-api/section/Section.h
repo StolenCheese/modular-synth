@@ -56,6 +56,9 @@ public:
      */
     explicit Section(const std::string& audio_source, const std::string& control_source);
 
+    // Above but for .mid files
+    explicit Section(const std::string& midi_source);
+
     ~Section();
 
     /*

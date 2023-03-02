@@ -40,6 +40,29 @@ Port* Section::getPortFor(const std::string& param)
     return nullptr;
 }
 
+
+Section::Section(const std::string& midi_source)
+    : synth(SuperColliderController::get().InstantiateMidiSynth(midi_source))
+    , outputPorts()
+    , inputPorts()
+{
+
+    std::vector<std::pair<std::string, float>> inputPortSpecification;
+    std::vector<std::string> outputPortSpecification;
+
+    for (const auto& key_value_pair : synth->controls) {
+        if (key_value_pair.first.rfind("out", 0) == 0) {
+            outputPortSpecification.insert(outputPortSpecification.cend(), key_value_pair.first);
+        }
+        else {
+            inputPortSpecification.insert(inputPortSpecification.cend(),
+                { key_value_pair.first, std::get<float>(key_value_pair.second) });
+        }
+    }
+
+    generatePortModel(*this, inputPortSpecification, outputPortSpecification);
+}
+
 Section::Section(const std::string& audio_source, const std::string& control_source)
     : synth(SuperColliderController::get().InstantiateSynth(audio_source, control_source))
     , outputPorts()
@@ -51,10 +74,10 @@ Section::Section(const std::string& audio_source, const std::string& control_sou
 
     for (const auto& key_value_pair : synth->controls) {
         if (key_value_pair.first.rfind("out", 0) == 0) {
-            outputPortSpecification.insert(outputPortSpecification.cend(), key_value_pair.first.c_str());
+            outputPortSpecification.insert(outputPortSpecification.cend(), key_value_pair.first);
         } else {
             inputPortSpecification.insert(inputPortSpecification.cend(),
-                { key_value_pair.first.c_str(), std::get<float>(key_value_pair.second) });
+                { key_value_pair.first, std::get<float>(key_value_pair.second) });
         }
     }
 

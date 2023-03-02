@@ -21,7 +21,7 @@ while (true)
 
 		case ["new", "midi", String midi, "with", String inst]:
 			var path = "A:\\Documents\\synth\\midi\\" + midi + ".mid";
-			s = new SCSection(path);
+			s = SCSection.FromMidi(path);
 			Console.WriteLine($"Loading from {path}");
 			Console.WriteLine($"Created new synth i={s.index} with controls [{System.String.Join(',', s.controls)}]");
 			synths[s.index] = s;
@@ -29,7 +29,7 @@ while (true)
 			var instPath = "A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + inst + ".scsyndef";
 			foreach (var p in s.controls)
 			{
-				var i = new SCSection(instPath);
+				var i = SCSection.FromSynthdef(instPath, null);
 				synths[i.index] = i;
 
 				s.getPortFor(p).linkTo(i.getPortFor("freq"));
@@ -39,7 +39,7 @@ while (true)
 
 		case ["new", "synth", String synth]:
 
-			s = new SCSection("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + synth + ".scsyndef");
+			s = SCSection.FromSynthdef("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + synth + ".scsyndef", null);
 			Console.WriteLine($"Created new synth i={s.index} with controls [{System.String.Join(',', s.controls)}]");
 			synths[s.index] = s;
 

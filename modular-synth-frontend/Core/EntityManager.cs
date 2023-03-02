@@ -35,4 +35,20 @@ public class EntityManager{
         }
 
     }
+
+    public static void DisableEntities()
+    {
+        foreach(Entity entity in entities)
+        {
+            entity.enabled= false;
+        }
+    }
+
+    public static void EnableEntities()
+    {
+        foreach(Entity entity in entities)
+        {
+            entity.enabled = true;
+        }
+    }
 }

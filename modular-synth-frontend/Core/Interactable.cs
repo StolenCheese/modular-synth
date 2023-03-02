@@ -8,11 +8,11 @@ public abstract class Interactable : Entity
 {
     protected Texture2D sprite;
     protected Color colour;
-    protected Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
+    private Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
     protected Rectangle boundingBox;
-    private int xOffset=0; 
-    private int yOffset=0; 
-    private int height; 
+    private int xOffset=0;
+    private int yOffset=0;
+    private int height;
     private int width;
 
     public Interactable(Texture2D sprite)
@@ -30,9 +30,9 @@ public abstract class Interactable : Entity
         this.sprite = sprite;
         colour = Color.White;
         this.position = position;
-        boundingBox = sprite.Bounds;
         this.height = sprite.Height;
         this.width = sprite.Width;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, sprite.Width, sprite.Height);
     }
 
     public Interactable(Texture2D sprite, Vector2 position, Color colour)
@@ -42,7 +42,7 @@ public abstract class Interactable : Entity
         this.position = position;
         this.height = sprite.Height;
         this.width = sprite.Width;
-        boundingBox = sprite.Bounds;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, sprite.Width, sprite.Height);
     }
 
     //offset is how much larger the bounding box is than the sprite
@@ -72,5 +72,29 @@ public abstract class Interactable : Entity
     {
         boundingBox = new Rectangle((int)position.X,(int)position.Y, width, height);
         spriteBatch.Draw(sprite, boundingBox, colour);
+    }
+
+    /*
+    public override void Draw(SpriteBatch spriteBatch, int width, int height)
+    {
+        spriteBatch.Draw(sprite, new Rectangle((int)position.X, (int)position.Y, width, height), colour);
+    }
+    */
+    public Vector2 GetPosition()
+    {
+        return position;
+    }
+
+    public void SetPosition(Vector2 pos)
+    {
+        position = pos;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, boundingBox.Width, boundingBox.Height);
+    }
+
+    public void ShiftPosition(int x, int y)
+    {
+        position.X += x;
+        position.Y += y;
+        boundingBox = new Rectangle((int)position.X, (int)position.Y, boundingBox.Width, boundingBox.Height);
     }
 }

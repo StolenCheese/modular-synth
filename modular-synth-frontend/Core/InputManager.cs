@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace modular_synth_frontend.Core;
 
@@ -42,7 +43,7 @@ namespace modular_synth_frontend.Core;
             return true;
         }
         else
-        {
+        {  
             return false;
         }
     }

@@ -79,10 +79,13 @@ public class Module : Interactable
         return false;
     }
 
-    private void sendInitialComponentValsToServer(){
-        foreach(Component c in components){
+    private void sendInitialComponentValsToServer()
+    {
+        foreach (Component c in components)
+        {
             c.sendValToServer();
         }
+    }
 
     public override void Update()
     {

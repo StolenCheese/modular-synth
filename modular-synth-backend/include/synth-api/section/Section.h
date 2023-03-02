@@ -55,7 +55,7 @@ public:
      *      char * synthdef: known/dir/to/synthdefs/{synthdef}.scsyndef
      *      inputParams: List of parameter names for front-end to use
      */
-    explicit Section(const char* synthDef);
+    explicit Section(const std::string& audio_source, const std::string& control_source);
 
     ~Section();
 

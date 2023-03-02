@@ -1,19 +1,85 @@
 #include "sc-controller/Synth.hpp"
 #include "sc-controller/SuperColliderController.hpp"
 
-Synth::Synth( int32_t index, std::map<std::string, std::variant< int, float, Bus>> controls)
-    : Node( index)
-    , controls(controls)
+Synth::Synth( int32_t index, std::string audio_rate_synth, std::string control_rate_synth)
+    : Node( index) ,
+    audio_rate_synth(audio_rate_synth),
+    control_rate_synth(control_rate_synth),
+    valid(false),
+    outputRate(BusRate::AUDIO)
 {
- 
+  
+    if (audio_rate_synth == "" && control_rate_synth != "") {
+        outputRate = BusRate::CONTROL;
+    } 
 }
 
 
 Synth::Synth()
-    : Node( -1)
+    : Node( -1), valid(false), outputRate(BusRate::AUDIO)
 {
  
 }
+
+// Get output rate
+BusRate const& Synth::getOutputRate() {
+    return outputRate;
+}
+
+// Set output rate of synth, possibly changing node representation
+bool Synth::setOutputRate(BusRate const& rate){
+    if (rate == outputRate)
+        // Already set
+        return true;
+    else if (audio_rate_synth == "" || control_rate_synth == "") 
+        // Unable to change
+        return false;
+    
+    auto& server = SuperColliderController::get();
+
+    int new_id = server.allocateSynthID();
+
+    auto& new_synth = rate == BusRate::CONTROL ? control_rate_synth : audio_rate_synth;
+
+    std::vector<  std::pair<
+        std::variant<int, std::string>,
+        std::variant<int, float, std::string>
+        >> controls_copy{};
+
+    for (auto it = controls.begin(); it != controls.end(); it++)
+    {
+        std::variant<int, float, std::string> val;
+
+        if (const int* ptr(std::get_if<int>(&it->second)); ptr)
+            val = *ptr;
+        if (const float* ptr(std::get_if<float>(&it->second)); ptr)
+            val = *ptr;
+        if (const Bus * ptr(std::get_if<Bus>(&it->second)); ptr)
+            val = ptr->asMap();
+
+        controls_copy.push_back(std::make_pair(
+            it->first, 
+            val
+
+        ));
+    }
+
+    server.s_new(new_synth, new_id,4, index, controls_copy);
+     
+    outputRate = rate;
+    index = new_id;
+}
+
+// Has this synth been assigned controls?
+bool Synth::isValid() {
+    return valid;
+}
+
+void Synth::loadControls(std::map<std::string, std::variant< int, float, Bus>> controls) {
+    this->controls = controls;
+    valid = true;
+}
+
 
 std::variant<int, float, Bus> Synth::get(const std::string& param)
 {
@@ -38,15 +104,17 @@ void Synth::set(const std::string& param, const int v)
     }
 }
 
-void Synth::set(const std::string& param, const Bus& v)
+void Synth::set(const std::string& param,  Bus const& v)
 {
+    controls.emplace(param, v);
     if (v.rate == BusRate::CONTROL)
     {
-        controls.emplace(param, v);
         SuperColliderController::get().n_map(index, { { param, v.index } });
     }
     else
-        set(param, v.index);
+    { 
+        SuperColliderController::get().n_mapa(index, { { param, v.index } });
+    }
 }
 
 

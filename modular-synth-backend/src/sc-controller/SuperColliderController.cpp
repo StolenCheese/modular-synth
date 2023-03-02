@@ -42,32 +42,32 @@ SuperColliderController& SuperColliderController::get()
 	return *s;
 }
 
-Synth* SuperColliderController::InstantiateSynth(const std::string& source)
-{
-	auto dot = source.find('.');
-	auto slash = source.find_last_of('\\');
+std::string extractSynthdef(std::string const& path) {
+	auto dot = path.find('.');
+	auto slash = path.find_last_of('\\');
+	if (dot != std::string::npos && slash != std::string::npos)
+		return path.substr(slash + 1, dot - slash - 1);
+	return "";
+}
 
-	if (dot == std::string::npos || slash == std::string::npos) {
-		throw std::invalid_argument("source path invalid");
-	}
+bool  SuperColliderController::loadSynthDefFile(const std::string& source, SuperColliderPacketBuilder* completion) {
 
-	auto file_type = source.substr(dot);
+	if (!loaded_synthdefs.count(source)) {
+		auto dot = source.find('.');
+		auto slash = source.find_last_of('\\');
 
-	std::cout << file_type << std::endl;
-
-	if (file_type == ".scsyndef") {
-
-		auto synthdef = source.substr(slash + 1, dot - slash - 1);
-
-
-		//Find a free node id
-		while (root.subtree.count(next_node_id)) {
-			next_node_id++;
+		if (dot == std::string::npos || slash == std::string::npos) {
+			throw std::invalid_argument("source path invalid");
 		}
-		const int id = next_node_id++;
 
-		if (!loaded_synthdefs.count(source)) {
-			std::cout << "Loading for the first time" << std::endl;
+		auto file_type = source.substr(dot);
+		 
+
+		if (file_type == ".scsyndef") {
+
+			auto synthdef = source.substr(slash + 1, dot - slash - 1);
+
+			std::cout << "Loading" << source << "for the first time" << std::endl;
 
 			std::ifstream def;
 			def.open(source);
@@ -77,37 +77,94 @@ Synth* SuperColliderController::InstantiateSynth(const std::string& source)
 				std::string str((std::istreambuf_iterator<char>(def)),
 					std::istreambuf_iterator<char>());
 
-				std::array<char, 100> completion_buf{};
-
-				loaded_synthdefs.insert(synthdef);
-
-				SuperColliderPacketBuilder completion{ completion_buf.data(), completion_buf.size() };
-
-				completion.s_new(synthdef, id, 0, 0, {});
-
-				auto m = d_recv(str, completion);
-
+				if (completion == nullptr) {
+					auto m = d_recv(str);
+				}
+				else {
+					auto m = d_recv(str, *completion);
+				}
 
 				def.close();
 
+				loaded_synthdefs.insert(source);
+
+				return true;
 			}
 			else {
-				std::cout << "Could not open " << source << std::endl;
+				throw std::invalid_argument("Could not open " + source);
 			}
 		}
-		else{
-			std::cout << "Already loaded" << std::endl;
-			s_new(synthdef, id, 0, 0, {});
+		else {
+			throw std::invalid_argument("Could not open " + source + ": Incorrect file format " + file_type);
+		}
+	}
+	else {
+		// File good, but already exists in the server's collection
+		return false;
+	}
+}
+
+MidiSynth* SuperColliderController::InstantiateMidiSynth(const std::string& midi_source)
+{
+	std::cout << "Loading midi" << std::endl;
+	return new MidiSynth(midi_source);
+}
+
+int SuperColliderController::allocateSynthID() {
+	//Find a free node id
+	while (root.subtree.count(next_node_id)) {
+		next_node_id++;
+	}
+	return next_node_id++;
+}
+
+Synth* SuperColliderController::InstantiateSynth(const std::string& audio_source, const std::string& control_source)
+{
+	//Find a free node id
+	while (root.subtree.count(next_node_id)) {
+		next_node_id++;
+	}
+	const int id = allocateSynthID();
+
+
+	std::array<char, 100> completion_buf{};
+
+	SuperColliderPacketBuilder completion{ completion_buf.data(), completion_buf.size() };
+
+	auto audio_synth = extractSynthdef(audio_source);
+	auto control_synth = extractSynthdef(control_source);
+
+	auto s = new Synth(id, audio_synth, control_synth);
+	root.subtree[id] = s;
+
+	if (audio_synth != "") {
+
+		completion.s_new(audio_synth, id, 0, 0, {});
+
+		if (!loadSynthDefFile(audio_source, &completion)) {
+			s_new(audio_synth, id, 0, 0, {});
 		}
 
-		SyncGroup(&root);
 
-		return static_cast<Synth*>(root.subtree[id]);
+		// Of course possible to have both. This could be included in completion, but I'm lazy
+		if (control_synth != "") {
+			loadSynthDefFile(control_source, nullptr);
+		}
 	}
-	else  if (file_type == ".mid") {
-		std::cout << "Loading midi" << std::endl;
-		return static_cast<Synth*>(new MidiSynth(source));
+	else if (control_synth != "") {
+		completion.s_new(control_synth, id, 0, 0, {});
+
+		if (!loadSynthDefFile(control_source, &completion)) {
+			s_new(audio_synth, id, 0, 0, {});
+		}
 	}
+	else {
+		throw std::invalid_argument("Synth must have either valid control or audio synthdef to be instantiated!");
+	}
+
+	SyncGroup(&root);
+
+	return s;
 }
 
 Bus SuperColliderController::InstantiateBus()
@@ -117,10 +174,26 @@ Bus SuperColliderController::InstantiateBus()
 	return Bus(next_bus_id);
 }
 
+bool SuperColliderController::overridePacketReception(osc::ReceivedMessage& msg) {
+	if (std::string("/fail").compare(msg.AddressPattern()) == 0) {
+
+		std::cout << "Intercepted Failure" << std::endl;
+
+		return true;
+	}
+	else if (msg.AddressPattern() == "/g_queryTree.reply") {
+
+
+		return false;
+	}
+
+	return false;
+}
+
 void SuperColliderController::SyncGroup(Group* g)
 {
 	auto m = g_queryTree({ { g->index, 1 } });
-	std::cout << m.AddressPattern() << std::endl;
+	 
 	auto it = m.ArgumentsBegin();
 
 	int32_t flag = (it++)->AsInt32();
@@ -133,7 +206,6 @@ void SuperColliderController::SyncGroup(Group* g)
 	for (size_t i = 0; i < children; i++)
 	{
 
-		Node* data;
 
 		int32_t nodeID = (it++)->AsInt32();
 		int32_t children = (it++)->AsInt32();
@@ -153,21 +225,20 @@ void SuperColliderController::SyncGroup(Group* g)
 						controls.insert({ cs,it->AsFloat() });
 					}
 					else {
-						controls.insert({ cs,Bus( std::stoi(it->AsString()+1)) });
+						controls.insert({ cs,Bus(std::stoi(it->AsString() + 1)) });
 					}
 					it++;
 				}
 			}
 
-			if (!g->subtree.count(nodeID))
-				data = new Synth(nodeID, controls);
+			static_cast<Synth*>(g->subtree[nodeID])->loadControls(controls);
+
 		}
 		else {
 			if (!g->subtree.count(nodeID))
-				data = new Group(nodeID);
+				g->subtree.insert({ nodeID, new Group(nodeID) });
 		}
 
-		g->subtree.insert({ nodeID, data });
 
 		//else, This is another group
 

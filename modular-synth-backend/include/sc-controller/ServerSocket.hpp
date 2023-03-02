@@ -31,6 +31,10 @@ class ServerSocket : UdpSocket {
 protected:
 	std::array<char, OUTPUT_BUFFER_SIZE> _inBuf{};
 	std::array<char, OUTPUT_BUFFER_SIZE> _outBuf{};
+
+
+	virtual bool overridePacketReception(osc::ReceivedMessage& msg);
+
 public:
 	SuperColliderPacketBuilder p{ _outBuf.data(), _outBuf.size() };
 

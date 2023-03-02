@@ -37,7 +37,7 @@ This message now supports array type tags ($[ and $]) in the control/value compo
 :param:control: - a control index or name
 :param:interpreted: - floating point and integer arguments are interpreted as control value.  a symbol argument consisting of the letter 'c' or 'a' (for control or audio) followed by the bus's index.
  */
-	void s_new(std::string definition, int synth, int action, int target, std::vector<std::pair<std::variant<int, std::string>, std::variant<float, int, std::string>>> control);
+	void s_new(std::string definition, int synth, int action, int target, std::vector<std::pair<std::variant<int, std::string>, std::variant<int, float, std::string>>> control);
 
 
 	template <typename  T>

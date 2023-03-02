@@ -6,6 +6,7 @@ class SuperColliderController;
 #include "sc-controller/Synth.hpp"
 #include "sc-controller/Group.hpp"
 #include "sc-controller/Bus.hpp"
+#include "sc-controller/MidiSynth.hpp"
 
 #include <set>
 
@@ -27,6 +28,12 @@ class SuperColliderController : public SuperColliderCommander {
 
     inline static SuperColliderController* s = nullptr;
 
+    // Returns: true if completion executed, i.e. file sent
+    bool loadSynthDefFile(const std::string& source, SuperColliderPacketBuilder* completion);
+
+protected:
+    bool overridePacketReception(osc::ReceivedMessage& msg) override;
+
 public:
 
      Group root{ 0 };
@@ -36,12 +43,14 @@ public:
 
      static SuperColliderController& get();
 
-
+     int allocateSynthID();
 
     // Create a synth from a synthdef
     // Will return when Synth class has been fully populated, as apparently the port mechanism requires
     // all parameters to be known in advance
-    Synth *InstantiateSynth(const std::string& synthdef);
+    Synth *InstantiateSynth(const std::string& audio_source, const std::string& control_source);
+
+    MidiSynth* InstantiateMidiSynth(const std::string& midi_source);
 
     // Create new bus with no listeners or sources
     // Represents a supercollider control or audio bus

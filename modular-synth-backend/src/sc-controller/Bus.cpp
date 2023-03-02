@@ -9,14 +9,14 @@ Bus::Bus() : index(-1)
 {
 }
 
-std::string Bus::asMap()
+std::string Bus::asMap()const
 {
 	if (rate == BusRate::CONTROL)
 		return "c" + std::to_string(index);
 	return "a" + std::to_string(index);
 }
 
-std::variant<int, float> Bus::get()
+std::variant<int, float> Bus::get() const
 {
 	auto m = SuperColliderController::get().c_get({ index });
 	auto i = m.ArgumentsBegin();
@@ -29,12 +29,12 @@ std::variant<int, float> Bus::get()
 	}
 }
 
-void Bus::set(const float v)
+void Bus::set(const float v)const
 {
 	SuperColliderController::get().c_set({ {index,v} });
 }
 
-void Bus::set(const int v)
+void Bus::set(const int v)const
 {
 	SuperColliderController::get().c_set({ {index,v} });
 }

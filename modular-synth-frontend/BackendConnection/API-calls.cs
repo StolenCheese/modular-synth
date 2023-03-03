@@ -9,7 +9,7 @@ namespace modular_synth_frontend.API;
 
 public static class API {
 
-    public static bool enableAPI = true;
+    public static bool enableAPI = false;
 
     public static string absPathToSynthDefs;
 
@@ -32,7 +32,6 @@ public static class API {
         //Server prints all osc commands it recieves (debug)
         SCController.DumpOSC(1);
         
-        
     }
 
     public static void startSCServer(){
@@ -44,6 +43,11 @@ public static class API {
 
             Console.WriteLine("Starting SuperCollider Process");
             try{
+                //kill old process if still running
+                foreach (var process in Process.GetProcessesByName("scsynth"))
+                {
+                    process.Kill();
+                }
 
                 // Start the SuperCollider process
                 scProcess.StartInfo.FileName = pathToSC;
@@ -100,9 +104,6 @@ public static class API {
     static void cleanup(){
         try{
             Console.WriteLine("killing sc server");
-            // Send Ctrl+C to the cmd window
-            //scProcess.CloseMainWindow();
-            //scProcess.Close(); 
             scProcess.Kill();
             scProcess.Dispose(); //release any resources related to process
 
@@ -126,11 +127,31 @@ public static class API {
         }
     }
 
-    public static void linkPorts(Port portFrom, Port portTo){
+    public static bool linkPorts(Port portFrom, Port portTo){
         if(enableAPI){
-            synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).linkTo(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
+            Console.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID},portTo: {portTo.parentModuleId}.{portTo.parameterID}");
+            try{
+                synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).linkTo(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
+                Console.WriteLine("connection made");
+                return true;
+            } catch(SynthAPI.CyclicLinksException_t e ){
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        } else {
+            return false;
         }
     }
+    public static void unlinkPorts(Port portFrom, Port portTo){
+        if(enableAPI){
+            Console.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID},portTo: {portTo.parentModuleId}.{portTo.parameterID}");
+
+            synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).removeLink(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
+
+            Console.WriteLine("connection removed");
+        }
+    }
+
 
     public static void setValue(int modueleID,string property,float value){
         if(enableAPI) {

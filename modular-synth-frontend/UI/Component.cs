@@ -54,6 +54,8 @@ public class Component : Interactable
         this.parentModuleId = parentModuleId;
         this.parameterID = paramID;
 
+        setSCLimitsBasedOnParamID();
+
         if(vertical){
             this.rotation = Math.PI/2;
              int temp = this.height;
@@ -61,6 +63,17 @@ public class Component : Interactable
              this.width = temp;
         }
     }
+
+    void setSCLimitsBasedOnParamID(){
+        switch(this.parameterID){
+            case "freq":
+                //suitable Hz range
+                this.maxValueForServer=10000;
+                this.minValueForServer=200;
+                break;
+        }
+    }
+
     //We want the module that this component belongs to to give the component its coordinates
     public virtual void UpdatePos(Vector2 modulePos){
         this.modulePos = modulePos;

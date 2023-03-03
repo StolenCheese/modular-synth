@@ -29,7 +29,7 @@ namespace SynthAPI {
 
 	void SCPort::removeLink(SCPort^ other) {
 		try {
-			this->m_port->linkTo(other->m_port);
+			this->m_port->removeLink(other->m_port);
 		}
 		catch (synth_api::LinkException& e) {
 			throw categorizeException(e);

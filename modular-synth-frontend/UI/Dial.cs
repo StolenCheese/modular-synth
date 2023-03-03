@@ -31,9 +31,6 @@ internal class Dial : Component
         this.lastRotation = minRotation;
         this.dialRotation = minRotation;
 
-        //this should not be necessary. For some reason the parameterID is read as null when set in Components
-        this.parameterID = parameterID;
-
     }
 
     //We want the module that this component belongs to to give the component its coordinates
@@ -74,11 +71,11 @@ internal class Dial : Component
                 value -= 2*Math.PI;
             }
 
-            Console.WriteLine($"value:{value}");
+            //Console.WriteLine($"value:{value}");
 
             double deltaR = value - lastVal;
 
-            Console.WriteLine($"deltaR:{deltaR},lastVal<maxRotation:{lastVal<maxRotation},value>maxRotation:{value>maxRotation}");
+            //Console.WriteLine($"deltaR:{deltaR},lastVal<maxRotation:{lastVal<maxRotation},value>maxRotation:{value>maxRotation}");
 
             //check we are not trying to go past limits. delta can only be this big when we get to limits at rotation wrap border
             if(deltaR<-3*maxRotation/4||(lastVal<maxRotation&&value>maxRotation)){

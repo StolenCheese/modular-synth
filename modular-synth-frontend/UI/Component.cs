@@ -31,7 +31,7 @@ public class Component : Interactable
 
     //origin is at the center of the component. Use this to add offset
 
-    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string ParameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string parameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
@@ -54,6 +54,8 @@ public class Component : Interactable
         this.parentModuleId = parentModuleId;
         this.parameterID = paramID;
 
+        setSCLimitsBasedOnParamID();
+
         if(vertical){
             this.rotation = Math.PI/2;
              int temp = this.height;
@@ -61,6 +63,17 @@ public class Component : Interactable
              this.width = temp;
         }
     }
+
+    void setSCLimitsBasedOnParamID(){
+        switch(this.parameterID){
+            case "freq":
+                //suitable Hz range
+                this.maxValueForServer=10000;
+                this.minValueForServer=200;
+                break;
+        }
+    }
+
     //We want the module that this component belongs to to give the component its coordinates
     public virtual void UpdatePos(Vector2 modulePos){
         this.modulePos = modulePos;

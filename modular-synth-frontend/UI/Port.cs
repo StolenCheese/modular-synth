@@ -99,11 +99,24 @@ public class Port : Component
                     portToConnect.dragging = false;
 
                     //to stop output to output connections TODO: add backend validation check here
-                    if((this.isInput||portToConnect.isInput)&&!portIsConnected(portToConnect)){
-                        Console.WriteLine("worked");
-                        portToConnect.portConnectedTo = this;
-                        this.portConnectedFrom = portToConnect;
-                        API.API.linkPorts(portToConnect,this);
+                    if(!(this.isInput&&portToConnect.isInput)&&(this.isInput||portToConnect.isInput)&&!portIsConnected(portToConnect)){
+                        Console.WriteLine("making port connection");
+
+                        //remove old connection
+                        if(portToConnect.portConnectedTo!=null){
+                            API.API.unlinkPorts(portToConnect,portToConnect.portConnectedTo);
+                        }
+
+                        if(API.API.linkPorts(portToConnect,this)){
+                            portToConnect.portConnectedTo = this;
+                            this.portConnectedFrom = portToConnect;
+
+                        } else if(portToConnect.portConnectedTo!=null){
+                            //linking rejected by backend. restore
+                            API.API.linkPorts(portToConnect,portToConnect.portConnectedTo);
+                        }
+                       
+                        
                     }
                 }                 
             }

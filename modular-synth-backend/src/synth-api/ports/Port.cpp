@@ -32,7 +32,7 @@ namespace synth_api {
         other->outgoingConnections.erase(other->outgoingConnections.find(this));
     }
 
-    void Port::cyclicCheck(Port *target) {
+    void Port::cyclicCheck(Port *target, bool doRepeat) {
         // INVARIANT: There are no existing cycles in a UAG (undirected acyclic graph)
         // Time & Space Complexity: O(n) where n is the number of ports across sections.
         std::list<Port *> queue;
@@ -77,6 +77,10 @@ namespace synth_api {
                 }
                 queue.insert(queue.end(), symLink);
             }
+        }
+        // to account for uni-directional symbolic links, we repeat the cyclic check once in the other direction 
+        if (doRepeat) {
+            target->cyclicCheck(this, false);
         }
     }
 

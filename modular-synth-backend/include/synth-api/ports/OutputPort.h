@@ -27,6 +27,7 @@ namespace synth_api {
             logicalBus = new LogicalBus(this);
         };
         void linkTo(Port* other) override;
+        void removeLink(Port *other) override;
         ~OutputPort() override;
     };
 }

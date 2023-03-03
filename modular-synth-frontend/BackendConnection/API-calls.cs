@@ -9,7 +9,7 @@ namespace modular_synth_frontend.API;
 
 public static class API {
 
-    public static bool enableAPI = false;
+    public static bool enableAPI = true;
 
     public static string absPathToSynthDefs;
 
@@ -22,33 +22,30 @@ public static class API {
 
     public static void connectToSCServer(){
 
-        absPathToSynthDefs = Path.GetFullPath(relPathToSynthDefs)+"\\";
-
-        Console.WriteLine($"absPathToSynthDefs {absPathToSynthDefs}");
-
-
-        startSCServer();
-
         Console.WriteLine("Connecting to SC Server...");
 
-        SCController.Connect("127.0.0.1", 58000);
+        if(!SCController.Connect("127.0.0.1", 58000)){
+            cleanup();
+            throw new Exception("failed to connect to server");
+        }
 
         //Server prints all osc commands it recieves (debug)
         SCController.DumpOSC(1);
-         
+        
         
     }
 
     public static void startSCServer(){
         if(enableAPI){
+                absPathToSynthDefs = Path.GetFullPath(relPathToSynthDefs)+"\\";
+
                 string pathToSC = absPathToSynthDefs.Substring(0,2) + @"\Program Files\SuperCollider-3.13.0\scsynth.exe";
-            string command = "cd " + pathToSC + " && scsynth.exe -u 58000cd";
+                //string command = "cd " + pathToSC + " && scsynth.exe -u 58000cd";
 
             Console.WriteLine("Starting SuperCollider Process");
             try{
 
                 // Start the SuperCollider process
-                Process scProcess = new Process();
                 scProcess.StartInfo.FileName = pathToSC;
                 scProcess.StartInfo.Arguments = "-u 58000cd";
                 scProcess.StartInfo.UseShellExecute = false;
@@ -60,6 +57,12 @@ public static class API {
                     if (!string.IsNullOrEmpty(e.Data))
                     {
                         Console.WriteLine("SuperCollider Output: " + e.Data);
+
+                        if(e.Data=="SuperCollider 3 server ready."){
+
+                            //connect to server we started
+                            connectToSCServer();
+                        }
                     }
                 });
 
@@ -98,9 +101,11 @@ public static class API {
         try{
             Console.WriteLine("killing sc server");
             // Send Ctrl+C to the cmd window
-            scProcess.CloseMainWindow();
-            scProcess.Close(); 
+            //scProcess.CloseMainWindow();
+            //scProcess.Close(); 
+            scProcess.Kill();
             scProcess.Dispose(); //release any resources related to process
+
         } catch(InvalidOperationException e){
             Console.WriteLine(e.Message+". Cleanup not run");
         }

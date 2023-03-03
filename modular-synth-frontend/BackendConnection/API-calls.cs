@@ -107,6 +107,12 @@ public static class API {
             scProcess.Kill();
             scProcess.Dispose(); //release any resources related to process
 
+            //kill old process if still running. Shouldnt be necessary here!
+            foreach (var process in Process.GetProcessesByName("scsynth"))
+            {
+                process.Kill();
+            }
+
         } catch(InvalidOperationException e){
             Console.WriteLine(e.Message+". Cleanup not run");
         }

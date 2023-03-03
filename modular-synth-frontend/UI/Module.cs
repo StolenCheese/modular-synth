@@ -48,11 +48,12 @@ public class Module : Interactable
                 components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2,250),Slider.rail1,Slider.slider2,Color.White,"add",0.7,0.7));
                 components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2-50,this.sprite.Height/2-50),Slider.rail1,Slider.slider2,Color.White,"freq",0.7,0.7,true));
                 components.Add(new Dial(pos, ModuleId, new Vector2(this.sprite.Width/2+50,this.sprite.Height/2-50),Dial.indicator1,Dial.dial1,Color.White,"mul",0.7,0.7));
+                
                 components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2+50,250),Port.port1,Color.White,"freq",true));
                 components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2-50,300),Port.port1,Color.White,"add",true));
                 components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"out",false));
                 break;
-                
+
             case "sliders":
                 function = "sin-ar";
 

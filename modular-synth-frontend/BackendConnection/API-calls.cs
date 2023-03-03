@@ -9,7 +9,7 @@ namespace modular_synth_frontend.API;
 
 public static class API {
 
-    public static bool enableAPI = false;
+    public static bool enableAPI = true;
 
     public static string absPathToSynthDefs;
 
@@ -137,19 +137,26 @@ public static class API {
             } catch(SynthAPI.CyclicLinksException_t e ){
                 Console.WriteLine(e.Message);
                 return false;
+            } catch (SynthAPI.LinkException_t e){
+                Console.WriteLine(e.Message);
+                return false;
             }
         } else {
             return false;
         }
     }
+
     public static void unlinkPorts(Port portFrom, Port portTo){
         if(enableAPI){
             Console.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID},portTo: {portTo.parentModuleId}.{portTo.parameterID}");
-
-            synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).removeLink(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
-
-            Console.WriteLine("connection removed");
-        }
+            try{
+                synths[portTo.parentModuleId].getPortFor(portTo.parameterID).removeLink(synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID));
+                Console.WriteLine("connection removed");
+            }
+            catch (SynthAPI.NoSuchConnectionException_t e ){
+                Console.WriteLine(e.Message);
+            }
+        } 
     }
 
 
@@ -163,6 +170,21 @@ public static class API {
             }
         }
     }
+
+    
+    // public static float getValue(int modueleID,string property){
+    //     if(enableAPI) {
+    //         //Console.WriteLine($"params: ID:{modueleID},property:{property},value:{value}");
+    //         if(property!=null){
+    //             return synths[modueleID].Get(property);
+    //         } else {
+    //             Console.WriteLine("Tried getValue API call with null property!");
+    //             return 0;
+    //         }
+    //     }
+    //     return 0;
+    // }
+
 
     
 

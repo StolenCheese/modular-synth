@@ -65,13 +65,16 @@ public class Port : Component
 
     private Port getInteractingPort(){
         foreach(Port port in ports){
-            if(port.isInteracting&&port.parentModuleId!=this.parentModuleId){
+            if(port.isInteracting&&port!=this){
                 return port;
             }
         }
         return null;
     }
 
+    private bool portOnSameModule(Port port){
+        return port.parentModuleId==this.parentModuleId;
+    }
     private bool portIsConnected(Port p){
         if((portConnectedFrom!=null&&portConnectedFrom==p)||(portConnectedTo!=null&&portConnectedTo==p)){
             return true;
@@ -79,6 +82,27 @@ public class Port : Component
             return false;
         }
     }
+
+    private bool removeConnectedTo(Port p){
+        if(p.portConnectedTo!=null){
+            API.API.unlinkPorts(p,p.portConnectedTo);
+            p.portConnectedTo.portConnectedFrom = null;
+            p.portConnectedTo = null;
+            
+            return true;
+        }
+        else return false;
+    }
+    private bool removeConnectedFrom(Port p){
+        if(p.portConnectedFrom!=null){
+            API.API.unlinkPorts(p.portConnectedFrom,p);
+            p.portConnectedFrom.portConnectedTo = null;
+            p.portConnectedFrom = null;
+            return true;
+        }
+        else return false;
+    }
+
 
     public override void Update(){    
         this.position = modulePos + moduleLocalPos; 
@@ -88,7 +112,8 @@ public class Port : Component
 
             
             if (input.LeftMouseClickDown()){
-  
+                
+                removeConnectedTo(this);
                 dragging = true;
                 clickOffset = position - input.MousePosVector();
 
@@ -98,14 +123,15 @@ public class Port : Component
                 if(portToConnect!=null){
                     portToConnect.dragging = false;
 
-                    //to stop output to output connections TODO: add backend validation check here
-                    if(!(this.isInput&&portToConnect.isInput)&&(this.isInput||portToConnect.isInput)&&!portIsConnected(portToConnect)){
+                    if((this.isInput||portToConnect.isInput) //to stop output to output connections
+                    &&!portIsConnected(portToConnect) //stop connections to same port
+                    &&!(portOnSameModule(portToConnect)&&(!this.isInput||!portToConnect.isInput)) //allow connections on the same module if they are inputs
+                    ){
                         Console.WriteLine("making port connection");
 
                         //remove old connection
-                        if(portToConnect.portConnectedTo!=null){
-                            API.API.unlinkPorts(portToConnect,portToConnect.portConnectedTo);
-                        }
+                        Port tmp = portToConnect.portConnectedTo;
+                        removeConnectedTo(portToConnect);
 
                         if(API.API.linkPorts(portToConnect,this)){
                             portToConnect.portConnectedTo = this;
@@ -113,12 +139,22 @@ public class Port : Component
 
                         } else if(portToConnect.portConnectedTo!=null){
                             //linking rejected by backend. restore
-                            API.API.linkPorts(portToConnect,portToConnect.portConnectedTo);
+                            API.API.linkPorts(portToConnect,tmp);
                         }
                        
                         
                     }
-                }                 
+                }            
+            //removing links with right click     
+            } else if(input.RightMouseClickDown()&&!dragging){
+                //try remove incoming connection. If none, remove outgoing connection
+                if(removeConnectedFrom(this)){
+                    portConnectedFrom = null;
+
+                } else if(removeConnectedTo(this)){
+                    portConnectedTo = null;
+
+                }
             }
         }else{
             this.isInteracting=false;

@@ -22,33 +22,34 @@ public static class API {
 
     public static void connectToSCServer(){
 
-        absPathToSynthDefs = Path.GetFullPath(relPathToSynthDefs)+"\\";
-
-        Console.WriteLine($"absPathToSynthDefs {absPathToSynthDefs}");
-
-
-        startSCServer();
-
         Console.WriteLine("Connecting to SC Server...");
 
-        SCController.Connect("127.0.0.1", 58000);
+        if(!SCController.Connect("127.0.0.1", 58000)){
+            cleanup();
+            throw new Exception("failed to connect to server");
+        }
 
         //Server prints all osc commands it recieves (debug)
         SCController.DumpOSC(1);
-         
         
     }
 
     public static void startSCServer(){
         if(enableAPI){
+                absPathToSynthDefs = Path.GetFullPath(relPathToSynthDefs)+"\\";
+
                 string pathToSC = absPathToSynthDefs.Substring(0,2) + @"\Program Files\SuperCollider-3.13.0\scsynth.exe";
-            string command = "cd " + pathToSC + " && scsynth.exe -u 58000cd";
+                //string command = "cd " + pathToSC + " && scsynth.exe -u 58000cd";
 
             Console.WriteLine("Starting SuperCollider Process");
             try{
+                //kill old process if still running
+                foreach (var process in Process.GetProcessesByName("scsynth"))
+                {
+                    process.Kill();
+                }
 
                 // Start the SuperCollider process
-                Process scProcess = new Process();
                 scProcess.StartInfo.FileName = pathToSC;
                 scProcess.StartInfo.Arguments = "-u 58000cd";
                 scProcess.StartInfo.UseShellExecute = false;
@@ -60,6 +61,12 @@ public static class API {
                     if (!string.IsNullOrEmpty(e.Data))
                     {
                         Console.WriteLine("SuperCollider Output: " + e.Data);
+
+                        if(e.Data=="SuperCollider 3 server ready."){
+
+                            //connect to server we started
+                            connectToSCServer();
+                        }
                     }
                 });
 
@@ -97,10 +104,9 @@ public static class API {
     static void cleanup(){
         try{
             Console.WriteLine("killing sc server");
-            // Send Ctrl+C to the cmd window
-            scProcess.CloseMainWindow();
-            scProcess.Close(); 
+            scProcess.Kill();
             scProcess.Dispose(); //release any resources related to process
+
         } catch(InvalidOperationException e){
             Console.WriteLine(e.Message+". Cleanup not run");
         }
@@ -121,11 +127,31 @@ public static class API {
         }
     }
 
-    public static void linkPorts(Port portFrom, Port portTo){
+    public static bool linkPorts(Port portFrom, Port portTo){
         if(enableAPI){
-            synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).linkTo(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
+            Console.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID},portTo: {portTo.parentModuleId}.{portTo.parameterID}");
+            try{
+                synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).linkTo(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
+                Console.WriteLine("connection made");
+                return true;
+            } catch(SynthAPI.CyclicLinksException_t e ){
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        } else {
+            return false;
         }
     }
+    public static void unlinkPorts(Port portFrom, Port portTo){
+        if(enableAPI){
+            Console.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID},portTo: {portTo.parentModuleId}.{portTo.parameterID}");
+
+            synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).removeLink(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));
+
+            Console.WriteLine("connection removed");
+        }
+    }
+
 
     public static void setValue(int modueleID,string property,float value){
         if(enableAPI) {

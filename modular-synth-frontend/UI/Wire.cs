@@ -12,15 +12,12 @@ public class Wire : Component
 {
     //This is required by ports to get the wire that is about to be connected to them
     public static List<Wire> wires = new List<Wire>();
-    private InputManager input = InputManager.GetInstance();
     public Vector2 endPosition;
+    public Vector2 Position {private get{return position;} set {this.position = value;}}
     Vector2 wireLine;
     int spriteNum = 10;
     Rectangle node;
-    public bool isConnected = false;
-    public Vector2 Position {private get{return position;} set {this.position = value;}}
-    public Port inputPort;
-    public Port outputPort;
+
 
     public Wire(Vector2 modulePos,int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale)
     { 

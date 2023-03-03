@@ -29,9 +29,16 @@ public class EntityManager{
         //render wires at the front by calling this last
         }
         foreach(Port port in Port.ports){
-            if(port.portConnectedTo!=null||port.dragging){
-                port.wire.Draw(spriteBatch);
+            if(port.portsConnectedTo.Count!=0){
+            foreach(var portWire in port.portsConnectedTo){
+                portWire.Value.Position=port.Position;
+                portWire.Value.endPosition = portWire.Key.Position;
+                portWire.Value.Draw(spriteBatch);
             }
+        }
+        if(port.dragging){
+                port.draggingWire.Draw(spriteBatch);
+            } 
         }
 
     }

@@ -152,17 +152,20 @@ public static class API {
         }
     }
 
-    public static void unlinkPorts(Port portFrom, Port portTo){
+    public static bool unlinkPorts(Port portFrom, Port portTo){
         if(enableAPI){
             Console.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID},portTo: {portTo.parentModuleId}.{portTo.parameterID}");
             try{
                 synths[portTo.parentModuleId].getPortFor(portTo.parameterID).removeLink(synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID));
                 Console.WriteLine("connection removed");
+                return true;
             }
             catch (SynthAPI.NoSuchConnectionException_t e ){
                 Console.WriteLine(e.Message);
+                return false;
             }
         } 
+        return false;
     }
 
 

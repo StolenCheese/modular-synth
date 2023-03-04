@@ -68,8 +68,7 @@ namespace synth_api {
 
         virtual ~Port();
 
-    //protected:
-    public: //TODO: @ksw40 @mp2015 revert to protected
+    protected:
 
         explicit Port() : logicalBus(nullptr) {};
 

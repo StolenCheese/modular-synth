@@ -38,22 +38,20 @@ int main(void) {
     sinmod->getPortFor("freq")->setDefault(1);
 	std::cout << "Set params of sin1" << std::endl;
 
-    sinmod->synth->setOutputRate(BusRate::CONTROL);
-    sinmod->getPortFor("out")->logicalBus->bus.rate = BusRate::CONTROL;
+    Sleep(1000);
+
+    //sinmod->synth->setOutputRate(BusRate::CONTROL);
+    //sinmod->getPortFor("out")->logicalBus->bus.rate = BusRate::CONTROL;
    
     // synthetic speaker
-    auto* speaker =  new InputPort(SetterFunctor("",nullptr),synth_api::Rate::audio,0);
-    speaker->logicalBus = new LogicalBus(nullptr);
-    speaker->logicalBus->bus.index = 0;
+    //auto* speaker =  new InputPort(SetterFunctor("",nullptr),synth_api::Rate::audio,0);
+    //speaker->logicalBus = new LogicalBus(nullptr);
+    //speaker->logicalBus->bus.index = 0;
 
-	//std::cout << "Changed out-rate of sin1" << std::endl;
-    //auto v = sin1->synth->get("out");
-    //Bus newBus = std::get<Bus>(v);
-	//std::cout << "Got new control bus" << std::endl;
     sinout->getPortFor("freq")->setDefault(550);
     sinout->getPortFor("mul")->linkTo(sinmod->getPortFor("out"));
-    std::cout << "Linking output to speaker" << std::endl;
-   // sin2->getPortFor("out")->linkTo(speaker);
+    //std::cout << "Linking output to speaker" << std::endl;
+    //sin2->getPortFor("out")->linkTo(speaker);
     sinout->synth->set("out", 0);
 
     std::cout << *sinmod->synth << std::endl;

@@ -27,7 +27,6 @@ void Section::generatePortModel(Section &parent,
 
     for (const auto& outputPair : outputPorts) {
         for (const auto& inputPair : inputPorts) {
-            inputPair.second->symbolicLinkTo(outputPair.second);
             outputPair.second->symbolicLinkTo(inputPair.second);
         }
     }

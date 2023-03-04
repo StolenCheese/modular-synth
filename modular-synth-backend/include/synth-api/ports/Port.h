@@ -87,7 +87,7 @@ namespace synth_api {
          * Checks for cycles existing in the tree - these can cause problems
          * (e.g. infinite stall, feedback loop) in super collider!
          */
-        void cyclicCheck(Port *target);
+        void cyclicCheck(Port *target, bool doRepeat = true);
 
         /*
          * See InputPort

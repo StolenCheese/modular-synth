@@ -27,7 +27,7 @@ while (true)
 			Console.WriteLine($"Created new synth i={s.index} with controls [{System.String.Join(',', s.controls)}]");
 			synths[s.index] = s;
 
-			var instPath = "A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + inst + ".scsyndef";
+			var instPath = "D:\\REPOS\\modular-synth\\modular-synth-backend\\synthdefs\\" + inst + ".scsyndef";
 			foreach (var p in s.controls)
 			{
 				var i = SCSection.FromSynthdef(instPath, null);
@@ -40,7 +40,7 @@ while (true)
 
 		case ["new", "synth", String synth]:
 
-			s = SCSection.FromSynthdef("A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + synth + ".scsyndef", null);
+			s = SCSection.FromSynthdef("D:\\REPOS\\modular-synth\\modular-synth-backend\\synthdefs\\" + synth + ".scsyndef", null);
 			Console.WriteLine($"Created new synth i={s.index} with controls [{System.String.Join(',', s.controls)}]");
 			synths[s.index] = s;
 
@@ -66,5 +66,9 @@ while (true)
 			synths[int.Parse(sidSrc)].getPortFor(srcParam).linkTo(synths[int.Parse(sidDst)].getPortFor(dstParam));
 
 			break;
-	};
+
+		case ["disconnect", String sidSrc, String sidDst, String srcParam, String dstParam]:
+            synths[int.Parse(sidSrc)].getPortFor(srcParam).removeLink(synths[int.Parse(sidDst)].getPortFor(dstParam));
+			break;
+    };
 }

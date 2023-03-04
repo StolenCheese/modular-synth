@@ -31,6 +31,17 @@ namespace synth_api {
         }
     }
 
+    void OutputPort::removeLink(Port *other) {
+        Port* otherCopy(other);
+        auto *otherAsInput = dynamic_cast<InputPort *>(otherCopy);
+        if (otherAsInput) {
+            otherAsInput->removeLink(this);
+        }
+        else {
+            throw FatalOutputControllerException((char *) "Detected an existing OutputPort <--> OutputPort connection. This should have been illegal and it means there is a logical error in backend's code!");
+        }
+    }
+
     OutputPort::~OutputPort() {
         for (const auto &p : outgoingConnections) {
             Port::removeLink(p);

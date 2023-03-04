@@ -71,7 +71,7 @@ namespace synth_api {
     public:
         const Rate rate;
 
-        explicit InputPort(SetterFunctor setter, Rate rate, float defaultValue) : controller(nullptr), setParam(setter), rate(rate), defaultValue(defaultValue), audioRateRequirement(0) {
+        explicit InputPort(SetterFunctor setter, Rate rate, float defaultValue) : controller(nullptr), setParam(setter), rate(rate), defaultValue(defaultValue), audioRateRequirement(0), Port() {
             subscribers = std::set<InputPort *>();
         };
         void linkTo(Port *other) override;

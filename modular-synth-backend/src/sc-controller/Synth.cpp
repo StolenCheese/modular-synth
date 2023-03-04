@@ -94,7 +94,6 @@ std::variant<int, float, Bus> Synth::get(const std::string& param)
 
 void Synth::set(const std::string& param, const float v)
 {    std::cout << "Setting " << param << " to " << v << std::endl;
-
     controls[param] = v;
     SuperColliderController::get().n_set(index, { { param, v } });
 }

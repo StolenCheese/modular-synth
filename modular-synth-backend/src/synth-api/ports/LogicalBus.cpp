@@ -42,7 +42,6 @@ namespace synth_api {
                 }
             }
         }
-
         inputPort->setParam(bus);
     }
 

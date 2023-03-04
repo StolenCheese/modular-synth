@@ -29,7 +29,7 @@ namespace synth_api {
                     makeRootController();
                 }
                 else {
-                    throw AlreadyBoundInputException((char*)"Cannot bound input to output - already bound!", *this, *other);
+                    throw AlreadyBoundInputException((char*)"Cannot bound input to output - already bound!", *this, *outputPort);
                 }
             }
 			follow(outputPort);
@@ -41,7 +41,7 @@ namespace synth_api {
                 // we only have output-to-output if two buses
                 // are linked together
                 if (this->logicalBus && inputPort->logicalBus) {
-                    throw OutputToOutputException((char *) "Binding two inputs linked to outputs", *this, *other);
+                    throw OutputToOutputException((char *) "Binding two inputs linked to outputs", *this, *inputPort);
                 } else {
                     if (!this->logicalBus) {
                         // flipping the direction will make this node a
@@ -70,7 +70,7 @@ namespace synth_api {
 
     void InputPort::removeLink(Port *other) {
         auto* otherCopy(other);
-        auto * otherAsInputPort = dynamic_cast<InputPort *>(other);
+        auto * otherAsInputPort = dynamic_cast<InputPort *>(otherCopy);
         // unsubscribe, then disconnect, so as not to get irrelevant bus rate change information whilst disconnecting
         if (this->controller == other) {
             if (otherAsInputPort) {
@@ -93,34 +93,39 @@ namespace synth_api {
     }
 
     void InputPort::follow(Port *other) {
+        auto* thisControllerCopy1(this->controller);
+        auto* thisControllerCopy2(this->controller);
         if (this->controller != nullptr) {
-            if (auto * previousInput = dynamic_cast<InputPort *>(this->controller)) {
+            if (auto * previousInput = dynamic_cast<InputPort *>(thisControllerCopy1)) {
                 previousInput->unsubscribe(this);
-            } else if (auto * previousOutput = dynamic_cast<OutputPort *>(this->controller)) {
+            } else if (auto * previousOutput = dynamic_cast<OutputPort *>(thisControllerCopy2)) {
                 previousOutput->unsubscribe(this);
             }
         }
         this->controller = other;
+        auto* otherCopy1(other);
+        auto* otherCopy2(other);
         // connect, then subscribe, so as not to get bus rate information twice
-        if (auto * otherAsInput = dynamic_cast<InputPort *>(other)) {
+        if (auto * otherAsInput = dynamic_cast<InputPort *>(otherCopy1)) {
             connectToBus(otherAsInput->logicalBus);
             otherAsInput->subscribe(this);
-        } else if (auto * otherAsOutput = dynamic_cast<OutputPort *>(other)) {
+        } else if (auto * otherAsOutput = dynamic_cast<OutputPort *>(otherCopy2)) {
             connectToBus(otherAsOutput->logicalBus);
-            otherAsOutput->subscribe(this);
         }
         notify();
     }
 
     void InputPort::subscribe(Port *other) {
-        auto *otherAsInputPort = dynamic_cast<InputPort *>(other);
+        auto* otherCopy(other);
+        auto *otherAsInputPort = dynamic_cast<InputPort *>(otherCopy);
         if (otherAsInputPort) {
             subscribers.insert(otherAsInputPort);
         }
     }
 
     void InputPort::unsubscribe(Port *other) {
-        auto *otherAsInputPort = dynamic_cast<InputPort *>(other);
+        auto* otherCopy(other);
+        auto *otherAsInputPort = dynamic_cast<InputPort *>(otherCopy);
         auto loc = subscribers.find(otherAsInputPort);
         if (loc != subscribers.end()) {
             subscribers.erase(loc);
@@ -130,8 +135,9 @@ namespace synth_api {
     void InputPort::makeRootController() {
         InputPort * current = this;
         InputPort * next;
-        next = dynamic_cast<InputPort *>(this->controller);
-        if (dynamic_cast<OutputPort *>(this->controller)) {
+        auto* thisController(this->controller);
+        next = dynamic_cast<InputPort *>(thisController);
+        if (dynamic_cast<OutputPort *>(thisController)) {
             throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to make an "
                                                           "InputPort the root controller in a dependency with an "
                                                           "OutputPort!");
@@ -140,8 +146,9 @@ namespace synth_api {
         // can only make the InputPort a root controller when there are no OutputPorts in the dependency graph
         current->controller = nullptr;
         while (next != nullptr) {
-            auto * nextController = next->controller;
-            if (dynamic_cast<OutputPort *>(nextController)) {
+            auto * nextController(next->controller);
+            auto* nextControllerCopy(next->controller);
+            if (dynamic_cast<OutputPort *>(nextControllerCopy)) {
                 throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to make an "
                                                               "InputPort the root controller in a dependency with an "
                                                               "OutputPort!");
@@ -196,7 +203,9 @@ namespace synth_api {
 
     void InputPort::connectToBus(LogicalBus* logicalBus) {
         this->logicalBus = logicalBus;
-        logicalBus->addListener(this);
+        if (logicalBus) {
+            logicalBus->addListener(this);
+        }
     }
 
     void InputPort::disconnectFromBus() {

@@ -22,104 +22,54 @@ int main(void) {
     server.g_deepFree({ 0 });
     server.dumpOSC(1);
 
-    //Sleep(1000);
-
-	std::cout << "Running" << std::endl;
 	Section *sinmod = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
 	Section *sinout = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
 	std::cout << "Created instance of sin sections" << std::endl;
+
     SuperColliderController::get().g_dumpTree({ {0,1} });
-    //return 0;
 
-    //sin1->synth->set("mul", 1);
-    sinmod->getPortFor("mul")->setDefault(1);
-    sinmod->getPortFor("add")->setDefault(0);
-    //sin1->synth->set("freq", 1);
-    sinmod->getPortFor("freq")->setDefault(1);
-	std::cout << "Set params of sin1" << std::endl;
+    sinmod->getPortFor("mul")->setDefault(20);
+    sinmod->getPortFor("add")->setDefault(440);
+    sinmod->getPortFor("freq")->setDefault(2);
+	std::cout << "Set params of sinmod" << std::endl;
 
-    Sleep(1000);
-
-    //sinmod->synth->setOutputRate(BusRate::CONTROL);
-    //sinmod->getPortFor("out")->logicalBus->bus.rate = BusRate::CONTROL;
-   
     // synthetic speaker
     //auto* speaker =  new InputPort(SetterFunctor("",nullptr),synth_api::Rate::audio,0);
     //speaker->logicalBus = new LogicalBus(nullptr);
     //speaker->logicalBus->bus.index = 0;
 
-    sinout->getPortFor("freq")->setDefault(550);
-    sinout->getPortFor("mul")->linkTo(sinmod->getPortFor("out"));
-    //std::cout << "Linking output to speaker" << std::endl;
+    sinout->getPortFor("freq")->setDefault(330);
+	std::cout << "Set params of sinout" << std::endl;
+
+    std::cout << "Linking sinout output to speaker" << std::endl;
     //sin2->getPortFor("out")->linkTo(speaker);
     sinout->synth->set("out", 0);
 
-    std::cout << *sinmod->synth << std::endl;
-    std::cout << *sinout->synth << std::endl;
-    //sin2->synth->set("freq", 550);
-    //sin2->synth->set("mul", newBus);
-	//std::cout << "Set sin2's mul to read from new bus" << std::endl;
+    Sleep(1000);
+
+    std::cout << "Setting default value of sinout's freq" << std::endl;
+    sinout->getPortFor("freq")->setDefault(550);
+
+    Sleep(1000);
+
+    std::cout << "Linking sinout input to sinmod output" << std::endl;
+    sinout->getPortFor("freq")->linkTo(sinmod->getPortFor("out"));
+
+    //std::cout << "Linking sinmod output to sinout input" << std::endl;
+    //sinmod->getPortFor("out")->linkTo(sinout->getPortFor("freq"));
+
+    Sleep(1500);
+
     SuperColliderController::get().g_dumpTree({ {0,1} });
-    //while (true) {
-        //std::cout << 
-    //}
 
-    //Create two sin wave synths
-    //auto s1 = server.InstantiateSynth(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+    Sleep(1500);
 
-    //assert(s1->getOutputRate() == BusRate::AUDIO);
+    //std::cout << "Removing link from sinout input to sinmod output" << std::endl;
+    //sinout->getPortFor("freq")->removeLink(sinmod->getPortFor("out"));
 
-    //std::cout << *s1 << std::endl;
+    std::cout << "Removing link from sinmod output to sinout input" << std::endl;
+    sinmod->getPortFor("out")->removeLink(sinout->getPortFor("freq"));
 
-    //std::this_thread::sleep_for(1000ms);
+    SuperColliderController::get().g_dumpTree({ {0,1} });
 
-    //auto s2 = server.InstantiateSynth(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
-
-    //assert(s2->getOutputRate() == BusRate::AUDIO);
-
-    //s2->set("freq", 550);
-
-    //std::cout << *s2 << std::endl;
-
-    /*
-    auto b = server.InstantiateBus();
-
-    std::cout << "Linking synths:" << std::endl;
-    s1->set("out", b.index);
-    b.rate = BusRate::AUDIO;
-
-    s1->set("add", 440);
-    s1->set("mul", 100);
-    s1->set("freq", 1);
-
-    s2->set("freq", b);
-
-    using namespace std::chrono_literals;
-
-    std::this_thread::sleep_for(1000ms);
-
-   // At this point both are audio - convert one to control
-  
-    s1->setOutputRate(BusRate::CONTROL);
-
-    assert(s1->getOutputRate() == BusRate::CONTROL);
-
-    b.rate = BusRate::CONTROL;
-
-    s2->set("freq", b);
-
-
-    std::cout << *s1 << std::endl;
-    std::cout << *s2 << std::endl;
-
-    std::string s;
-    std::cin >> s;
-
-
-
-    delete s1;
-    delete s2;
-    */
-
-    while (1) {}
 }

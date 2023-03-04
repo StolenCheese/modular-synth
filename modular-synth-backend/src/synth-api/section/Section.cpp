@@ -20,6 +20,8 @@ void Section::generatePortModel(Section &parent,
 
     for (const auto& p : outputPortList) {
         OutputPort* newOutputPort = PortManager::getNewOutputPort(&parent);
+        parent.synth->set(p, newOutputPort->logicalBus->bus);
+        newOutputPort->logicalBus->bus.rate = parent.synth->getOutputRate(); //TODO @ksw40: check
         outputPorts.insert({ p, newOutputPort });
     }
 

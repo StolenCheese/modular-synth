@@ -210,9 +210,14 @@ void SuperColliderController::SyncGroup(Group* g)
             if (flag) {
                 int controlCount = (it++)->AsInt32();
                 for (size_t j = 0; j < controlCount; j++) {
-                    auto cs = (it++)->AsString();
+                    auto cs =std::string((it++)->AsString());
+                   
                     if (it->IsFloat()) {
-                        controls.insert({ cs, it->AsFloat() });
+                        float f = it->AsFloat();
+                        if (cs.substr(0, 3) == "out" || cs.substr(0, 2) == "in") {
+                            controls.insert({ cs, Bus(int(f)) });
+                        }else
+                        controls.insert({ cs, f });
                     } else {
                         controls.insert({ cs, Bus(std::stoi(it->AsString() + 1)) });
                     }

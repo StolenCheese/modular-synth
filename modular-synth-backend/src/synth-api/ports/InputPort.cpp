@@ -25,10 +25,15 @@ namespace synth_api {
         auto * inputPort = dynamic_cast<InputPort *>(other);
         if (outputPort) {
             if (this->controller) {
-                throw AlreadyBoundInputException((char *) "Cannot bound input to output - already bound!", *this, *other);
+                if (!this->logicalBus) {
+                    makeRootController();
+                }
+                else {
+                    throw AlreadyBoundInputException((char*)"Cannot bound input to output - already bound!", *this, *other);
+                }
             }
-            this->controller = other;
-            this->Port::linkTo(other);
+			follow(outputPort);
+            this->Port::linkTo(outputPort);
         } else if (inputPort) {
             // both are bound with controllers. It's possible we have an input daisy chain, so
             // we need to scan for this

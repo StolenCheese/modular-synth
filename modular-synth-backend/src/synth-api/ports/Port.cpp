@@ -27,8 +27,11 @@ namespace synth_api {
         if (loc == this->outgoingConnections.end()) {
             throw NoSuchConnectionException((char *) "No such connection exists!", *this, *other);
         }
+
+        ///// this
         this->outgoingConnections.erase(other);
 
+        ///// asymmetry
         other->outgoingConnections.erase(other->outgoingConnections.find(this));
     }
 

@@ -1,0 +1,233 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						4
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "external_libraries",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"jsonFile" : "directory-external_libraries-Debug-98a97bb7891f1ca0b419.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "external_libraries"
+				},
+				{
+					"build" : "external_libraries/oscpack_1_1_0",
+					"jsonFile" : "directory-external_libraries.oscpack_1_1_0-Debug-d3104319747cbedef24b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "external_libraries/oscpack_1_1_0",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "external_libraries/libremidi",
+					"jsonFile" : "directory-external_libraries.libremidi-Debug-f4f21b69be9793f43a11.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "external_libraries/libremidi",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						5,
+						6,
+						7,
+						8
+					],
+					"jsonFile" : "directory-src-Debug-c94b7c2814d5a21df52c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src"
+				},
+				{
+					"build" : "src/sc-controller",
+					"jsonFile" : "directory-src.sc-controller-Debug-13665c4c6fb2c26ea620.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 0,
+					"source" : "src/sc-controller",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "src/synth-api",
+					"jsonFile" : "directory-src.synth-api-Debug-ad14994d7a3772718fe6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 0,
+					"source" : "src/synth-api",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "src/console",
+					"jsonFile" : "directory-src.console-Debug-b6256c3ffbfb6d476db7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 0,
+					"source" : "src/console",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "src/synth-api-managed",
+					"jsonFile" : "directory-src.synth-api-managed-Debug-3dc583c110779b185755.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 0,
+					"source" : "src/synth-api-managed",
+					"targetIndexes" : 
+					[
+						4
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8
+					],
+					"name" : "modular_synth_backend",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 7,
+					"id" : "controller_debug::@7da3e4a066c0d323d8f8",
+					"jsonFile" : "target-controller_debug-Debug-0101272408aa133dde03.json",
+					"name" : "controller_debug",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "libremidi::@d3b6004636449d2c8570",
+					"jsonFile" : "target-libremidi-Debug-638510a26b9c5d0b9cae.json",
+					"name" : "libremidi",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "oscpack::@965eb01b8c4ec03f14ad",
+					"jsonFile" : "target-oscpack-Debug-f2a532559248f6b216d9.json",
+					"name" : "oscpack",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "servercommander::@83b50cf2e96170b01fc8",
+					"jsonFile" : "target-servercommander-Debug-502d5f3dc8520c68f6a6.json",
+					"name" : "servercommander",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 8,
+					"id" : "synth-api-managed::@581d0b7c166db13e340c",
+					"jsonFile" : "target-synth-api-managed-Debug-30159c7f51131321354e.json",
+					"name" : "synth-api-managed",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "synthapi::@0555ce21110bc7d9df6b",
+					"jsonFile" : "target-synthapi-Debug-7f577eceba7377263edf.json",
+					"name" : "synthapi",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/REPOS/modular-synth/modular-synth-backend/cmake-build-debug",
+		"source" : "D:/REPOS/modular-synth/modular-synth-backend"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

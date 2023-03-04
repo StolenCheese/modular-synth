@@ -64,6 +64,7 @@ namespace synth_api {
     }
 
     void InputPort::removeLink(Port *other) {
+        auto* otherCopy(other);
         auto * otherAsInputPort = dynamic_cast<InputPort *>(other);
         // unsubscribe, then disconnect, so as not to get irrelevant bus rate change information whilst disconnecting
         if (this->controller == other) {
@@ -75,7 +76,7 @@ namespace synth_api {
                 disconnectFromBus();
                 this->notify();
             }
-        } else if (otherAsInputPort->controller == this) {
+        } else if (otherAsInputPort && otherAsInputPort->controller == this) {
             otherAsInputPort->controller = nullptr;
             this->unsubscribe(otherAsInputPort);
             if (otherAsInputPort->logicalBus) {

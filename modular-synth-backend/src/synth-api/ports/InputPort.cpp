@@ -27,8 +27,8 @@ namespace synth_api {
             if (this->controller) {
                 throw AlreadyBoundInputException((char *) "Cannot bound input to output - already bound!", *this, *other);
             }
-            this->controller = other;
-            this->Port::linkTo(other);
+            this->controller = outputPort;
+            this->Port::linkTo(outputPort);
         } else if (inputPort) {
             // both are bound with controllers. It's possible we have an input daisy chain, so
             // we need to scan for this

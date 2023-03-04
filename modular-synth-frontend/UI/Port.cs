@@ -124,7 +124,7 @@ public class Port : Component
     private bool connectTo(Port portTo=null){
         if(portTo!=null&&!portsConnectedTo.ContainsKey(portTo)){
             if(API.API.linkPorts(this,portTo)){
-                portsConnectedTo[portTo] = new Wire(portTo.modulePos,portTo.parentModuleId,portTo.moduleLocalPos,sprite,Color.White,"",0.2);
+                portsConnectedTo[portTo] = new Wire(portTo.modulePos,portTo.parentModuleId,portTo.moduleLocalPos,Wire.orangewire,Color.White,"",0.2);
                 portTo.portConnectedFrom = this;
                 return true;
             }
@@ -134,7 +134,7 @@ public class Port : Component
     private bool connectFrom(Port portFrom=null){
         if(portFrom!=null&&!portFrom.portsConnectedTo.ContainsKey(this)){
             if(API.API.linkPorts(portFrom,this)){
-                portFrom.portsConnectedTo[this] = new Wire(modulePos,parentModuleId,moduleLocalPos,sprite,Color.White,"",0.2);
+                portFrom.portsConnectedTo[this] = new Wire(modulePos,parentModuleId,moduleLocalPos,Wire.orangewire,Color.White,"",0.2);
                 portConnectedFrom = portFrom;
                 return true;
             }

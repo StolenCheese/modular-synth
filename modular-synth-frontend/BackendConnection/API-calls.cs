@@ -14,7 +14,7 @@ public static class API {
     public static string absPathToSynthDefs;
 
     //relative to modular_synth_frontend
-    private const string relPathToSynthDefs =  @"..\modular-synth-backend\synthdefs";
+    private const string relPathToSynthDefs =  "..\\..\\..\\..\\modular-synth-backend\\synthdefs";
     
     public static Dictionary<int, SCSection> synths = new Dictionary<int, SCSection>(); 
 

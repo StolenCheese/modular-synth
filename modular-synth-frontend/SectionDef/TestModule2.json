@@ -1,6 +1,8 @@
 {
     "moduleArgs" : {
-        "function" : "brownnoise-ar"
+      "function": "brownnoise-ar",
+      "width": "8",
+      "backgroundImage" :  "module"
     },
     "MulDial": {
         "type" : "dial",

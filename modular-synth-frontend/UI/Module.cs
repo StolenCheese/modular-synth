@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using SynthAPI;
 using modular_synth_frontend.API;
+using SectionDefTest;
 namespace modular_synth_frontend.UI;
 using Newtonsoft.Json;
 using System.IO;
@@ -68,12 +69,13 @@ public class Module : Interactable
         API.API.createSection(this);
         sendInitialComponentValsToServer();
     }
-    public Module(Vector2 pos, string uiSecDefFile) : base(LoadSprite(uiSecDefFile),pos)
+    public Module(Vector2 pos, string uiDefFile, string secDefFile) : base(LoadSprite(uiDefFile),pos)
     {
         this.ModuleId = modules++;
+        SectionDefTest.Program.combineSecUIDef(uiDefFile, secDefFile, "uiSecDefFile.json"); //combines UI and Sec Def
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
         //this is in SectionDefFile but I can't seem to import it for some reason
-        string jsonCombinedFile = File.ReadAllText(path + uiSecDefFile+".json");
+        string jsonCombinedFile = File.ReadAllText(path + "uiSecDefFile.json");
         Dictionary<string, Dictionary<string, string>> UISecDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
 
         foreach (KeyValuePair<string, Dictionary<string, string>> component in UISecDefDict)

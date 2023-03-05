@@ -20,7 +20,6 @@ namespace synth_api {
     }
 
     void Port::removeLink(Port *other) {
-        std::cout << "trying to find\n";
         auto loc = this->outgoingConnections.find(other);
 
         // front-end has messed up if they are trying to remove a non-existent connection
@@ -29,13 +28,8 @@ namespace synth_api {
             throw NoSuchConnectionException((char *) "No such connection exists!", *this, *other);
         }
 
-        std::cout << "this (pt1)\n";
-        ///// this
         this->outgoingConnections.erase(other);
-
-        ///// asymmetry
-        std::cout << "asymmetry (pt2)\n";
-        other->outgoingConnections.erase(other->outgoingConnections.find(this));
+        other->outgoingConnections.erase(this);
     }
 
     void Port::cyclicCheck(Port *target, bool doRepeat) {
@@ -51,6 +45,12 @@ namespace synth_api {
             // deletes without returning
             queue.pop_front();
 
+            // if our target is matched, then introducing the link would raise a cycle,
+            // so we throw an exception to alert front-end the user is doing something bad
+            if (next_node == target) {
+                throw CyclicLinksException((char*)"Cyclic link detected!", *this, *target);
+            }
+
             // Scan over both *real* and *symbolic* links
             for (auto outgoingLink : next_node->outgoingConnections) {
 
@@ -62,12 +62,6 @@ namespace synth_api {
                 }
                 // otherwise mark as visited
                 visited.insert(outgoingLink);
-
-                // if our target is matched, then introducing the link would raise a cycle,
-                // so we throw an exception to alert front-end the user is doing something bad
-                if (outgoingLink == target) {
-                    throw CyclicLinksException((char *) "Cyclic link detected!", *this, *target);
-                }
 
                 queue.insert(queue.cend(), outgoingLink);
             }

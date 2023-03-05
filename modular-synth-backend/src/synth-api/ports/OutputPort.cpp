@@ -43,12 +43,17 @@ namespace synth_api {
     }
 
     void OutputPort::clearConnections() {
+        std::vector<Port*> toRemove;
         for (const auto& p : outgoingConnections) {
+            toRemove.push_back(p);
+        }
+        for (const auto& p : toRemove) {
             removeLink(p);
         }
     }
 
     OutputPort::~OutputPort() {
+        clearConnections();
         delete logicalBus;
     }
 }

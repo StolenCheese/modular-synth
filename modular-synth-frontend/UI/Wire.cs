@@ -19,9 +19,12 @@ public class Wire : Component
     Vector2 wireLine;
     int spriteNum = 10;
     Rectangle node;
+    public bool animate;
+    public int nodesToDraw = 0;
+    private int delay = 0;
 
 
-    public Wire(Vector2 modulePos,int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale)
+    public Wire(Vector2 modulePos,int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1,bool animate = false) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale)
     { 
         //set to true as wire is made when someone clicks on a port
         this.visible = true;
@@ -29,6 +32,7 @@ public class Wire : Component
         //TODO: use an alternative? as this seems quite inefficient
         Wire.wires.Add(this);
 
+        this.animate = animate;
         
     }
 
@@ -44,7 +48,7 @@ public class Wire : Component
 
         //quick and easy way to get a number of sprites to render that is suitably proportional to line length
         spriteNum = MathHelper.Max(MathHelper.Max((int)Math.Abs(wireLine.X),(int)Math.Abs(wireLine.Y))/2,40);
-
+        
         float deviation(float step,float maxStep){
             int n = 1000;
             float x = step;
@@ -57,12 +61,22 @@ public class Wire : Component
             }
             else return dev;
         }
+        int count = spriteNum;
+        if(animate){
+            count = 1 + nodesToDraw;
+            nodesToDraw+=spriteNum/8;
+            if(nodesToDraw>spriteNum){
+                nodesToDraw=0;
+                animate = false;
+            }
+        }
 
-        for(int i=0;i<spriteNum+1;i++){
+        for(int i=0;i<count+1;i++){
             float xDeviation = wireLine.X < 0 ? deviation(i,spriteNum)/2 : -deviation(i,spriteNum)/2;
             node = new Rectangle((int)(position.X+i*(wireLine.X/spriteNum)+xDeviation),(int)(position.Y+i*(wireLine.Y/spriteNum)+deviation(i,spriteNum)), width, height);
 
             spriteBatch.Draw(sprite, node,null, colour,0,new Vector2(this.sprite.Width/2,this.sprite.Height/2),SpriteEffects.None,0);
+            
         }       
         //For reding hitbox
         //spriteBatch.Draw(Slider.slider1, boundingBox,colour);

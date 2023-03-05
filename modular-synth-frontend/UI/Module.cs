@@ -275,8 +275,18 @@ public class Module : Interactable
         string jsonCombinedFile = File.ReadAllText(path + uidefFilePath + ".json");
         Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
 
-        string img = UIDefDict["moduleArgs"]["backgroundImage"];
-        return ModularSynth.content.Load<Texture2D>(img);
+        string img;
+
+        if (UIDefDict.ContainsKey("moduleArgs"))
+        {
+            if (UIDefDict["moduleArgs"].ContainsKey("backgroundImage"))
+            {
+                img = UIDefDict["moduleArgs"]["backgroundImage"];
+                return ModularSynth.content.Load<Texture2D>(img);
+            }
+        }
+
+        return ModularSynth.content.Load<Texture2D>("module");
     }
 
 

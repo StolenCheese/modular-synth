@@ -214,7 +214,7 @@ void SuperColliderController::SyncGroup(Group* g)
                    
                     if (it->IsFloat()) {
                         float f = it->AsFloat();
-                        if (cs.substr(0, 3) == "out" || cs.substr(0, 2) == "in") {
+                        if (cs.substr(0, 3) == "out") { // || cs.substr(0, 2) == "in") { @ksw40: a check for in causes problems, don't think it should be done here
                             controls.insert({ cs, Bus(int(f)) });
                         }else
                         controls.insert({ cs, f });

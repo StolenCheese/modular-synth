@@ -7,21 +7,10 @@
 #define ADDRESS "127.0.0.1"
 #define PORT 58000
 
+
 using namespace synth_api;
 
-int main(void) {
-	std::string synthPath = "S:\\University\\Part-IB\\Group-Project\\modular-synth\\modular-synth-backend\\synthdefs\\";
-
-	std::cout << "Starting" << std::endl;
-
-    auto endpoint = IpEndpointName(ADDRESS, PORT);
-      
-    SuperColliderController::Connect(endpoint);
-    auto& server = SuperColliderController::get();
-
-    server.g_deepFree({ 0 });
-    server.dumpOSC(1);
-
+void panTest(std::string  synthPath) {
 	Section *sinmod = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
 	Section *sinmod2 = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
 	Section *sinout = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
@@ -97,4 +86,73 @@ int main(void) {
 
     SuperColliderController::get().g_dumpTree({ {0,1} });
 
+}
+
+void daisyChainTest(std::string synthPath) {
+	Section *sinmod = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	Section *sina = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	Section *sinb = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	Section *sinc = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	Section *sind = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	std::cout << "Created instances of sound sections" << std::endl;
+
+    Section* mixer = new Section(synthPath + "mixer-ar" + ".scsyndef", synthPath + "mixer-kr" + ".scsyndef");
+	std::cout << "Created instance of mixer section" << std::endl;
+
+	Section *speaker = new Section(synthPath + "speaker-ar" + ".scsyndef", "");
+	std::cout << "Created instance of speaker section" << std::endl;
+
+    SuperColliderController::get().g_dumpTree({ {0,1} });
+
+    sina->getPortFor("freq")->setDefault(220);
+    sina->getPortFor("mul")->setDefault(0.2);
+    sinb->getPortFor("freq")->setDefault(330);
+    sinb->getPortFor("mul")->setDefault(0.2);
+    sinc->getPortFor("freq")->setDefault(440);
+    sinc->getPortFor("mul")->setDefault(0.2);
+    sind->getPortFor("freq")->setDefault(550);
+    sind->getPortFor("mul")->setDefault(0.2);
+	std::cout << "Set params of sins" << std::endl;
+
+    sinmod->getPortFor("mul")->setDefault(0.25);
+    sinmod->getPortFor("add")->setDefault(0);
+    sinmod->getPortFor("freq")->setDefault(2);
+	std::cout << "Set params of sinmod" << std::endl;
+
+    sina->getPortFor("mul")->linkTo(sinb->getPortFor("mul"));
+    //sinb->getPortFor("mul")->linkTo(sina->getPortFor("mul"));
+    sinb->getPortFor("mul")->linkTo(sinc->getPortFor("mul"));
+    sinc->getPortFor("mul")->linkTo(sind->getPortFor("mul"));
+	std::cout << "Daisy-chained sins' muls together" << std::endl;
+
+    sind->getPortFor("mul")->linkTo(sinmod->getPortFor("out"));
+	std::cout << "Connected sinmod to a mul" << std::endl;
+
+    sina->getPortFor("out")->linkTo(mixer->getPortFor("in1"));
+    sinb->getPortFor("out")->linkTo(mixer->getPortFor("in2"));
+    sinc->getPortFor("out")->linkTo(mixer->getPortFor("in3"));
+    sind->getPortFor("out")->linkTo(mixer->getPortFor("in4"));
+	std::cout << "Connected sins to mixer" << std::endl;
+
+    speaker->getPortFor("inl")->linkTo(mixer->getPortFor("out"));
+    speaker->getPortFor("inr")->linkTo(mixer->getPortFor("out"));
+	std::cout << "Connected speaker to mixer" << std::endl;
+
+    SuperColliderController::get().g_dumpTree({ {0,1} });
+}
+
+int main(void) {
+    std::string synthPath = "S:\\University\\Part-IB\\Group-Project\\modular-synth\\modular-synth-backend\\synthdefs\\";
+
+	std::cout << "Starting" << std::endl;
+
+    auto endpoint = IpEndpointName(ADDRESS, PORT);
+      
+    SuperColliderController::Connect(endpoint);
+    auto& server = SuperColliderController::get();
+
+    server.g_deepFree({ 0 });
+    server.dumpOSC(1);
+
+    daisyChainTest(synthPath);
 }

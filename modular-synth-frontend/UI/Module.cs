@@ -70,8 +70,8 @@ public class Module : Interactable
     }
     public Module(Texture2D sprite, Vector2 pos, string uiSecDefFile) : base(sprite, pos)
     {
-        var path = Path.GetFullPath("..\\modular-synth-frontend\\SectionDef\\");
         this.ModuleId = modules++;
+        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
         //this is in SectionDefFile but I can't seem to import it for some reason
         string jsonCombinedFile = File.ReadAllText(path + uiSecDefFile+".json");
         Dictionary<string, Dictionary<string, string>> UISecDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);

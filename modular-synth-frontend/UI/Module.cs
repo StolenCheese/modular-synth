@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using SynthAPI;
 using modular_synth_frontend.API;
+using SectionDefTest;
 namespace modular_synth_frontend.UI;
 using Newtonsoft.Json;
 using System.IO;
@@ -34,12 +35,12 @@ public class Module : Interactable
 
     public Module(Texture2D sprite) : base(sprite)
     {
-        width = 8; //TODO: this is temp
+        width = sprite.Width / Grid.GetInstance().GetGridSideLength();
     }
 
     public Module(Texture2D sprite, Vector2 pos, string TEMPmoduleType="",int TEMP=0) : base(sprite, pos)
     {
-        width = 8;
+        width = sprite.Width / Grid.GetInstance().GetGridSideLength();
 
         this.ModuleId = modules++;
 
@@ -68,25 +69,29 @@ public class Module : Interactable
         API.API.createSection(this);
         sendInitialComponentValsToServer();
     }
-    public Module(Texture2D sprite, Vector2 pos, string uiSecDefFile) : base(sprite, pos)
+    public Module(Vector2 pos, string secDefFile, string uiDefFile) : base(LoadSprite(uiDefFile),pos)
     {
-        var path = Path.GetFullPath("..\\modular-synth-frontend\\SectionDef\\");
         this.ModuleId = modules++;
-        //this is in SectionDefFile but I can't seem to import it for some reason
-        string jsonCombinedFile = File.ReadAllText(path + uiSecDefFile+".json");
-        Dictionary<string, Dictionary<string, string>> UISecDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+        
+        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
+
+        Dictionary<string, Dictionary<string, string>> UISecDefDict = SectionDefTest.Program.combineSecUIDef(path + uiDefFile + ".json", path + secDefFile + ".json", "uiSecDefFile.json"); //combines UI and Sec Def
 
         foreach (KeyValuePair<string, Dictionary<string, string>> component in UISecDefDict)
         {
             Dictionary<string, string> newComp = component.Value;
             string ComponentType = newComp.TryGetValue("type", out string type) ? type : "error";
 
-            if (component.Key == "moduleArgs"){//not a component. Placed here temporarily. This to get the synthdef function name
+            if (component.Key == "moduleArgs") {//not a component. Placed here temporarily. This to get the synthdef function name
                 this.function = newComp.TryGetValue("function", out string func) ? func : null;
-                if(this.function==null){
+                if (this.function == null) {
                     Console.WriteLine("Error parsing function type");
                 }
-            }else{
+
+                width = newComp.TryGetValue("width", out string val) ? int.Parse(val) : 8;
+
+            }
+            else{
                 string xPosString = newComp.TryGetValue("xPos", out string compXPos) ? compXPos : "error";//get xPosition
                 string yPosString = newComp.TryGetValue("yPos", out string compYPos) ? compYPos : "error";//get yPosition  
                 Vector2 moduleLocalPos = new Vector2(parsePositionX(xPosString), parsePositionY(yPosString));
@@ -258,6 +263,26 @@ public class Module : Interactable
         }
     }
 
+    static private Texture2D LoadSprite(string uidefFilePath)
+    {
+        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
+        string jsonCombinedFile = File.ReadAllText(path + uidefFilePath + ".json");
+        Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+
+        string img;
+
+        if (UIDefDict.ContainsKey("moduleArgs"))
+        {
+            if (UIDefDict["moduleArgs"].ContainsKey("backgroundImage"))
+            {
+                img = UIDefDict["moduleArgs"]["backgroundImage"];
+                return ModularSynth.content.Load<Texture2D>(img);
+            }
+        }
+
+        return ModularSynth.content.Load<Texture2D>("module");
+    }
+
 
     public override void Update()
     {
@@ -286,7 +311,7 @@ public class Module : Interactable
         {
             SetPosition(input.MousePosVector() + clickOffset);
 
-            Vector2 TopLeftCorner = grid.GetNearestRightEdgeTileSnap(new Vector2(boundingBox.Left, boundingBox.Top));
+            Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(boundingBox.Left, boundingBox.Top));
 
             if(grid.AreTilesOccupied(TopLeftCorner, width))
             {
@@ -337,6 +362,23 @@ public class Module : Interactable
     public int GetWidth()
     {
         return width;
+    }
+
+    public static int GetWidth(string uiDef)
+    {
+        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
+        string jsonCombinedFile = File.ReadAllText(path + uiDef + ".json");
+        Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+
+        if (UIDefDict.ContainsKey("moduleArgs"))
+        {
+            if (UIDefDict["moduleArgs"].ContainsKey("width"))
+            {
+                return(int.Parse(UIDefDict["moduleArgs"]["width"]));
+            }
+        }
+
+        return 8;
     }
 
     //set on spawn

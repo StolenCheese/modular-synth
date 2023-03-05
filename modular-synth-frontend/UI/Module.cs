@@ -163,10 +163,22 @@ public class Module : Interactable
                 }
                 else if (ComponentType == "button")
                 {
-                    //TODO: add button creation
-                }
-                
-            
+                    string parameterIDString = newComp.TryGetValue("parameterID", out string compParameterID) ? compParameterID : "error";
+                    string scaleString = newComp.TryGetValue("scale", out string compScale) ? compScale : "1";
+                    string spriteString = newComp.TryGetValue("sprite", out string compSprite) ? compSprite : "error";
+                    double scale = double.Parse(scaleString);
+
+                    if (xPosString == "error" || yPosString == "error" || colString == "error" || parameterIDString == "error" || spriteString == "error")
+                    {
+                        Console.WriteLine("error making button");
+                        //TODO: Handle error
+                    }
+
+                    Texture2D spriteButton = ModularSynth.content.Load<Texture2D>(spriteString);
+
+
+                    components.Add(new ButtonComponent(pos, ModuleId, moduleLocalPos, spriteButton, col, parameterIDString, scale));
+                }            
                 else
                 {
                     Console.WriteLine("Error, do not know component type");

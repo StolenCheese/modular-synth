@@ -68,7 +68,7 @@ public class Module : Interactable
         API.API.createSection(this);
         sendInitialComponentValsToServer();
     }
-    public Module(Texture2D sprite, Vector2 pos, string uiSecDefFile) : base(sprite, pos)
+    public Module(Vector2 pos, string uiSecDefFile) : base(LoadSprite(uiSecDefFile),pos)
     {
         this.ModuleId = modules++;
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
@@ -81,16 +81,20 @@ public class Module : Interactable
             Dictionary<string, string> newComp = component.Value;
             string ComponentType = newComp.TryGetValue("type", out string type) ? type : "error";
 
-            if (component.Key == "moduleArgs"){//not a component. Placed here temporarily. This to get the synthdef function name
+            if (component.Key == "moduleArgs") {//not a component. Placed here temporarily. This to get the synthdef function name
                 this.function = newComp.TryGetValue("function", out string func) ? func : null;
-                if(this.function==null){
+                if (this.function == null) {
                     Console.WriteLine("Error parsing function type");
                 }
 
                 width = newComp.TryGetValue("width", out string val) ? int.Parse(val) : 8;
 
                 string texturePath = newComp.TryGetValue("backgroundImage", out string stringPath) ? stringPath : null;
-                //sprite = ModularSynth.content.Load<Texture2D>(textureName);
+                Debug.WriteLine(texturePath);
+                if (texturePath != null)
+                {
+                    sprite = ModularSynth.content.Load<Texture2D>(texturePath);
+                }
 
             }
             else{
@@ -263,6 +267,16 @@ public class Module : Interactable
                 return offset;
             } 
         }
+    }
+
+    static private Texture2D LoadSprite(string uidefFilePath)
+    {
+        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
+        string jsonCombinedFile = File.ReadAllText(path + uidefFilePath + ".json");
+        Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+
+        string img = UIDefDict["moduleArgs"]["backgroundImage"];
+        return ModularSynth.content.Load<Texture2D>(img);
     }
 
 

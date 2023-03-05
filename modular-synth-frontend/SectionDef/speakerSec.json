@@ -1,0 +1,11 @@
+{
+    "moduleArgs" : {
+        "function": "speaker-ar"
+    },	
+    "i/p left ear": {
+        "parameterID" : "inl",
+    },
+    "i/p right ear": {
+        "parameterID" : "inr",
+    },
+}

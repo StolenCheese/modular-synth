@@ -1,0 +1,20 @@
+{
+    "moduleArgs" : {
+      "width": "6",
+      "backgroundImage" :  "module_pale_thin"
+    },
+    "i/p left ear": {
+        "type" : "port",
+        "xPos" : "l+50",
+        "yPos" : "b-50",
+        "sprite" : "port1",
+        "isInput" : "true"
+    },
+    "i/p right ear": {
+        "type" : "port",
+        "xPos" : "r-50",
+        "yPos" : "b-50",
+        "sprite" : "port1",
+        "isInput" : "true"
+    },
+}

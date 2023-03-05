@@ -18,6 +18,7 @@ namespace synth_api {
     class InputPort : public Port {
         friend class PortManager;
         friend class LogicalBus;
+        friend class TestingProdder;
 
     private:
         uint16_t audioRateRequirement;
@@ -79,6 +80,7 @@ namespace synth_api {
         void setDefault(float value) override;
 
         ~InputPort() override;
+        void clearConnections();
     };
 
 }

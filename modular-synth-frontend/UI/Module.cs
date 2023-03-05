@@ -99,6 +99,8 @@ public class Module : Interactable
                 string colString = newComp.TryGetValue("col", out string compCol) ? compCol : "255255255"; 
                 //Color col = (Color)new System.Drawing.ColorConverter().ConvertFromString(colString); //convert colour to colour type
                 var col = new Color(int.Parse(colString.Substring(0,3)),int.Parse(colString.Substring(3,3)),int.Parse(colString.Substring(6,3)));
+                double minValueForServer = double.Parse(newComp.TryGetValue("minValueForServer", out string minVal) ? minVal : "0");
+                double maxValueForServer = double.Parse(newComp.TryGetValue("maxValueForServer", out string maxVal) ? maxVal : "1");
                 if (ComponentType == "slider")
                 {                                                   
                     string parameterIDString = newComp.TryGetValue("parameterID", out string compParameterID) ? compParameterID : "error";//get ParameterID
@@ -120,7 +122,7 @@ public class Module : Interactable
                     Texture2D trackSprite = ModularSynth.content.Load<Texture2D>(trackSpriteString);
                     Texture2D sliderSprite = ModularSynth.content.Load<Texture2D>(sliderSpriteString);
 
-                    components.Add(new Slider(pos, ModuleId, moduleLocalPos, trackSprite, sliderSprite, col, parameterIDString, trackScale, sliderScale, isVertical));
+                    components.Add(new Slider(pos, ModuleId, moduleLocalPos, trackSprite, sliderSprite, col, parameterIDString, trackScale, sliderScale, isVertical,minValueForServer,maxValueForServer));
                 }
                 else if (ComponentType == "dial")
                 {                                                                              
@@ -140,7 +142,7 @@ public class Module : Interactable
                     double dialScale = double.Parse(dialScaleString);
                     Texture2D staticPartSprite = ModularSynth.content.Load<Texture2D>(staticPartSpriteString);
                     Texture2D dialSprite = ModularSynth.content.Load<Texture2D>(dialSpriteString);
-                    components.Add(new Dial(pos, ModuleId, moduleLocalPos, staticPartSprite, dialSprite, col, parameterIDString, staticPartScale, dialScale));
+                    components.Add(new Dial(pos, ModuleId, moduleLocalPos, staticPartSprite, dialSprite, col, parameterIDString, staticPartScale, dialScale,minValueForServer,maxValueForServer));
                 }
                 else if (ComponentType == "port")
                 {                                           
@@ -183,7 +185,7 @@ public class Module : Interactable
                     Texture2D spriteButton = ModularSynth.content.Load<Texture2D>(spriteString);
 
 
-                    components.Add(new ButtonComponent(pos, ModuleId, moduleLocalPos, spriteButton, col, parameterIDString, scale));
+                    components.Add(new ButtonComponent(pos, ModuleId, moduleLocalPos, spriteButton, col, parameterIDString, scale,minValueForServer,maxValueForServer));
                 }            
                 else
                 {

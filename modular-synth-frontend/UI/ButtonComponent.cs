@@ -15,8 +15,9 @@ internal class ButtonComponent : Component
     private bool isClickingButton;
     //does something go here
     private InputManager input = InputManager.GetInstance();
-    public ButtonComponent(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D buttonSprite, Color col, string ParameterID, double buttonScale = 1) : base(modulePos, parentModuleId, moduleLocalPos, buttonSprite, col, ParameterID, buttonScale) {
-        //does something go here
+    public ButtonComponent(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D buttonSprite, Color col, string ParameterID, double buttonScale = 1,double minValueForServer=0,double maxValueForServer=1) : base(modulePos, parentModuleId, moduleLocalPos, buttonSprite, col, ParameterID, buttonScale) {
+        this.minValueForServer = minValueForServer;
+        this.maxValueForServer = maxValueForServer;
     }
     public override void UpdatePos(Vector2 modulePos)
     {
@@ -30,13 +31,13 @@ internal class ButtonComponent : Component
 
     public override void sendValToServer()
     {    
-        float val = 0;
+        double val = minValueForServer;
         if (isOn) {
-            val = 1;
+            val = maxValueForServer;
         }
         if (val != lastSentVal)
         {
-            API.API.setValue(this.parentModuleId, this.parameterID, val);
+            API.API.setValue(this.parentModuleId, this.parameterID, (float)val);
             lastSentVal = val;
         }
     }

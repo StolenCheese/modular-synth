@@ -138,14 +138,18 @@ namespace synth_api {
         InputPort * current = this;
         InputPort * next;
         auto* thisController(this->controller);
+        auto* thisControllerCopy(this->controller);
         next = dynamic_cast<InputPort *>(thisController);
-        if (dynamic_cast<OutputPort *>(thisController)) {
+        if (dynamic_cast<OutputPort *>(thisControllerCopy)) {
             throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to make an "
                                                           "InputPort the root controller in a dependency with an "
                                                           "OutputPort!");
         }
 
         // can only make the InputPort a root controller when there are no OutputPorts in the dependency graph
+        if (next) {
+            next->unsubscribe(this);
+        }
         current->controller = nullptr;
         while (next != nullptr) {
             auto * nextController(next->controller);
@@ -153,7 +157,7 @@ namespace synth_api {
             if (dynamic_cast<OutputPort *>(nextControllerCopy)) {
                 throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to make an "
                                                               "InputPort the root controller in a dependency with an "
-                                                              "OutputPort!");
+                                                              "OutputPort!"); 
             }
 
             // reverse direction of controller
@@ -211,13 +215,26 @@ namespace synth_api {
     }
 
     void InputPort::disconnectFromBus() {
-        this->logicalBus->removeListener(this);
+        if (this->logicalBus) {
+            this->logicalBus->removeListener(this);
+        }
         this->logicalBus = nullptr;
     }
 
-    InputPort::~InputPort() {
-        for (const auto &p : outgoingConnections) {
-            InputPort::removeLink(p);
+    void InputPort::clearConnections() {
+        if (!outgoingConnections.size()) {
+            return;
         }
+        std::vector<Port*> toRemove;
+        for (const auto& p : outgoingConnections) {
+            toRemove.push_back(p);
+        }
+        for (const auto& p : toRemove) {
+            removeLink(p);     
+        }
+    }
+
+    InputPort::~InputPort() {
+        clearConnections();
     }
 } // synth-api

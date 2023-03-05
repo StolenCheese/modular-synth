@@ -1,5 +1,6 @@
 {
     "moduleArgs" : {
+        "function": "brownnoise-ar",
     },
     "MulDial": {
         "parameterID" : "mul",

@@ -88,12 +88,12 @@ Section::Section(const std::string& audio_source, const std::string& control_sou
 
 Section::~Section()
 {
-    delete synth;
-    for (const auto& p : outputPorts) {
-        delete p.second;
-    }
     for (const auto& p : inputPorts) {
         delete p.second;
     }
+    for (const auto& p : outputPorts) {
+        delete p.second;
+    }
+    delete synth;
 }
 }

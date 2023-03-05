@@ -17,6 +17,7 @@ namespace synth_api {
         friend class LogicalBus;
         friend class Section;
         friend class PortManager;
+        friend class TestingProdder;
     public:
         /*
          * Ports can be bound to each other. This is analogous to a
@@ -75,10 +76,6 @@ namespace synth_api {
         // Logical bus to represent bus connections at a high-level. Abstracts away audio/control rate details.
         LogicalBus *logicalBus;
 
-        // Holds all actual front-end created outgoingConnections (models wires)
-        // TODO @bms53: Rename to imply it is bi-directional
-        std::set<Port *> outgoingConnections;
-
         // Holds all back-end created outgoingConnections (models ports on the same section)
         // TODO @bms53: Rename to imply it is bi-directional
         std::set<Port *> outgoingSymbolicLinks;
@@ -95,6 +92,10 @@ namespace synth_api {
          */
         virtual void subscribe(Port *) = 0;
         virtual void unsubscribe(Port *) = 0;
+
+        // Holds all actual front-end created outgoingConnections (models wires)
+        // TODO @bms53: Rename to imply it is bi-directional
+        std::set<Port*> outgoingConnections;
     };
 
 }

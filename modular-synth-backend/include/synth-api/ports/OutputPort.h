@@ -29,6 +29,7 @@ namespace synth_api {
         void linkTo(Port* other) override;
         void removeLink(Port *other) override;
         ~OutputPort() override;
+        void clearConnections();
     };
 }
 #endif //MODULAR_SYNTH_OUTPUTPORT_H

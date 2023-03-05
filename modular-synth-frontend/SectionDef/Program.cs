@@ -21,7 +21,7 @@ namespace SectionDefTest
             {
                 if (!UIDefValues.ContainsKey(component.Key))
                 {
-                    throw new InvalidOperationException("SecDef file contains parameters not found in UIDef File");
+                    throw new InvalidOperationException($"Can't find {component.Key} in UIDef File");
                 }
             }
 

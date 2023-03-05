@@ -75,6 +75,7 @@ internal class Menu : Interactable
     public void LoadContent()
     {
         moduleTexture = ModularSynth.instance.Content.Load<Texture2D>("module");
+
         leftArrowTexture = ModularSynth.instance.Content.Load<Texture2D>("left_arrow");
         rightArrowTexture = ModularSynth.instance.Content.Load<Texture2D>("right_arrow");
 
@@ -97,6 +98,7 @@ internal class Menu : Interactable
         {
             visibleButtons = activeButtons.GetRange(0, activeButtons.Count);
         }
+
     }
 
     public override void Update()

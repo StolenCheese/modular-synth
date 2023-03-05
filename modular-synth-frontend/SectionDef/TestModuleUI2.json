@@ -38,13 +38,6 @@
         "sprite" : "port1",
         "isInput" : "true"
     },
-    "i/p freq port": {
-        "type" : "port",
-        "xPos" : "l+50",
-        "yPos" : "b-120",
-        "sprite" : "port1",
-        "isInput" : "true"
-    },
     "0/p port": {
         "type" : "port",
         "xPos" : "r-50",

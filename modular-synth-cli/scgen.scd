@@ -128,3 +128,35 @@ SynthDef("clipnoise-kr", { arg mul= 1.0, add= 0.0, out=0;
 	Out.kr(out, ClipNoise .kr(mul, add));
 }).writeDefFile(x);
 )
+
+(
+SynthDef("speaker-ar", { arg inl = 2, inr = 3;
+	Out.ar(0, [In.ar(inl), In.ar(inr)]);
+}).writeDefFile(x);
+)
+
+(
+SynthDef("pan-ar", { arg in = 2, pos = 0.0, level = 1.0, outl=0, outr=1;
+	Out.ar(outl, Pan2.ar(In.ar(in), pos, level).at(0));
+	Out.ar(outr, Pan2.ar(In.ar(in), pos, level).at(1));
+}).writeDefFile(x);
+)
+
+(
+SynthDef("pan-kr", { arg in = 2, pos = 0.0, level = 1.0, outl=0, outr=1;
+	Out.kr(outl, Pan2.kr(In.kr(in), pos, level).at(0));
+	Out.kr(outr, Pan2.kr(In.kr(in), pos, level).at(1));
+}).writeDefFile(x);
+)
+
+(
+SynthDef("mixer-ar", { arg in1 = 2, in2 = 3, in3 = 4, in4 = 5, out=0;
+	Out.ar(out, In.ar(in1) + In.ar(in2) + In.ar(in3) + In.ar(in4));
+}).writeDefFile(x);
+)
+
+(
+SynthDef("mixer-kr", { arg in1 = 2, in2 = 3, in3 = 4, in4 = 5, out=0;
+	Out.kr(out, In.kr(in1) + In.kr(in2) + In.kr(in3) + In.kr(in4));
+}).writeDefFile(x);
+)

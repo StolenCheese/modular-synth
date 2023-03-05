@@ -1,6 +1,8 @@
 {
     "moduleArgs" : {
-        "function" : "sin-ar"
+      "function": "sin-ar",
+      "width": "8",
+      "backgroundImage" : "module_red"
     },
     "AddingSlider": {
         "type" : "slider",

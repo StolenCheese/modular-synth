@@ -86,7 +86,14 @@ public class Module : Interactable
                 if(this.function==null){
                     Console.WriteLine("Error parsing function type");
                 }
-            }else{
+
+                width = newComp.TryGetValue("width", out string val) ? int.Parse(val) : 8;
+
+                string texturePath = newComp.TryGetValue("backgroundImage", out string stringPath) ? stringPath : null;
+                //sprite = ModularSynth.content.Load<Texture2D>(textureName);
+
+            }
+            else{
                 string xPosString = newComp.TryGetValue("xPos", out string compXPos) ? compXPos : "error";//get xPosition
                 string yPosString = newComp.TryGetValue("yPos", out string compYPos) ? compYPos : "error";//get yPosition  
                 Vector2 moduleLocalPos = new Vector2(parsePositionX(xPosString), parsePositionY(yPosString));

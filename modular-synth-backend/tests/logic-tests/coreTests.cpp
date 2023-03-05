@@ -23,8 +23,19 @@ int main(void) {
     server.dumpOSC(1);
 
 	Section *sinmod = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	Section *sinmod2 = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
 	Section *sinout = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
-	std::cout << "Created instance of sin sections" << std::endl;
+	Section *noiseout = new Section(synthPath + "pinknoise-ar" + ".scsyndef", synthPath + "pinknoise-kr" + ".scsyndef");
+	std::cout << "Created instances of sound sections" << std::endl;
+
+    Section* pan = new Section(synthPath + "pan-ar" + ".scsyndef", synthPath + "pan-kr" + ".scsyndef");
+	std::cout << "Created instance of pan section" << std::endl;
+
+    Section* mixer = new Section(synthPath + "mixer-ar" + ".scsyndef", synthPath + "mixer-kr" + ".scsyndef");
+	std::cout << "Created instance of mixer section" << std::endl;
+
+	Section *speaker = new Section(synthPath + "speaker-ar" + ".scsyndef", "");
+	std::cout << "Created instance of speaker section" << std::endl;
 
     SuperColliderController::get().g_dumpTree({ {0,1} });
 
@@ -33,17 +44,31 @@ int main(void) {
     sinmod->getPortFor("freq")->setDefault(2);
 	std::cout << "Set params of sinmod" << std::endl;
 
-    // synthetic speaker
-    //auto* speaker =  new InputPort(SetterFunctor("",nullptr),synth_api::Rate::audio,0);
-    //speaker->logicalBus = new LogicalBus(nullptr);
-    //speaker->logicalBus->bus.index = 0;
+    sinmod2->getPortFor("mul")->setDefault(1);
+    sinmod2->getPortFor("add")->setDefault(0);
+    sinmod2->getPortFor("freq")->setDefault(1);
+	std::cout << "Set params of sinmod2" << std::endl;
 
     sinout->getPortFor("freq")->setDefault(330);
 	std::cout << "Set params of sinout" << std::endl;
 
-    std::cout << "Linking sinout output to speaker" << std::endl;
-    //sin2->getPortFor("out")->linkTo(speaker);
-    sinout->synth->set("out", 0);
+    std::cout << "Linking sinout output to mixer" << std::endl;
+    sinout->getPortFor("out")->linkTo(mixer->getPortFor("in1"));
+
+    std::cout << "Linking noiseout output to pan input" << std::endl;
+    noiseout->getPortFor("out")->linkTo(pan->getPortFor("in"));
+
+    std::cout << "Linking sinmod2 output to pan control input" << std::endl;
+    sinmod2->getPortFor("out")->linkTo(pan->getPortFor("pos"));
+
+    std::cout << "Linking pan output l to speaker input l" << std::endl;
+    pan->getPortFor("outl")->linkTo(speaker->getPortFor("inl"));
+
+    std::cout << "Linking pan output r to mixer input" << std::endl;
+    pan->getPortFor("outr")->linkTo(mixer->getPortFor("in2"));
+
+    std::cout << "Linking mixer output to speaker input r" << std::endl;
+    mixer->getPortFor("out")->linkTo(speaker->getPortFor("inr"));
 
     Sleep(1000);
 

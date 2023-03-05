@@ -5,6 +5,7 @@
 #include "synth-api/ports/InputPort.h"
 #include "synth-api/ports/OutputPort.h"
 #include "synth-api/ports/Port.h"
+#include "synth-api/section/_model/PortManager.h"
 
 #include "synth-api/exception/LinkException.hpp"
 
@@ -34,6 +35,7 @@ namespace synth_api {
             }
 			follow(outputPort);
             this->Port::linkTo(outputPort);
+			PortManager::reorder(outputPort);
         } else if (inputPort) {
             // both are bound with controllers. It's possible we have an input daisy chain, so
             // we need to scan for this

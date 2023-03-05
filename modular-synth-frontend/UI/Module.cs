@@ -69,7 +69,7 @@ public class Module : Interactable
         API.API.createSection(this);
         sendInitialComponentValsToServer();
     }
-    public Module(Vector2 pos, string uiDefFile, string secDefFile) : base(LoadSprite(uiDefFile),pos)
+    public Module(Vector2 pos, string secDefFile, string uiDefFile) : base(LoadSprite(uiDefFile),pos)
     {
         this.ModuleId = modules++;
         SectionDefTest.Program.combineSecUIDef(uiDefFile, secDefFile, "uiSecDefFile.json"); //combines UI and Sec Def

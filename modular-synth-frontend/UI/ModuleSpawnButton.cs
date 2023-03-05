@@ -10,19 +10,22 @@ internal class ModuleSpawnButton : Button
     private Texture2D _texture;
     private InputManager input = InputManager.GetInstance();
     private Grid grid = Grid.GetInstance();
-    private string secUiDefFileName;
+
+    private string uiDefFile;
+    private string secDefFile;
   
-    public ModuleSpawnButton(Texture2D sprite, Vector2 position,string secUiDefFileName) : base(sprite, position)
+    public ModuleSpawnButton(Texture2D sprite, Vector2 position,string uiDefFile, string secDefFile) : base(sprite, position)
     {
         _texture = sprite;
-        this.secUiDefFileName = secUiDefFileName;
+        this.uiDefFile = uiDefFile;
+        this.secDefFile = secDefFile;
     }
 
     public Module Spawn()
     {
-        int offset = Module.GetWidth(secUiDefFileName) * grid.GetGridSideLength() / 2; 
+        int offset = Module.GetWidth(uiDefFile) * grid.GetGridSideLength() / 2; 
         Vector2 pos = new Vector2(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS/2));
-        return new Module(pos,secUiDefFileName); 
+        return new Module(pos, secDefFile, uiDefFile); 
     }
 
     public override void Update()

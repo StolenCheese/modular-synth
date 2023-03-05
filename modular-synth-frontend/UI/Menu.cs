@@ -36,8 +36,8 @@ internal class Menu : Interactable
     public void LoadContent()
     {
         moduleTexture = ModularSynth.instance.Content.Load<Texture2D>("module");
-        ActiveButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(100, 10),"TestModule"));
-        ActiveButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(100+moduleTexture.Width+gapBetweenModules, 10),"TestModule2"));
+        ActiveButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(100, 10),"TestModule", "TestModule_ui"));
+        ActiveButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(100+moduleTexture.Width+gapBetweenModules, 10),"TestModule2", "TestModule2_ui"));
     }
 
     public override void Update()

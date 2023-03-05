@@ -35,12 +35,12 @@ public class Module : Interactable
 
     public Module(Texture2D sprite) : base(sprite)
     {
-        width = 8; //TODO: this is temp
+        width = sprite.Width / Grid.GetInstance().GetGridSideLength();
     }
 
     public Module(Texture2D sprite, Vector2 pos, string TEMPmoduleType="",int TEMP=0) : base(sprite, pos)
     {
-        width = 8;
+        width = sprite.Width / Grid.GetInstance().GetGridSideLength();
 
         this.ModuleId = modules++;
 
@@ -312,7 +312,7 @@ public class Module : Interactable
         {
             SetPosition(input.MousePosVector() + clickOffset);
 
-            Vector2 TopLeftCorner = grid.GetNearestRightEdgeTileSnap(new Vector2(boundingBox.Left, boundingBox.Top));
+            Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(boundingBox.Left, boundingBox.Top));
 
             if(grid.AreTilesOccupied(TopLeftCorner, width))
             {

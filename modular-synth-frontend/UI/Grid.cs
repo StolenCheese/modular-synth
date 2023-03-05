@@ -11,7 +11,7 @@ internal class Grid
 {
     private static Grid instance = new Grid();
 
-    const int ROWS = 12;
+    public const int ROWS = 12;
     int cols;
 
     int gridSideLength = ((ModularSynth.viewport.Height - ModularSynth.menuBarHeight)/ModularSynth.RAILNUM - ModularSynth.dividerHeight)/ROWS;

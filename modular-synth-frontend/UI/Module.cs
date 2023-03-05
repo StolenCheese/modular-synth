@@ -363,6 +363,23 @@ public class Module : Interactable
         return width;
     }
 
+    public static int GetWidth(string uiDef)
+    {
+        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
+        string jsonCombinedFile = File.ReadAllText(path + uiDef + ".json");
+        Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+
+        if (UIDefDict.ContainsKey("moduleArgs"))
+        {
+            if (UIDefDict["moduleArgs"].ContainsKey("width"))
+            {
+                return(int.Parse(UIDefDict["moduleArgs"]["width"]));
+            }
+        }
+
+        return 8;
+    }
+
     //set on spawn
     public void Drag()
     {

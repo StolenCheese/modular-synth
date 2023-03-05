@@ -9,6 +9,7 @@ internal class ModuleSpawnButton : Button
 {
     private Texture2D _texture;
     private InputManager input = InputManager.GetInstance();
+    private Grid grid = Grid.GetInstance();
     private string secUiDefFileName;
   
     public ModuleSpawnButton(Texture2D sprite, Vector2 position,string secUiDefFileName) : base(sprite, position)
@@ -19,7 +20,9 @@ internal class ModuleSpawnButton : Button
 
     public Module Spawn()
     {
-        return new Module(input.MousePosVector(),secUiDefFileName); //TODO: spawn mouse on middle of sprite not on top - can use half of module width * gridsidelenth and all modules are same height so that's easy
+        int offset = Module.GetWidth(secUiDefFileName) * grid.GetGridSideLength() / 2; 
+        Vector2 pos = new Vector2(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS/2));
+        return new Module(pos,secUiDefFileName); 
     }
 
     public override void Update()

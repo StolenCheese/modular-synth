@@ -1,0 +1,22 @@
+{
+    "moduleArgs" : {
+    },
+    "MulDial": {
+        "parameterID" : "mul",
+    },
+    "AddDial": {
+        "parameterID" : "add",
+    },
+    "MulSlider": {
+        "parameterID" : "mul",
+    },
+    "i/p add port": {
+        "parameterID" : "add",
+    },
+    "i/p freq port": {
+        "parameterID" : "freq",
+    },
+    "0/p port": {
+    }
+
+}

@@ -71,10 +71,12 @@ namespace synth_api {
     }
 
     void InputPort::removeLink(Port *other) {
+        std::cout << "remove link" << "\n";
         auto* otherCopy(other);
         auto * otherAsInputPort = dynamic_cast<InputPort *>(otherCopy);
         // unsubscribe, then disconnect, so as not to get irrelevant bus rate change information whilst disconnecting
         if (this->controller == other) {
+            std::cout << "this controls other " << "\n";
             if (otherAsInputPort) {
                 otherAsInputPort->unsubscribe(this);
             }
@@ -84,6 +86,7 @@ namespace synth_api {
                 this->notify();
             }
         } else if (otherAsInputPort && otherAsInputPort->controller == this) {
+            std::cout << "other controls this" << "\n";
             otherAsInputPort->controller = nullptr;
             this->unsubscribe(otherAsInputPort);
             if (otherAsInputPort->logicalBus) {
@@ -153,7 +156,7 @@ namespace synth_api {
             if (dynamic_cast<OutputPort *>(nextControllerCopy)) {
                 throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to make an "
                                                               "InputPort the root controller in a dependency with an "
-                                                              "OutputPort!");
+                                                              "OutputPort!"); 
             }
 
             // reverse direction of controller
@@ -215,9 +218,13 @@ namespace synth_api {
         this->logicalBus = nullptr;
     }
 
-    InputPort::~InputPort() {
-        for (const auto &p : outgoingConnections) {
-            InputPort::removeLink(p);
+    void InputPort::clearConnections() {
+        for (const auto& p : outgoingConnections) {
+            std::cout << "I/P: removing " << p << "\n";
+            removeLink(p);
+            std::cout << "removed\n";
         }
     }
+
+    InputPort::~InputPort() {}
 } // synth-api

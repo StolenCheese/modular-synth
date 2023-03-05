@@ -8,18 +8,31 @@
 #define SYNTH_API_ROOT_FOLDER "D:\\REPOS\\modular-synth\\modular-synth-backend\\synthdefs"
 
 TEST_CASE("We can link I/P to I/P on the same section, but not I/P to O/P on the same section") {
-	synth_api::Section section = synth_api::Section(SYNTH_API_ROOT_FOLDER "\\sin-ar.scsyndef", "");
+	synth_api::Section section = synth_api::Section(SYNTH_API_ROOT_FOLDER "\\sin-kr.scsyndef", "");
 
 	SUBCASE("Linking I/P to I/P on same section is allowed") {
-		CHECK_NOTHROW(section.getPortFor("mul")->linkTo(section.getPortFor("add")));
+		for (auto kv : section.inputPorts) {
+			std::cout << kv.first << " ";
+			std::cout << section.getPortFor(kv.first) << "\n";
+		}
+		section.getPortFor("freq")->linkTo(section.getPortFor("mul"));
+		std::cout << "freq connections\n";
+		for (auto kv : section.getPortFor("freq")->outgoingConnections) {
+			std::cout << kv << "\n";
+		}
+		std::cout << "mul connections\n";
+		for (auto kv : section.getPortFor("mul")->outgoingConnections) {
+			std::cout << kv << "\n";
+		}
 	}
 
 	SUBCASE("Linking I/P to O/P on same section throws an exception") {
 		CHECK_THROWS_AS(
-			section.getPortFor("freq")->linkTo(section.getPortFor("out")), 
+			section.getPortFor("freq")->linkTo(section.getPortFor("out")),
 			synth_api::CyclicLinksException
 		);
 	}
+	std::cout << "end of test\n";
 }
 
 int main(int argc, char** argv) {

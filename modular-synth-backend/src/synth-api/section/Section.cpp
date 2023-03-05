@@ -88,12 +88,25 @@ Section::Section(const std::string& audio_source, const std::string& control_sou
 
 Section::~Section()
 {
-    delete synth;
     for (const auto& p : outputPorts) {
-        delete p.second;
+        p.second->clearConnections();
     }
     for (const auto& p : inputPorts) {
-        delete p.second;
+        std::cout << "Clearing... " << p.first << "\n";
+        p.second->clearConnections();
     }
+    std::vector<Port*> portsToDelete;
+    for (const auto& p : inputPorts) {
+        std::cout << "Deleting " << p.first << "\n";
+        portsToDelete.insert(portsToDelete.cend(), p.second);
+    }
+    for (const auto& p : outputPorts) {
+        portsToDelete.insert(portsToDelete.cend(), p.second);
+    }
+    for (Port *p : portsToDelete) {
+        std::cout << "Deleting " << p << "\n";
+        delete p;
+    }
+    delete synth;
 }
 }

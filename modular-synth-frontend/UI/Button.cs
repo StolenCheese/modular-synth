@@ -4,9 +4,28 @@ using modular_synth_frontend.Core;
 
 namespace modular_synth_frontend.UI;
 
-internal abstract class Button : Interactable
+internal class Button : Interactable
 {
     public Button(Texture2D sprite, Vector2 position) : base(sprite, position)
     {
+    }
+
+    public override void Update()
+    {}
+
+    //For getting interactions with button and defining them within class that is using them
+    public Rectangle getBoundingBox()
+    {
+        return boundingBox;
+    }
+
+    public void SetInactive()
+    {
+        colour = Color.DarkGray;
+    }
+
+    public void SetActive()
+    {
+        colour = Color.White;
     }
 }

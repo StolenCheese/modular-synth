@@ -7,9 +7,10 @@ using System.Collections.Generic;
 using SynthAPI;
 using modular_synth_frontend.API;
 using SectionDefTest;
-namespace modular_synth_frontend.UI;
 using Newtonsoft.Json;
 using System.IO;
+
+namespace modular_synth_frontend.UI;
 public class Module : Interactable
 {
     private InputManager input = InputManager.GetInstance();
@@ -75,7 +76,7 @@ public class Module : Interactable
         
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
 
-        Dictionary<string, Dictionary<string, string>> UISecDefDict = SectionDefTest.Program.combineSecUIDef(path + uiDefFile + ".json", path + secDefFile + ".json", "uiSecDefFile.json"); //combines UI and Sec Def
+        Dictionary<string, Dictionary<string, string>> UISecDefDict = SectionDefTest.Program.combineSecUIDef(path + uiDefFile + ".json", path + secDefFile + ".json"); //combines UI and Sec Def
 
         foreach (KeyValuePair<string, Dictionary<string, string>> component in UISecDefDict)
         {

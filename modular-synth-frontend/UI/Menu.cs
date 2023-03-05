@@ -10,6 +10,8 @@ namespace modular_synth_frontend.UI;
 
 internal class Menu : Interactable
 {
+    private static Menu instance;
+
     InputManager input = InputManager.GetInstance();
     private Texture2D boxSprite;
 
@@ -31,7 +33,7 @@ internal class Menu : Interactable
     const int GAPBETWEENMODULES = 20;
     const int BUTTONSPERSCREEN = 4;
 
-    public Menu(Texture2D boxSprite, Texture2D handleSprite, Vector2 position) : base(handleSprite, position)
+    private Menu(Texture2D boxSprite, Texture2D handleSprite, Vector2 position) : base(handleSprite, position)
     {
         this.boxSprite = boxSprite;
         open = false;
@@ -43,6 +45,31 @@ internal class Menu : Interactable
         //TODO: Make button spawning proper but for now this will do:
         activeButtons = new List<Button>();
         visibleButtons = new List<Button>();
+    }
+
+    public static Menu GetInstance()
+    {
+        if(instance != null)
+        {
+            return instance;
+        }
+        else
+        {
+            throw new Exception("rip - this is called we didn't plan for singleton and there's like 4 days left so im making terrible code");
+        }
+    }
+
+    public static Menu CreateInstance(Texture2D boxSprite, Texture2D handleSprite, Vector2 position)
+    {
+        if(instance != null)
+        {
+            throw new Exception("rip - this is called we didn't plan for singleton and there's like 4 days left so im making terrible code");
+        }
+        else
+        {
+            instance = new Menu(boxSprite, handleSprite, position);
+            return instance;
+        }
     }
 
     public void LoadContent()

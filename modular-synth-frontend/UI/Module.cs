@@ -18,6 +18,7 @@ public class Module : Interactable
 
     private int width; //in tiles - used for collision code and marking tiles as occupied
 
+    private bool placed = false;
     private bool dragging;
     private bool invalidPos = false;
     private Vector2 originalPosition;
@@ -341,14 +342,35 @@ public class Module : Interactable
                 dragging = false;
                 if (invalidPos)
                 {
-                    //TODO: if menu still open then delete module
-                    SetPosition(originalPosition);
-                    grid.OccupyTiles(width, GetPosition());
-                    colour = Color.White;
-                    invalidPos = false;
+                    if (!placed)
+                    {
+                        //TODO: Actually delete don't just deactivate - we're gonna get a memory leak currently
+
+                        foreach (Component component in components)
+                        {
+                            component.enabled = false;
+                            component.visible = false;
+                        }
+
+                        visible = false;
+                        enabled = false;
+                    }
+
+                    else
+                    {
+                        SetPosition(originalPosition);
+                        grid.OccupyTiles(width, GetPosition());
+                        colour = Color.White;
+                        invalidPos = false;
+                    }
                 }
                 else
                 {
+                    if (!placed)
+                    {
+                        placed = true;
+                        Menu.GetInstance().ChangeState();
+                    }
                     //Vector2 TopRightCorner = grid.GetNearestLeftEdgeTileSnap(new Vector2(boundingBox.Right, boundingBox.Top));
                     //if (Math.Abs((position - TopLeftCorner).X) < Math.Abs((new Vector2(boundingBox.Right,position.Y) - TopRightCorner).X)) //TODO: either remove or fix this :(
 

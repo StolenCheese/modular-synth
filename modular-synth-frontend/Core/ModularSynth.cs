@@ -18,6 +18,8 @@ public class ModularSynth : Game
     private InputManager input;
     private Grid grid;
     private Menu menu;
+    public static GraphicsDevice graphicsDevice;
+    public static Microsoft.Xna.Framework.Content.ContentManager content;
 
     public const int menuBarHeight = 42;
     public const int dividerHeight = 9;
@@ -49,6 +51,9 @@ public class ModularSynth : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+        graphicsDevice = this.GraphicsDevice;
+        content = this.Content;
+
         Debug.WriteLine(grid.GetGridSideLength());
         base.Initialize();
     }

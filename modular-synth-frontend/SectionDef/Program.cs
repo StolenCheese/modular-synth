@@ -8,7 +8,7 @@ namespace SectionDefTest
     internal class Program
     {
         //input UIDef file path, SecDefFile path and CombinedFile as an path
-        static public Dictionary<string, Dictionary<string,string>> combineSecUIDef(string UIDefFile, string SecDefFile, string CombinedFile) 
+        static public Dictionary<string, Dictionary<string,string>> combineSecUIDef(string UIDefFile, string SecDefFile) 
         {
             //read in UIDef and SecDef Files
             string jsonUI = File.ReadAllText(UIDefFile);

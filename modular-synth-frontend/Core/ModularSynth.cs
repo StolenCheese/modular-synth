@@ -75,7 +75,7 @@ public class ModularSynth : Game
         Port.port1 = Content.Load<Texture2D>("port1");
         Wire.orangewire = Content.Load<Texture2D>("orangewire");
 
-        menu = new Menu(boxTexture,handleTexture, new Vector2(viewport.Width / 2 - handleTexture.Width/2, 0));
+        menu = Menu.CreateInstance(boxTexture,handleTexture, new Vector2(viewport.Width / 2 - handleTexture.Width/2, 0));
         menu.LoadContent();
     }
 

@@ -74,11 +74,13 @@ public class Module : Interactable
         this.ModuleId = modules++;
         
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
-        SectionDefTest.Program.combineSecUIDef(path + uiDefFile + ".json", path + secDefFile + ".json", "uiSecDefFile.json"); //combines UI and Sec Def
+        
 
         //this is in SectionDefFile but I can't seem to import it for some reason
-        string jsonCombinedFile = File.ReadAllText(path + "uiSecDefFile.json");
-        Dictionary<string, Dictionary<string, string>> UISecDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+        //string jsonCombinedFile = File.ReadAllText(path + "uiSecDefFile.json");
+        //Dictionary<string, Dictionary<string, string>> UISecDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+
+        Dictionary<string, Dictionary<string, string>> UISecDefDict = SectionDefTest.Program.combineSecUIDef(path + uiDefFile + ".json", path + secDefFile + ".json", "uiSecDefFile.json"); //combines UI and Sec Def
 
         foreach (KeyValuePair<string, Dictionary<string, string>> component in UISecDefDict)
         {

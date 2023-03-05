@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 namespace SectionDefTest
@@ -7,7 +8,7 @@ namespace SectionDefTest
     internal class Program
     {
         //input UIDef file path, SecDefFile path and CombinedFile as an path
-        static public void combineSecUIDef(string UIDefFile, string SecDefFile, string CombinedFile) 
+        static public Dictionary<string, Dictionary<string,string>> combineSecUIDef(string UIDefFile, string SecDefFile, string CombinedFile) 
         {
             //read in UIDef and SecDef Files
             string jsonUI = File.ReadAllText(UIDefFile);
@@ -37,8 +38,14 @@ namespace SectionDefTest
 
                 combinedFile.Add(component.Key, newDict);
             }
-            string json = JsonConvert.SerializeObject(combinedFile, Formatting.Indented);
-            File.WriteAllText(CombinedFile, json);
+
+            Debug.WriteLine(combinedFile.ToString());
+
+            return combinedFile;
+
+            
+            //string json = JsonConvert.SerializeObject(combinedFile, Formatting.Indented);
+            //File.WriteAllText(CombinedFile, json);
         }
     }
     

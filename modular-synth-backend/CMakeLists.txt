@@ -9,5 +9,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/synthdefs
         DESTINATION
         ${CMAKE_CURRENT_BINARY_DIR})
 
+set(SYNTHDEFS_FILE_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/synthdefs")
+
 add_subdirectory(src)
 add_subdirectory(tests)

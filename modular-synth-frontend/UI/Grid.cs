@@ -88,7 +88,7 @@ internal class Grid
     }
 
     //The two following functions are useful for dragging as whether you want to assume left or right will depend on where the majority of the shape is currently covering.
-    public Vector2 GetNearestRightEdgeTileSnap(Vector2 pos)
+    public Vector2 GetNearestTileEdgeSnap(Vector2 pos)
     {
         int x = (int)Math.Round(pos.X / gridSideLength,0);
         x *= gridSideLength;
@@ -106,16 +106,6 @@ internal class Grid
 
         int y = rail * (railHeight) + ModularSynth.menuBarHeight;
         return new Vector2(x,y);
-    }
-
-    public Vector2 GetNearestLeftEdgeTileSnap(Vector2 pos)
-    {
-        //TODO: This is never running rip
-
-        int x = (int)Math.Round(pos.X/gridSideLength,0) - 1;
-        x *= gridSideLength;
-        float y = pos.Y;
-        return new Vector2(x, y);
     }
 
     public bool IsTileOccupied(int x, int y)

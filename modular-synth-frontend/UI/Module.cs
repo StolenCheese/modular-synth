@@ -35,12 +35,12 @@ public class Module : Interactable
 
     public Module(Texture2D sprite) : base(sprite)
     {
-        width = 8; //TODO: this is temp
+        width = sprite.Width / Grid.GetInstance().GetGridSideLength();
     }
 
     public Module(Texture2D sprite, Vector2 pos, string TEMPmoduleType="",int TEMP=0) : base(sprite, pos)
     {
-        width = 8;
+        width = sprite.Width / Grid.GetInstance().GetGridSideLength();
 
         this.ModuleId = modules++;
 
@@ -69,14 +69,13 @@ public class Module : Interactable
         API.API.createSection(this);
         sendInitialComponentValsToServer();
     }
-    public Module(Vector2 pos, string uiDefFile, string secDefFile) : base(LoadSprite(uiDefFile),pos)
+    public Module(Vector2 pos, string secDefFile, string uiDefFile) : base(LoadSprite(uiDefFile),pos)
     {
         this.ModuleId = modules++;
-        SectionDefTest.Program.combineSecUIDef(uiDefFile, secDefFile, "uiSecDefFile.json"); //combines UI and Sec Def
+        
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
-        //this is in SectionDefFile but I can't seem to import it for some reason
-        string jsonCombinedFile = File.ReadAllText(path + "uiSecDefFile.json");
-        Dictionary<string, Dictionary<string, string>> UISecDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+
+        Dictionary<string, Dictionary<string, string>> UISecDefDict = SectionDefTest.Program.combineSecUIDef(path + uiDefFile + ".json", path + secDefFile + ".json", "uiSecDefFile.json"); //combines UI and Sec Def
 
         foreach (KeyValuePair<string, Dictionary<string, string>> component in UISecDefDict)
         {
@@ -312,7 +311,7 @@ public class Module : Interactable
         {
             SetPosition(input.MousePosVector() + clickOffset);
 
-            Vector2 TopLeftCorner = grid.GetNearestRightEdgeTileSnap(new Vector2(boundingBox.Left, boundingBox.Top));
+            Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(boundingBox.Left, boundingBox.Top));
 
             if(grid.AreTilesOccupied(TopLeftCorner, width))
             {

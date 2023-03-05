@@ -93,14 +93,15 @@ std::variant<int, float, Bus> Synth::get(const std::string& param)
 
 
 void Synth::set(const std::string& param, const float v)
-{    std::cout << "Setting " << param << " to " << v << std::endl;
+{   
+    // std::cout << "Setting " << param << " to " << v << std::endl;
     controls[param] = v;
     SuperColliderController::get().n_set(index, { { param, v } });
 }
 
 void Synth::set(const std::string& param, const int v)
-{    std::cout << "Setting " << param << " to " << v << std::endl;
-
+{    
+    //std::cout << "Setting " << param << " to " << v << std::endl;
     if (controls.count(param)) {
         controls[param] = v;
         SuperColliderController::get().n_set(index, {{param, v}});
@@ -112,13 +113,12 @@ void Synth::set(const std::string& param, const int v)
 
 void Synth::set(const std::string& param,  Bus const& v)
 {
-    std::cout << "Setting " << param << " to bus " << v.index << std::endl;
-
+    //std::cout << "Setting " << param << " to bus " << v.index << std::endl;
     controls[param] = v;
 
     // OUT params write to a bus ID, not bus MAP
     if (param.substr(0, 3) == "out" || param.substr(0, 2) == "in") {
-		std::cout << param << " is in/out, so using ID and not MAP" << std::endl;
+		//std::cout << param << " is in/out, so using ID and not MAP" << std::endl;
         set(param, v.index);
         return;
     }

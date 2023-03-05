@@ -79,6 +79,7 @@ namespace synth_api {
         void setDefault(float value) override;
 
         ~InputPort() override;
+        void clearConnections();
     };
 
 }

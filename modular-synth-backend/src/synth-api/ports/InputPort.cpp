@@ -157,7 +157,7 @@ namespace synth_api {
             if (dynamic_cast<OutputPort *>(nextControllerCopy)) {
                 throw FatalOutputControllerException((char *) "Fatal Logic Error: Attempted to make an "
                                                               "InputPort the root controller in a dependency with an "
-                                                              "OutputPort!");
+                                                              "OutputPort!"); 
             }
 
             // reverse direction of controller
@@ -221,9 +221,20 @@ namespace synth_api {
         this->logicalBus = nullptr;
     }
 
-    InputPort::~InputPort() {
-        for (const auto &p : outgoingConnections) {
-            InputPort::removeLink(p);
+    void InputPort::clearConnections() {
+        if (!outgoingConnections.size()) {
+            return;
         }
+        std::vector<Port*> toRemove;
+        for (const auto& p : outgoingConnections) {
+            toRemove.push_back(p);
+        }
+        for (const auto& p : toRemove) {
+            removeLink(p);     
+        }
+    }
+
+    InputPort::~InputPort() {
+        clearConnections();
     }
 } // synth-api

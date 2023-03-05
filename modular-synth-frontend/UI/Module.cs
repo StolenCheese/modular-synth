@@ -72,8 +72,10 @@ public class Module : Interactable
     public Module(Vector2 pos, string secDefFile, string uiDefFile) : base(LoadSprite(uiDefFile),pos)
     {
         this.ModuleId = modules++;
-        SectionDefTest.Program.combineSecUIDef(uiDefFile, secDefFile, "uiSecDefFile.json"); //combines UI and Sec Def
+        
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
+        SectionDefTest.Program.combineSecUIDef(path + uiDefFile + ".json", path + secDefFile + ".json", "uiSecDefFile.json"); //combines UI and Sec Def
+
         //this is in SectionDefFile but I can't seem to import it for some reason
         string jsonCombinedFile = File.ReadAllText(path + "uiSecDefFile.json");
         Dictionary<string, Dictionary<string, string>> UISecDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);

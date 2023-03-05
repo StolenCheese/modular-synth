@@ -1,6 +1,5 @@
 {
     "moduleArgs" : {
-      "function": "brownnoise-ar",
       "width": "8",
       "backgroundImage" :  "module"
     },

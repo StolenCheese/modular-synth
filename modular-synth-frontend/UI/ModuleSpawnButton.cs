@@ -8,9 +8,7 @@ namespace modular_synth_frontend.UI;
 internal class ModuleSpawnButton : Button
 {
     private Texture2D _texture;
-    //private Texture2D moduleSprite; //at some point this will store an actual module but atm i just need it to spawn an image so
     private InputManager input = InputManager.GetInstance();
-    private SpriteBatch _spriteBatch;
     private string secUiDefFileName;
   
     public ModuleSpawnButton(Texture2D sprite, Vector2 position,string secUiDefFileName) : base(sprite, position)

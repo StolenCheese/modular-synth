@@ -24,12 +24,15 @@ internal class Dial : Component
     private double dialRotationOffset;
     private InputManager input = InputManager.GetInstance();
 
-    public Dial(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, string parameterID,double staticPartScale=1,double dialScale=1) : base(modulePos, parentModuleId, moduleLocalPos, dialSprite, col, parameterID,dialScale)
+    public Dial(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, string parameterID,double staticPartScale=1,double dialScale=1,double minValueForServer=0,double maxValueForServer=1) : base(modulePos, parentModuleId, moduleLocalPos, dialSprite, col, parameterID,dialScale)
     { 
         this.staticPart = new Component(modulePos, parentModuleId, moduleLocalPos, staticPartSprite, col, parameterID, staticPartScale);
         this.rotation = minRotation;
         this.lastRotation = minRotation;
         this.dialRotation = minRotation;
+
+        this.minValueForServer = minValueForServer;
+         this.maxValueForServer = maxValueForServer;
 
     }
 

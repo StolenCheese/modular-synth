@@ -22,7 +22,7 @@ internal class Slider : Component
     private int minSliderOffset=0;
     private InputManager input = InputManager.GetInstance();
 
-    public Slider(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, string ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false) : base(modulePos, parentModuleId, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
+    public Slider(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, string ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false,double minValueForServer=0,double maxValueForServer=1) : base(modulePos, parentModuleId, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
     { 
         this.track = new Component(modulePos, parentModuleId, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
         if(vertical){
@@ -33,8 +33,8 @@ internal class Slider : Component
             minSliderOffset = -track.width/2;
         }
 
-        // this.minValueForServer = 1;
-        // this.maxValueForServer = 10;
+         this.minValueForServer = minValueForServer;
+         this.maxValueForServer = maxValueForServer;
         
     }
 

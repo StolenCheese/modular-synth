@@ -37,38 +37,6 @@ public class Module : Interactable
     {
         width = sprite.Width / Grid.GetInstance().GetGridSideLength();
     }
-
-    public Module(Texture2D sprite, Vector2 pos, string TEMPmoduleType="",int TEMP=0) : base(sprite, pos)
-    {
-        width = sprite.Width / Grid.GetInstance().GetGridSideLength();
-
-        this.ModuleId = modules++;
-
-        switch (TEMPmoduleType){
-            case "":
-                function = "sin-ar";
-
-                
-                
-                components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2+50,250),Port.port1,Color.White,"freq",true));
-                components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2-50,300),Port.port1,Color.White,"add",true));
-                components.Add(new Port(pos, ModuleId, new Vector2(this.sprite.Width/2+50,300),Port.port1,Color.White,"out",false));
-                break;
-
-            case "sliders":
-                function = "sin-ar";
-
-                components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2,150),Slider.rail1,Slider.slider2,Color.White,"add",0.7,0.7));
-                components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2,200),Slider.rail1,Slider.slider2,Color.White,"add",0.7,0.7));
-                components.Add(new Slider(pos, ModuleId, new Vector2(this.sprite.Width/2,250),Slider.rail1,Slider.slider2,Color.White,"add",0.7,0.7));
-                break;
-        }
-
-        addToEtyMgr();
-
-        API.API.createSection(this);
-        sendInitialComponentValsToServer();
-    }
     public Module(Vector2 pos, string secDefFile, string uiDefFile) : base(LoadSprite(uiDefFile),pos)
     {
         this.ModuleId = modules++;

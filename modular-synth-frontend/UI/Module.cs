@@ -89,13 +89,6 @@ public class Module : Interactable
 
                 width = newComp.TryGetValue("width", out string val) ? int.Parse(val) : 8;
 
-                string texturePath = newComp.TryGetValue("backgroundImage", out string stringPath) ? stringPath : null;
-                Debug.WriteLine(texturePath);
-                if (texturePath != null)
-                {
-                    sprite = ModularSynth.content.Load<Texture2D>(texturePath);
-                }
-
             }
             else{
                 string xPosString = newComp.TryGetValue("xPos", out string compXPos) ? compXPos : "error";//get xPosition

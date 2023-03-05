@@ -45,7 +45,6 @@
         "type" : "port",
         "xPos" : "r-50",
         "yPos" : "b-50",
-        "parameterID" : "add",
         "sprite" : "port1",
         "isInput" : "false"
     }

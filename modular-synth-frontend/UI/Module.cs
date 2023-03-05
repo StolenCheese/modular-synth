@@ -142,15 +142,22 @@ public class Module : Interactable
                     string isInputString = newComp.TryGetValue("isInput", out string compIsInput) ? compIsInput : "error";                                //get isInput
                     string scaleString = newComp.TryGetValue("scale", out string compScale) ? compScale : "1";                                            //get Scale
                     string spriteString = newComp.TryGetValue("sprite", out string compSprite) ? compSprite : "error";
+                    double scale = double.Parse(scaleString);
+                    bool isInput = bool.Parse(isInputString);
+                    if(!isInput){
+                        parameterIDString="out";
+                    }
 
                     if (xPosString == "error" || yPosString == "error" || colString == "error" || parameterIDString == "error" || spriteString == "error")
                     {
                         Console.WriteLine("error making port");
                         //TODO: Handle error
                     }
-                    double scale = double.Parse(scaleString);
+                    
                     Texture2D spritePort = ModularSynth.content.Load<Texture2D>(spriteString);
-                    bool isInput = bool.Parse(isInputString);
+                    
+
+                    
 
                     components.Add(new Port(pos, ModuleId, moduleLocalPos, spritePort, col, parameterIDString, isInput, scale));
                 }
@@ -166,7 +173,6 @@ public class Module : Interactable
                 }
             }
         }
-
 
         addToEtyMgr();
 
@@ -232,7 +238,7 @@ public class Module : Interactable
                 case 'b': offset = this.sprite.Height; break;
                 case 't': offset = 0; break;
             }
-            if(secDefString.Substring(1)!=null){
+            if(secDefString.Substring(1)!=""){
                 return offset+int.Parse(secDefString.Substring(1));
             } else {
                 return offset;

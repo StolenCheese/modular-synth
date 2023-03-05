@@ -19,6 +19,8 @@ internal class Menu : Interactable
     public static event Action MenuOpened;
     public static event Action MenuClosed;
 
+    private static int gapBetweenModules = 20;
+
     public Menu(Texture2D boxSprite, Texture2D handleSprite, Vector2 position) : base(handleSprite, position)
     {
         this.boxSprite = boxSprite;
@@ -34,7 +36,8 @@ internal class Menu : Interactable
     public void LoadContent()
     {
         moduleTexture = ModularSynth.instance.Content.Load<Texture2D>("module");
-        ActiveButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(100, 10)));
+        ActiveButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(100, 10),"TestModule"));
+        ActiveButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(100+moduleTexture.Width+gapBetweenModules, 10),"TestModule2"));
     }
 
     public override void Update()

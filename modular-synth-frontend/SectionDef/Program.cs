@@ -39,13 +39,7 @@ namespace SectionDefTest
                 combinedFile.Add(component.Key, newDict);
             }
 
-            Debug.WriteLine(combinedFile.ToString());
-
             return combinedFile;
-
-            
-            //string json = JsonConvert.SerializeObject(combinedFile, Formatting.Indented);
-            //File.WriteAllText(CombinedFile, json);
         }
     }
     

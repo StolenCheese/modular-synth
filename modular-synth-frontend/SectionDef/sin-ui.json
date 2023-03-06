@@ -1,49 +1,20 @@
-{
-  "inherits": "sin-sec",
-  "width": 8,
-  "backgroundImage": "module_red",
-
+﻿{
+  "inherits" :  "sin-control-ui",
+  "backgroundImage": "module_sin_pale",
   "components": {
-    "AddingSlider": {
-      "type": "slider",
-      "xPos": "m",
-      "yPos": "200",
-      "trackScale": 0.7,
-      "sliderScale": 0.7,
-      "trackSprite": "rail1",
-      "sliderSprite": "slider2"
-    },
-    "MulSlider": {
-      "type": "slider",
-      "xPos": "m-50",
-      "yPos": "80",
-      "vertical": true,
-      "trackScale": 0.7,
-      "sliderScale": 0.7,
-      "trackSprite": "rail1",
-      "sliderSprite": "slider2"
-    },
     "FreqDial": {
-      "type": "dial",
-      "xPos": "m+50",
-      "yPos": "m-50",
-      "staticPartScale": 0.7,
-      "dialScale": 0.7,
-      "staticPartSprite": "indicator1",
-      "dialSprite": "dial1"
+      "minValueForServer": 20,
+      "maxValueForServer": 1000
     },
-    "i/p port": {
-      "type": "port",
-      "xPos": "l+50",
-      "yPos": "b-50",
-      "isInput": true
-    },
-    "0/p port": {
-      "type": "port",
-      "xPos": "r-50",
-      "yPos": "b-50",
-      "isInput": false
-    }
+    "Add": {
 
+      "minValueForServer": 0,
+      "maxValueForServer": 1
+    },
+    "Mul": {
+
+      "minValueForServer": 0,
+      "maxValueForServer": 1
+    }
   }
 }

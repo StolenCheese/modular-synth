@@ -1,0 +1,54 @@
+{
+  "inherits": "sin-sec",
+  "width": 8,
+  "backgroundImage": "module_sincontrol_pale",
+
+  "components": {
+    "Add": {
+      "type": "slider",
+      "xPos": "m",
+      "yPos": "5.5",
+      "trackScale": 0.7,
+      "sliderScale": 0.7,
+      "trackSprite": "rail1",
+      "sliderSprite": "slider2",
+
+      "maxValueForServer": 1000
+    },
+    "Mul": {
+      "type": "slider",
+      "xPos": "m",
+      "yPos": "8",
+      "vertical": false,
+      "trackScale": 0.7,
+      "sliderScale": 0.7,
+      "trackSprite": "rail1",
+      "sliderSprite": "slider2",
+
+      "maxValueForServer": 100
+    },
+    "FreqDial": {
+      "type": "dial",
+      "xPos": "l+3.7",
+      "yPos": "t+3.3",
+      "staticPartScale": 0.3,
+      "dialScale": 0.3,
+      "staticPartSprite": "indicator1",
+      "dialSprite": "dial1",
+
+      "minValueForServer": 0,
+      "maxValueForServer": 20
+    },
+    "FreqPort": {
+      "xPos": "l+1.2",
+      "yPos": "t+3.3"
+    },
+    "0/p port": {
+      "type": "port",
+      "xPos": "r-1.5",
+      "yPos": "b-1.5",
+      "isInput": false
+    }
+
+  }
+}

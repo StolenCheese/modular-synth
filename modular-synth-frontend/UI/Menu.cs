@@ -87,8 +87,8 @@ internal class Menu : Interactable
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + moduleTexture.Width + GAPBETWEENMODULES, 10), SectionDefManager.LoadSectionDef("brownnoise-ui")));
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 10), SectionDefManager.LoadSectionDef("pan-ui")));
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 3 * (moduleTexture.Width + GAPBETWEENMODULES), 10), SectionDefManager.LoadSectionDef("speaker-ui")));
-		activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 10), SectionDefManager.LoadSectionDef("brownnoise-ui")));
-		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + (moduleTexture.Width + GAPBETWEENMODULES), 10), SectionDefManager.LoadSectionDef("brownnoise-ui")));
+		activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 10), SectionDefManager.LoadSectionDef("organ-ui")));
+		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + (moduleTexture.Width + GAPBETWEENMODULES), 10), SectionDefManager.LoadSectionDef("sin-control-ui")));
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 10), SectionDefManager.LoadSectionDef("brownnoise-ui")));
 
 		if (activeButtons.Count > BUTTONSPERSCREEN)

@@ -24,7 +24,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="synth-api-managed" >
+    <Reference Include="synth-api-managed">
 		<HintPath>synth-api-managed.dll</HintPath>
 	</Reference>
   </ItemGroup>

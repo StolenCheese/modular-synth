@@ -5,21 +5,21 @@
   "components": {
     "i/p left ear": {
       "type": "port",
-      "xPos": "l+50",
-      "yPos": "b-50",
+      "xPos": "l+2",
+      "yPos": "b-4",
       "isInput": true
     },
     "i/p right ear": {
       "type": "port",
-      "xPos": "r-50",
-      "yPos": "b-50",
+      "xPos": "r-2",
+      "yPos": "b-4",
       "isInput": true,
       "parameterID": "inr"
     },
     "speaker sprite": {
       "type": "sprite",
       "xPos": "m",
-      "yPos": "m-20",
+      "yPos": "m-2",
       "sprite": "port1",
       "scale": 2
 

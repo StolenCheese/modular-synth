@@ -56,7 +56,7 @@ public class Module : Interactable
 		foreach ((string name, ComponentDef component) in def.components)
 		{
 
-			Vector2 moduleLocalPos = new(parsePositionX(component.xPos), parsePositionY(component.yPos));
+			Vector2 moduleLocalPos = new(ParsePositionX(component.xPos), ParsePositionY(component.yPos));
 
 			//Color col = (Color)new System.Drawing.ColorConverter().ConvertFromString(colString); //convert colour to colour type
 			var col = new Color(int.Parse(component.col.Substring(0, 3)), int.Parse(component.col.Substring(3, 3)), int.Parse(component.col.Substring(6, 3)));
@@ -196,57 +196,54 @@ public class Module : Interactable
 			c.sendValToServer();
 		}
 	}
-	private int parsePositionX(string secDefString)
-	{
-		Console.WriteLine("secDefString: " + secDefString);
-		int offset = 0;
-		try
-		{
-			return int.Parse(secDefString);
-		}
-		catch
-		{
-			switch (secDefString[0])
-			{
-				case 'm': offset = this.sprite.Width / 2; break;
-				case 'r': offset = this.sprite.Width; break;
-				case 'l': offset = 0; break;
-			}
-			if (secDefString.Substring(1) != "")
-			{
-				return offset + int.Parse(secDefString.Substring(1));
-			}
-			else
-			{
-				return offset;
-			}
-		}
-	}
-	private int parsePositionY(string secDefString)
+	private int ParsePositionX(string secDefString)
 	{
 		//Console.WriteLine("secDefString: " + secDefString);
-		int offset = 0;
-		try
+
+		int offset;
+		if (float.TryParse(secDefString, out float pos))
 		{
-			return int.Parse(secDefString);
+			offset = (int)(pos * grid.GetGridSideLength());
 		}
-		catch
+		else
 		{
-			switch (secDefString[0])
+			offset = secDefString[0] switch
 			{
-				case 'm': offset = this.sprite.Height / 2; break;
-				case 'b': offset = this.sprite.Height; break;
-				case 't': offset = 0; break;
-			}
-			if (secDefString.Substring(1) != "")
-			{
-				return offset + int.Parse(secDefString.Substring(1));
-			}
-			else
-			{
-				return offset;
-			}
+				'm' => sprite.Width / 2,
+				'r' => sprite.Width,
+				_ => 0,
+			};
+
+			if (float.TryParse(secDefString.AsSpan(1), out pos))
+				offset += (int)(pos * grid.GetGridSideLength());
 		}
+
+		return offset;
+	}
+
+	private int ParsePositionY(string secDefString)
+	{
+		//Console.WriteLine("secDefString: " + secDefString);
+
+		int offset;
+		if (float.TryParse(secDefString, out float pos))
+		{
+			offset = (int)(pos * grid.GetGridSideLength());
+		}
+		else
+		{
+			offset = secDefString[0] switch
+			{
+				'm' => sprite.Height / 2,
+				'b' => sprite.Height,
+				_ => 0,
+			};
+
+			if (float.TryParse(secDefString.AsSpan(1), out pos))
+				offset += (int)(pos * grid.GetGridSideLength());
+		}
+
+		return offset;
 	}
 
 	public void AddComponent(Component c)

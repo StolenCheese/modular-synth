@@ -2,19 +2,23 @@
 
   "audio_synth": "sin-ar",
   "components": {
-    "AddingSlider": {
-      "parameterID": "add"
+    "Add": {
+      "parameterID": "add",
     },
-    "MulSlider": {
-      "parameterID": "mul"
+    "Mul": {
+      "parameterID": "mul",
+      "maxValueForServer": 100
     },
     "FreqDial": {
+      "type": "dial",
       "parameterID": "freq",
-      "minValueForServer": 20,
+      "minValueForServer": 0.1,
       "maxValueForServer": 2000
     },
-    "i/p port": {
-      "parameterID": "add"
+    "FreqPort": {
+      "type": "port",
+      "parameterID": "freq", 
+      "isInput": true
     },
     "0/p port": {
       "parameterID": "out"

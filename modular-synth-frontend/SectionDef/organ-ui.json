@@ -1,0 +1,26 @@
+{
+  "width": 8,
+  "audio_synth": "organ",
+
+  "components": {
+    "FreqDial": {
+      "parameterID": "freq",
+      "type": "dial",
+      "minValueForServer": 20,
+      "maxValueForServer": 800,
+      "xPos": "m",
+      "yPos": "m",
+      "staticPartScale": 0.5,
+      "dialScale": 0.5,
+      "staticPartSprite": "indicator1",
+      "dialSprite": "dial1"
+    },
+    "FreqPort": {
+      "parameterID": "freq",
+      "type": "port",
+      "xPos": "m",
+      "yPos": "m-3",
+      "isInput": true
+    }
+  }
+}

@@ -7,8 +7,8 @@
   "components": {
     "MulDial": {
       "type": "dial",
-      "xPos": "l+55",
-      "yPos": "70",
+      "xPos": "l+2.5",
+      "yPos": "3.5",
       "staticPartScale": 0.5,
       "dialScale": 0.5,
       "staticPartSprite": "indicator1",
@@ -16,8 +16,8 @@
     },
     "AddDial": {
       "type": "dial",
-      "xPos": "r-55",
-      "yPos": "70",
+      "xPos": "r-2.5",
+      "yPos": "3.5",
       "staticPartScale": 0.5,
       "dialScale": 0.5,
       "staticPartSprite": "indicator1",
@@ -35,13 +35,13 @@
     },
     "i/p add port": {
       "type": "port",
-      "xPos": "l+50",
-      "yPos": "b-50", 
+      "xPos": "l+2.5",
+      "yPos": "b-2.5", 
     },
     "0/p port": {
       "type": "port",
-      "xPos": "r-50",
-      "yPos": "b-50", 
+      "xPos": "r-2.5",
+      "yPos": "b-2.5", 
     }
   }
 

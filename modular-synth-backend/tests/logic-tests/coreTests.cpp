@@ -141,6 +141,62 @@ void daisyChainTest(std::string synthPath) {
     SuperColliderController::get().g_dumpTree({ {0,1} });
 }
 
+void nullTest(std::string synthPath) {
+	Section *sinout = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	std::cout << "Created instance of sound section" << std::endl;
+
+	//Section *speaker = new Section(synthPath + "speaker-ar" + ".scsyndef", "");
+	//std::cout << "Created instance of speaker section" << std::endl;
+
+	//Section *decay = new Section(synthPath + "decay2-ar" + ".scsyndef", "");
+	//std::cout << "Created instance of decay2 section" << std::endl;
+
+    Section* pan = new Section(synthPath + "pan-ar" + ".scsyndef", synthPath + "pan-kr" + ".scsyndef");
+	std::cout << "Created instance of pan section" << std::endl;
+
+    //pan->getPortFor("outl")->linkTo(decay->getPortFor("ain"));
+    //decay->getPortFor("ain")->linkTo(pan->getPortFor("outl"));
+
+    //pan->getPortFor("outl")->linkTo(sinout->getPortFor("freq"));
+    sinout->getPortFor("freq")->linkTo(pan->getPortFor("outl"));
+	std::cout << "Made the fatal link!" << std::endl;
+
+    SuperColliderController::get().g_dumpTree({ {0,1} });
+}
+
+void audioInputTest(std::string synthPath) {
+	Section *sinmod = new Section(synthPath + "sin-ar" + ".scsyndef", synthPath + "sin-kr" + ".scsyndef");
+	std::cout << "Created instance of sinmod section" << std::endl;
+
+	Section *speaker = new Section(synthPath + "speaker-ar" + ".scsyndef", "");
+	std::cout << "Created instance of speaker section" << std::endl;
+
+	Section *decay = new Section(synthPath + "decay2-ar" + ".scsyndef", "");
+	std::cout << "Created instance of decay2 section" << std::endl;
+
+    Section* pan = new Section(synthPath + "pan-ar" + ".scsyndef", synthPath + "pan-kr" + ".scsyndef");
+	std::cout << "Created instance of pan section" << std::endl;
+
+    Section* mic = new Section(synthPath + "mic-ar" + ".scsyndef", synthPath + "mic-ar" + ".scsyndef");
+	std::cout << "Created instance of mic section" << std::endl;
+
+    sinmod->getPortFor("freq")->setDefault(1);
+
+    decay->getPortFor("attackTime")->setDefault(0);
+    decay->getPortFor("decayTime")->setDefault(5);
+
+    mic->getPortFor("outl")->linkTo(decay->getPortFor("in"));
+
+    pan->getPortFor("in")->linkTo(decay->getPortFor("out"));
+
+    pan->getPortFor("pos")->linkTo(sinmod->getPortFor("out"));
+
+    speaker->getPortFor("inl")->linkTo(pan->getPortFor("outl"));
+    pan->getPortFor("outr")->linkTo(speaker->getPortFor("inr"));
+
+    SuperColliderController::get().g_dumpTree({ {0,1} });
+}
+
 int main(void) {
     std::string synthPath = "S:\\University\\Part-IB\\Group-Project\\modular-synth\\modular-synth-backend\\synthdefs\\";
 
@@ -154,5 +210,8 @@ int main(void) {
     server.g_deepFree({ 0 });
     server.dumpOSC(1);
 
-    daisyChainTest(synthPath);
+    //panTest(synthPath);
+    //daisyChainTest(synthPath);
+    //nullTest(synthPath);
+    audioInputTest(synthPath);
 }

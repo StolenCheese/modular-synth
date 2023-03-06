@@ -1,0 +1,28 @@
+{
+  "inherits": "speaker-sec",
+  "width": 6,
+  "backgroundImage": "module_pale_thin",
+  "components": {
+    "i/p left ear": {
+      "type": "port",
+      "xPos": "l+50",
+      "yPos": "b-50",
+      "isInput": true
+    },
+    "i/p right ear": {
+      "type": "port",
+      "xPos": "r-50",
+      "yPos": "b-50",
+      "isInput": true,
+      "parameterID": "inr"
+    },
+    "speaker sprite": {
+      "type": "sprite",
+      "xPos": "m",
+      "yPos": "m-20",
+      "sprite": "port1",
+      "scale": 2
+
+    }
+  }
+}

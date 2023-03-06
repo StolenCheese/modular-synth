@@ -8,57 +8,55 @@ namespace modular_synth_frontend.UI;
 
 internal class ModuleSpawnButton : Button
 {
-    private Texture2D _texture;
-    private Module buttonImage;
+	private readonly Texture2D _texture;
+	private readonly Module buttonImage;
 
-    private InputManager input = InputManager.GetInstance();
-    private Grid grid = Grid.GetInstance();
+	private readonly InputManager input = InputManager.GetInstance();
+	private readonly Grid grid = Grid.GetInstance();
 
-    private string uiDefFile;
-    private string secDefFile;
+	private readonly SectionDef def;
 
-    public static event Action ModuleSpawned;
+	public static event Action ModuleSpawned;
 
-    public ModuleSpawnButton(Vector2 position,string uiDefFile, string secDefFile,double scale=0.5) : base(position)
-    {
-        //_texture = sprite;
-        this.uiDefFile = uiDefFile;
-        this.secDefFile = secDefFile;
+	public ModuleSpawnButton(Vector2 position, SectionDef def, double scale = 0.5) : base(position)
+	{
+		//_texture = sprite; 
+		this.def = def;
 
-        ModuleSpawned += Menu.GetInstance().ChangeState;
+		ModuleSpawned += Menu.GetInstance().ChangeState;
 
-        buttonImage = new Module(position, secDefFile, uiDefFile,false,(float)scale);
-        this.width = (int)(scale*buttonImage.sprite.Width);
-        this.height = (int)(scale*buttonImage.sprite.Height);
+		buttonImage = new Module(position, def, false, (float)scale);
+		this.width = (int)(scale * buttonImage.sprite.Width);
+		this.height = (int)(scale * buttonImage.sprite.Height);
 
-        boundingBox = new Rectangle((int)position.X,(int)position.Y,width,height);
-    }
+		boundingBox = new Rectangle((int)position.X, (int)position.Y, width, height);
+	}
 
-    public Module Spawn()
-    {
-        ModuleSpawned.Invoke();
+	public Module Spawn()
+	{
+		ModuleSpawned.Invoke();
 
-        int offset = Module.GetWidth(uiDefFile) * grid.GetGridSideLength() / 2; 
-        Vector2 pos = new Vector2(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS/2));
-        return new Module(pos, secDefFile, uiDefFile); 
-    }
+		int offset = def.width * grid.GetGridSideLength() / 2;
+		Vector2 pos = new(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS / 2));
+		return new Module(pos, def);
+	}
 
-    public override void Draw(SpriteBatch spriteBatch)
-    {
-        buttonImage.Draw(spriteBatch);
-    }
+	public override void Draw(SpriteBatch spriteBatch)
+	{
+		buttonImage.Draw(spriteBatch);
+	}
 
-    public override void Update()
-    {
-        if (boundingBox.Contains(input.MousePosition()))
-        {
-            if (input.LeftMouseClickDown()&&!Menu.justOpen)
-            {
-                Module newModule = Spawn();
-                newModule.Drag();
+	public override void Update()
+	{
+		if (boundingBox.Contains(input.MousePosition()))
+		{
+			if (input.LeftMouseClickDown() && !Menu.justOpen)
+			{
+				Module newModule = Spawn();
+				newModule.Drag();
 
-                //need to create a dragging event i think because we need to have "on drag stop if not moved out of region then delete newModule
-            }
-        }
-    }
+				//need to create a dragging event i think because we need to have "on drag stop if not moved out of region then delete newModule
+			}
+		}
+	}
 }

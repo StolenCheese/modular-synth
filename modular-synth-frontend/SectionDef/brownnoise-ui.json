@@ -1,0 +1,48 @@
+{
+  "inherits": "brownnoise-sec",
+
+  "width": 8,
+  "backgroundImage": "module",
+
+  "components": {
+    "MulDial": {
+      "type": "dial",
+      "xPos": "l+55",
+      "yPos": "70",
+      "staticPartScale": 0.5,
+      "dialScale": 0.5,
+      "staticPartSprite": "indicator1",
+      "dialSprite": "dial1"
+    },
+    "AddDial": {
+      "type": "dial",
+      "xPos": "r-55",
+      "yPos": "70",
+      "staticPartScale": 0.5,
+      "dialScale": 0.5,
+      "staticPartSprite": "indicator1",
+      "dialSprite": "dial1"
+    },
+    "MulSlider": {
+      "type": "slider",
+      "xPos": "m",
+      "yPos": "m",
+      "vertical": false,
+      "trackScale": 0.7,
+      "sliderScale": 0.7,
+      "trackSprite": "rail1",
+      "sliderSprite": "slider2"
+    },
+    "i/p add port": {
+      "type": "port",
+      "xPos": "l+50",
+      "yPos": "b-50", 
+    },
+    "0/p port": {
+      "type": "port",
+      "xPos": "r-50",
+      "yPos": "b-50", 
+    }
+  }
+
+}

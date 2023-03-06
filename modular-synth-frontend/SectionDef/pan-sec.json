@@ -1,0 +1,21 @@
+{
+
+  "audio_synth": "pan-ar",
+  "components": {
+    "i/p ear": {
+      "parameterID": "in",
+      "isInput": true
+    },
+    "volume dial": {
+      "parameterID": "level"
+    },
+    "o/p left": {
+      "parameterID": "outl",
+      "isInput": false
+    },
+    "o/p right": {
+      "parameterID": "outr",
+      "isInput": false
+    }
+  }
+}

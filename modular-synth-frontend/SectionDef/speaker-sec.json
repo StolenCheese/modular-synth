@@ -1,0 +1,16 @@
+{
+
+  "audio_synth": "speaker-ar",
+
+  "components": {
+    "i/p left ear": {
+      "parameterID": "inl"
+    },
+    "i/p right ear": {
+      "parameterID": "inr"
+    },
+    "speaker sprite": {
+
+    }
+  }
+}

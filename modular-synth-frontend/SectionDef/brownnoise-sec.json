@@ -1,0 +1,22 @@
+{
+  "audio_synth": "brownnoise-ar",
+  "components": {
+    "MulDial": {
+      "parameterID": "mul"
+    },
+    "AddDial": {
+      "parameterID": "add"
+    },
+    "MulSlider": {
+      "parameterID": "mul"
+    },
+    "i/p add port": {
+      "isInput": true,
+      "parameterID": "add"
+    },
+    "0/p port": {
+      "parameterID": "out",
+       "isInput":  false
+    }
+  }
+}

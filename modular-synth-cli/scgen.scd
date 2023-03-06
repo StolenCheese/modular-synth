@@ -33,8 +33,8 @@ SynthDef("impulse-kr", { arg freq= 440.0, phase= 0.0, mul= 1.0, add= 0.0, out=0;
 )
 
 (
-SynthDef("decay2-ar", { arg ain = 2, attackTime= 0.01, decayTime= 1.0, mul= 1.0, add= 0.0,out=0;
-	Out.ar(out, Decay2.ar(AudioIn.ar(ain), attackTime, decayTime, mul, [add,add]));
+SynthDef("decay2-ar", { arg in = 2, attackTime= 0.01, decayTime= 1.0, mul= 1.0, add= 0.0,out=0;
+	Out.ar(out, Decay2.ar(In.ar(in), attackTime, decayTime, mul, [add,add]));
 }).writeDefFile(x);
 )
 
@@ -158,5 +158,12 @@ SynthDef("mixer-ar", { arg in1 = 2, in2 = 3, in3 = 4, in4 = 5, out=0;
 (
 SynthDef("mixer-kr", { arg in1 = 2, in2 = 3, in3 = 4, in4 = 5, out=0;
 	Out.kr(out, In.kr(in1) + In.kr(in2) + In.kr(in3) + In.kr(in4));
+}).writeDefFile(x);
+)
+
+(
+SynthDef("mic-ar", { arg outl=0, outr=1;
+	Out.ar(outl, SoundIn.ar(0));
+	Out.ar(outr, SoundIn.ar(1));
 }).writeDefFile(x);
 )

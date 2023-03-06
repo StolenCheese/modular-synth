@@ -15,7 +15,7 @@ internal class ButtonComponent : Component
     private bool isClickingButton;
     //does something go here
     private InputManager input = InputManager.GetInstance();
-    public ButtonComponent(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D buttonSprite, Color col, string ParameterID, double buttonScale = 1,double minValueForServer=0,double maxValueForServer=1) : base(modulePos, parentModuleId, moduleLocalPos, buttonSprite, col, ParameterID, buttonScale) {
+    public ButtonComponent(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D buttonSprite, Color col, string ParameterID, double buttonScale = 1,double minValueForServer=0,double maxValueForServer=1,bool canInteract = true) : base(modulePos, parentModuleId, moduleLocalPos, buttonSprite, col, ParameterID, buttonScale,canInteract) {
         this.minValueForServer = minValueForServer;
         this.maxValueForServer = maxValueForServer;
     }
@@ -45,30 +45,32 @@ internal class ButtonComponent : Component
     public override void Update()
     {
         this.position = modulePos + moduleLocalPos;
-        if (boundingBox.Contains(input.MousePosition()))
-        {
-            this.isInteracting = true;
-            if (input.LeftMouseClickDown())
+        if(canInteract){
+            if (boundingBox.Contains(input.MousePosition()))
             {
-                isClickingButton = true;
+                this.isInteracting = true;
+                if (input.LeftMouseClickDown())
+                {
+                    isClickingButton = true;
+                }
             }
-        }
-        else
-        {
-            this.isInteracting = false;
-        }
-        if (isClickingButton)
-        {
-            this.isInteracting = true;
-
-            if (input.LeftMouseClickUp())
+            else
             {
                 this.isInteracting = false;
-                //flip button state
-                isOn = !isOn;
-                isClickingButton = false;
             }
-            sendValToServer();
+            if (isClickingButton)
+            {
+                this.isInteracting = true;
+
+                if (input.LeftMouseClickUp())
+                {
+                    this.isInteracting = false;
+                    //flip button state
+                    isOn = !isOn;
+                    isClickingButton = false;
+                }
+                sendValToServer();
+            }
         }
     }
 }

@@ -34,13 +34,16 @@ public class Module : Interactable
 
     public string function;
 
+    private bool canInteract;
+
 
     public Module(Texture2D sprite) : base(sprite)
     {
         width = sprite.Width / Grid.GetInstance().GetGridSideLength();
     }
-    public Module(Vector2 pos, string secDefFile, string uiDefFile) : base(LoadSprite(uiDefFile),pos)
+    public Module(Vector2 pos, string secDefFile, string uiDefFile, bool canInteract=true) : base(LoadSprite(uiDefFile),pos)
     {
+        this.canInteract=canInteract;
         this.ModuleId = modules++;
         
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
@@ -163,7 +166,7 @@ public class Module : Interactable
             }
         }
 
-        addToEtyMgr();
+        if(canInteract){addToEtyMgr();}
 
         API.API.createSection(this);
         sendInitialComponentValsToServer();
@@ -175,6 +178,16 @@ public class Module : Interactable
             c.addComponentToEtyMgr();
         }
     }
+
+    public override void Draw(SpriteBatch spriteBatch){
+        base.Draw(spriteBatch);
+        if(!canInteract){
+            foreach(Component c in components){
+                c.Draw(spriteBatch);
+            }
+        }
+    }
+    
     private void updateComponentPositions(){
     foreach(Component c in components){
         c.UpdatePos(position);

@@ -9,6 +9,8 @@ namespace modular_synth_frontend.UI;
 internal class ModuleSpawnButton : Button
 {
     private Texture2D _texture;
+    private Module buttonImage;
+
     private InputManager input = InputManager.GetInstance();
     private Grid grid = Grid.GetInstance();
 
@@ -24,6 +26,8 @@ internal class ModuleSpawnButton : Button
         this.secDefFile = secDefFile;
 
         ModuleSpawned += Menu.GetInstance().ChangeState;
+
+        buttonImage = new Module(position, secDefFile, uiDefFile,false);
     }
 
     public Module Spawn()
@@ -33,6 +37,12 @@ internal class ModuleSpawnButton : Button
         int offset = Module.GetWidth(uiDefFile) * grid.GetGridSideLength() / 2; 
         Vector2 pos = new Vector2(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS/2));
         return new Module(pos, secDefFile, uiDefFile); 
+    }
+
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        base.Draw(spriteBatch);
+        buttonImage.Draw(spriteBatch);
     }
 
     public override void Update()

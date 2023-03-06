@@ -24,7 +24,7 @@ public class Wire : Component
     private int delay = 0;
 
 
-    public Wire(Vector2 modulePos,int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1,bool animate = false) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale)
+    public Wire(Vector2 modulePos,int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1,bool animate = false) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale,true)
     { 
         //set to true as wire is made when someone clicks on a port
         this.visible = true;

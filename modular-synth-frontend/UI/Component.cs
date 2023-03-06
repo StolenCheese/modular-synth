@@ -28,10 +28,11 @@ public class Component : Interactable
     protected double maxValueForServer=1;
     protected double minValueForServer=0;
     protected double lastSentVal = -1111; //set to value that will never be used to make sure all components sync at start
+    protected bool canInteract = true;
 
     //origin is at the center of the component. Use this to add offset
 
-    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string parameterID,double scale=1) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string parameterID,double scale=1,bool canInteract=true) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
@@ -40,10 +41,11 @@ public class Component : Interactable
         this.moduleLocalPos = moduleLocalPos;
         this.parentModuleId = parentModuleId;
         this.parameterID = parameterID;
+        this.canInteract = canInteract; 
 
     }
 
-    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string paramID,double scale=1,bool vertical=false) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
+    public Component(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D baseSprite, Color col, string paramID,double scale=1,bool vertical=false,bool canInteract=true) : base(baseSprite, modulePos+moduleLocalPos, col,scale)
     { 
         this.scale = scale;
         this.height=(int)(this.sprite.Height*this.scale);
@@ -53,6 +55,8 @@ public class Component : Interactable
         this.vertical = vertical;
         this.parentModuleId = parentModuleId;
         this.parameterID = paramID;
+        this.canInteract = canInteract; 
+
 
         setSCLimitsBasedOnParamID();
 

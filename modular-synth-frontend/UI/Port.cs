@@ -33,7 +33,7 @@ public class Port : Component
     public Wire draggingWire;
 
 
-    public Port(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, string ParamID,bool isInput, double scale=1) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParamID,scale)
+    public Port(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, string ParamID,bool isInput, double scale=1,bool canInteract=true) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParamID,scale,canInteract)
     { 
 
         this.isInput = isInput;
@@ -145,55 +145,57 @@ public class Port : Component
 
     public override void Update(){    
         this.position = modulePos + moduleLocalPos; 
-        if (boundingBox.Contains(input.MousePosition()))
-        {
-            this.isInteracting=true;
+        if(canInteract){
+            if (boundingBox.Contains(input.MousePosition()))
+            {
+                this.isInteracting=true;
 
-            
-            if (input.LeftMouseClickDown()){
-                //removeConnectedTo(this);
-                dragging = true;
-                clickOffset = position - input.MousePosVector();
+                
+                if (input.LeftMouseClickDown()){
+                    //removeConnectedTo(this);
+                    dragging = true;
+                    clickOffset = position - input.MousePosVector();
 
-            //If we aren't dragging a wire then we may have a wire about to be connected to us
-            } else if(input.LeftMouseClickUp()&&!dragging){
-                Port portToConnectFrom = getInteractingPort();
-                if(portToConnectFrom!=null){
-                    portToConnectFrom.dragging = false;
+                //If we aren't dragging a wire then we may have a wire about to be connected to us
+                } else if(input.LeftMouseClickUp()&&!dragging){
+                    Port portToConnectFrom = getInteractingPort();
+                    if(portToConnectFrom!=null){
+                        portToConnectFrom.dragging = false;
 
-                    if(portIsConnected(portToConnectFrom)){ //delete connections to same port
-                        if(!removeConnectionFrom(portToConnectFrom)&&!removeConnectionTo(portToConnectFrom)){
-                            Console.WriteLine("failed to remove connection by dragging to same connection");
+                        if(portIsConnected(portToConnectFrom)){ //delete connections to same port
+                            if(!removeConnectionFrom(portToConnectFrom)&&!removeConnectionTo(portToConnectFrom)){
+                                Console.WriteLine("failed to remove connection by dragging to same connection");
+                            }
+
+                        //stop output to output connections and allow connections on the same module if they are inputs
+                        } else if((this.isInput||portToConnectFrom.isInput) &&!(portOnSameModule(portToConnectFrom)&&(!this.isInput||!portToConnectFrom.isInput)) 
+                        ){
+                            Console.WriteLine("making port connection");
+
+                            connectFrom(portToConnectFrom);
                         }
-
-                    //stop output to output connections and allow connections on the same module if they are inputs
-                    } else if((this.isInput||portToConnectFrom.isInput) &&!(portOnSameModule(portToConnectFrom)&&(!this.isInput||!portToConnectFrom.isInput)) 
-                    ){
-                        Console.WriteLine("making port connection");
-
-                        connectFrom(portToConnectFrom);
-                    }
-                }            
-            //removing links with right click     
-            } else if(input.RightMouseClickDown()&&!dragging){
-                //try remove incoming connection. 
-                if(!removeConnectionFrom()){
-                    if(!removeConnectionTo()){
-                        Console.WriteLine("no connection to remove");
+                    }            
+                //removing links with right click     
+                } else if(input.RightMouseClickDown()&&!dragging){
+                    //try remove incoming connection. 
+                    if(!removeConnectionFrom()){
+                        if(!removeConnectionTo()){
+                            Console.WriteLine("no connection to remove");
+                        }
                     }
                 }
+            }else{
+                this.isInteracting=false;
             }
-        }else{
-            this.isInteracting=false;
-        }
-        if(dragging){
-            this.isInteracting=true;
-            this.draggingWire.Position=Position;
-            this.draggingWire.endPosition = input.MousePosVector() + clickOffset;
+            if(dragging){
+                this.isInteracting=true;
+                this.draggingWire.Position=Position;
+                this.draggingWire.endPosition = input.MousePosVector() + clickOffset;
 
-            //hide wire if not over a port
-            if(input.LeftMouseClickUp()&&getInteractingPort()==null){
-                dragging = false;
+                //hide wire if not over a port
+                if(input.LeftMouseClickUp()&&getInteractingPort()==null){
+                    dragging = false;
+                }
             }
         }
     }

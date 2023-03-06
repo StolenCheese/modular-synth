@@ -72,42 +72,45 @@ internal class Slider : Component
     }
 
     public override void Update(){  
-        //Console.WriteLine($"SliderOffset: {SliderOffset}");   
-        if (boundingBox.Contains(input.MousePosition()))
-        {
-            this.isInteracting=true;
-            if (input.LeftMouseClickDown())
+        //Console.WriteLine($"SliderOffset: {SliderOffset}");  
+        if(canInteract){
+            if (boundingBox.Contains(input.MousePosition()))
             {
-                dragging = true;
-                clickOffset = position.X - input.MousePosVector().X;
-            }
-        }else{
-            this.isInteracting=false;
-        }
-        if (dragging)
-        {
-            this.isInteracting=true;
-            if(vertical){
-                //minus used here to make sliding up increase the value and sliding down decrease
-                SliderOffset = -(input.MousePosVector().Y + clickOffset - modulePos.Y - moduleLocalPos.Y);
-                this.position.Y = -SliderOffset + modulePos.Y + moduleLocalPos.Y;
+                this.isInteracting=true;
+                if (input.LeftMouseClickDown())
+                {
+                    dragging = true;
+                    clickOffset = position.X - input.MousePosVector().X;
+                }
             }else{
-                SliderOffset = input.MousePosVector().X + clickOffset - modulePos.X - moduleLocalPos.X;
-                this.position.X = SliderOffset + modulePos.X + moduleLocalPos.X;
+                this.isInteracting=false;
             }
-            
-            if (input.LeftMouseClickUp()){
-                dragging = false;
+            if (dragging)
+            {
+                this.isInteracting=true;
+                if(vertical){
+                    //minus used here to make sliding up increase the value and sliding down decrease
+                    SliderOffset = -(input.MousePosVector().Y + clickOffset - modulePos.Y - moduleLocalPos.Y);
+                    this.position.Y = -SliderOffset + modulePos.Y + moduleLocalPos.Y;
+                }else{
+                    SliderOffset = input.MousePosVector().X + clickOffset - modulePos.X - moduleLocalPos.X;
+                    this.position.X = SliderOffset + modulePos.X + moduleLocalPos.X;
+                }
+                
+                if (input.LeftMouseClickUp()){
+                    dragging = false;
+                }
+            sendValToServer();    
+            }else{
+                this.position = modulePos + moduleLocalPos;
+                if(vertical){
+                    this.position.Y -= SliderOffset;  
+                }else{
+                    this.position.X += SliderOffset;  
+                }         
             }
-        sendValToServer();    
-        }else{
+        } else {
             this.position = modulePos + moduleLocalPos;
-            if(vertical){
-                this.position.Y -= SliderOffset;  
-            }else{
-                this.position.X += SliderOffset;  
-            }
-                    
         }
     }
 }

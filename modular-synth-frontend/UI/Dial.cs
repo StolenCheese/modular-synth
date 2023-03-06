@@ -24,9 +24,9 @@ internal class Dial : Component
     private double dialRotationOffset;
     private InputManager input = InputManager.GetInstance();
 
-    public Dial(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, string parameterID,double staticPartScale=1,double dialScale=1,double minValueForServer=0,double maxValueForServer=1) : base(modulePos, parentModuleId, moduleLocalPos, dialSprite, col, parameterID,dialScale)
+    public Dial(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, string parameterID,double staticPartScale=1,double dialScale=1,double minValueForServer=0,double maxValueForServer=1,bool canInteract=true) : base(modulePos, parentModuleId, moduleLocalPos, dialSprite, col, parameterID,dialScale,canInteract)
     { 
-        this.staticPart = new Component(modulePos, parentModuleId, moduleLocalPos, staticPartSprite, col, parameterID, staticPartScale);
+        this.staticPart = new Component(modulePos, parentModuleId, moduleLocalPos, staticPartSprite, col, parameterID, staticPartScale,canInteract);
         this.rotation = minRotation;
         this.lastRotation = minRotation;
         this.dialRotation = minRotation;
@@ -123,43 +123,45 @@ internal class Dial : Component
 
     public override void Update(){ 
         this.position = modulePos + moduleLocalPos; 
-        if (boundingBox.Contains(input.MousePosition()))
-        {
-            this.isInteracting=true;
-            if (input.LeftMouseClickDown()){
-                rotating = true;
-                dialRotationOffset = getAngle(input.MousePosVector() - position);
-            } else if(input.MouseWheelUp()){
-                Console.WriteLine("MouseWheelUp");
-                DialRotation += Math.PI/8;
+        if(canInteract){
+            if (boundingBox.Contains(input.MousePosition()))
+            {
+                this.isInteracting=true;
+                if (input.LeftMouseClickDown()){
+                    rotating = true;
+                    dialRotationOffset = getAngle(input.MousePosVector() - position);
+                } else if(input.MouseWheelUp()){
+                    Console.WriteLine("MouseWheelUp");
+                    DialRotation += Math.PI/8;
 
-                this.rotation = DialRotation;
-                sendValToServer();
-                lastRotation = this.rotation;
-            } else if(input.MouseWheelDown()){
-                Console.WriteLine("MouseWheelDown");
-                DialRotation -= Math.PI/8;
+                    this.rotation = DialRotation;
+                    sendValToServer();
+                    lastRotation = this.rotation;
+                } else if(input.MouseWheelDown()){
+                    Console.WriteLine("MouseWheelDown");
+                    DialRotation -= Math.PI/8;
 
-                this.rotation = DialRotation;
-                sendValToServer();
-                lastRotation = this.rotation;
-            }
-        }else{
-            this.isInteracting=false;
-        }
-        if (rotating){
-            this.isInteracting=true;
-            DialRotation = getAngle(input.MousePosVector() - position)- dialRotationOffset+ lastRotation;
-            //Console.WriteLine(String.Format("DialRotation:{0},dialRotationOffset:{1},lastRotation:{2},clkWiseLock:{3},aClkWiseLock:{4}",DialRotation*180/Math.PI,dialRotationOffset*180/Math.PI,lastRotation*180/Math.PI,clkWiseLock,aClkWiseLock));
-            this.rotation = DialRotation;
-          
-            if (input.LeftMouseClickUp()){
+                    this.rotation = DialRotation;
+                    sendValToServer();
+                    lastRotation = this.rotation;
+                }
+            }else{
                 this.isInteracting=false;
-                lastRotation = this.rotation;
-                rotating = false;
             }
-        //only make an api call when we are rotating
-        sendValToServer();
+            if (rotating){
+                this.isInteracting=true;
+                DialRotation = getAngle(input.MousePosVector() - position)- dialRotationOffset+ lastRotation;
+                //Console.WriteLine(String.Format("DialRotation:{0},dialRotationOffset:{1},lastRotation:{2},clkWiseLock:{3},aClkWiseLock:{4}",DialRotation*180/Math.PI,dialRotationOffset*180/Math.PI,lastRotation*180/Math.PI,clkWiseLock,aClkWiseLock));
+                this.rotation = DialRotation;
+            
+                if (input.LeftMouseClickUp()){
+                    this.isInteracting=false;
+                    lastRotation = this.rotation;
+                    rotating = false;
+                }
+            //only make an api call when we are rotating
+                sendValToServer();
+            }
         }
     }
 }

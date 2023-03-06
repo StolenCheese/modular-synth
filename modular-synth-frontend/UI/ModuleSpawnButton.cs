@@ -19,15 +19,19 @@ internal class ModuleSpawnButton : Button
 
     public static event Action ModuleSpawned;
 
-    public ModuleSpawnButton(Texture2D sprite, Vector2 position,string uiDefFile, string secDefFile) : base(sprite, position)
+    public ModuleSpawnButton(Vector2 position,string uiDefFile, string secDefFile,double scale=0.5) : base(position)
     {
-        _texture = sprite;
+        //_texture = sprite;
         this.uiDefFile = uiDefFile;
         this.secDefFile = secDefFile;
 
         ModuleSpawned += Menu.GetInstance().ChangeState;
 
-        buttonImage = new Module(position, secDefFile, uiDefFile,false);
+        buttonImage = new Module(position, secDefFile, uiDefFile,false,(float)scale);
+        this.width = (int)(scale*buttonImage.sprite.Width);
+        this.height = (int)(scale*buttonImage.sprite.Height);
+
+        boundingBox = new Rectangle((int)position.X,(int)position.Y,width,height);
     }
 
     public Module Spawn()
@@ -41,7 +45,6 @@ internal class ModuleSpawnButton : Button
 
     public override void Draw(SpriteBatch spriteBatch)
     {
-        base.Draw(spriteBatch);
         buttonImage.Draw(spriteBatch);
     }
 

@@ -26,7 +26,6 @@ internal class Dial : Component
 
     public Dial(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D staticPartSprite, Texture2D dialSprite, Color col, string parameterID,double staticPartScale=1,double dialScale=1,double minValueForServer=0,double maxValueForServer=1,bool canInteract=true) : base(modulePos, parentModuleId, moduleLocalPos, dialSprite, col, parameterID,dialScale,canInteract)
     { 
-        this.staticPart = new Component(modulePos, parentModuleId, moduleLocalPos, staticPartSprite, col, parameterID, staticPartScale,canInteract);
         this.rotation = minRotation;
         this.lastRotation = minRotation;
         this.dialRotation = minRotation;
@@ -36,15 +35,12 @@ internal class Dial : Component
 
     }
 
-    //We want the module that this component belongs to to give the component its coordinates
     public override void UpdatePos(Vector2 modulePos){
-        staticPart.UpdatePos(modulePos);
         this.modulePos = modulePos;
     }
 
     //order is important!
     public override void addComponentToEtyMgr(){
-        staticPart.addComponentToEtyMgr();
         EntityManager.entities.Add(this);
     }
 

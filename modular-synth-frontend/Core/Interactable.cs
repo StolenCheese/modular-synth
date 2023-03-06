@@ -6,14 +6,15 @@ namespace modular_synth_frontend.Core;
 
 public abstract class Interactable : Entity
 {
-    protected Texture2D sprite;
+    public Texture2D sprite;
     protected Color colour;
     protected Vector2 position; //relative to world space not screenspace is the idea here (0,0) for this program will be centre of main screen when completely static
     protected Rectangle boundingBox;
     private int xOffset=0;
     private int yOffset=0;
-    private int height;
-    private int width;
+    public int height;
+    public int width;
+    private double scale = 1;
 
     public Interactable(Texture2D sprite)
     {
@@ -33,6 +34,10 @@ public abstract class Interactable : Entity
         this.height = sprite.Height;
         this.width = sprite.Width;
         boundingBox = new Rectangle((int)position.X, (int)position.Y, sprite.Width, sprite.Height);
+    }
+    public Interactable( Vector2 position)
+    {
+        this.position = position;
     }
 
     public Interactable(Texture2D sprite, Vector2 position, Color colour)

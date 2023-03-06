@@ -41,7 +41,7 @@ public class Module : Interactable
     {
         width = sprite.Width / Grid.GetInstance().GetGridSideLength();
     }
-    public Module(Vector2 pos, string secDefFile, string uiDefFile, bool canInteract=true) : base(LoadSprite(uiDefFile),pos)
+    public Module(Vector2 pos, string secDefFile, string uiDefFile, bool canInteract=true,float modScale=1) : base(LoadSprite(uiDefFile),pos,Color.White,modScale)
     {
         this.canInteract=canInteract;
         this.ModuleId = modules++;
@@ -94,7 +94,15 @@ public class Module : Interactable
                     Texture2D trackSprite = ModularSynth.content.Load<Texture2D>(trackSpriteString);
                     Texture2D sliderSprite = ModularSynth.content.Load<Texture2D>(sliderSpriteString);
 
-                    components.Add(new Slider(pos, ModuleId, moduleLocalPos, trackSprite, sliderSprite, col, parameterIDString, trackScale, sliderScale, isVertical,minValueForServer,maxValueForServer));
+                    moduleLocalPos = new Vector2(moduleLocalPos.X*modScale,moduleLocalPos.Y*modScale);
+
+                    //slider static part:
+                    components.Add(new Component(pos, ModuleId,moduleLocalPos, trackSprite, col, parameterIDString, trackScale*modScale,isVertical,canInteract));
+                    components.Add(new Slider(pos, ModuleId,moduleLocalPos, trackSprite, sliderSprite, col, parameterIDString, trackScale*modScale, sliderScale*modScale, isVertical,minValueForServer,maxValueForServer,canInteract));
+
+                    ((Slider)components[components.Count-1]).setvaluesBasedOnTrack(components[components.Count-2]);
+                    
+                    
                 }
                 else if (ComponentType == "dial")
                 {                                                                              
@@ -114,7 +122,12 @@ public class Module : Interactable
                     double dialScale = double.Parse(dialScaleString);
                     Texture2D staticPartSprite = ModularSynth.content.Load<Texture2D>(staticPartSpriteString);
                     Texture2D dialSprite = ModularSynth.content.Load<Texture2D>(dialSpriteString);
-                    components.Add(new Dial(pos, ModuleId, moduleLocalPos, staticPartSprite, dialSprite, col, parameterIDString, staticPartScale, dialScale,minValueForServer,maxValueForServer));
+
+                    moduleLocalPos = new Vector2(moduleLocalPos.X*modScale,moduleLocalPos.Y*modScale);
+
+                    components.Add(new Dial(pos, ModuleId, moduleLocalPos, staticPartSprite, dialSprite, col, parameterIDString, staticPartScale*modScale, dialScale*modScale,minValueForServer,maxValueForServer));
+                    //dial static part:
+                    components.Add(new Component(pos, ModuleId, moduleLocalPos, staticPartSprite, col, parameterIDString, staticPartScale*modScale,canInteract));
                 }
                 else if (ComponentType == "port")
                 {                                           
@@ -137,9 +150,9 @@ public class Module : Interactable
                     Texture2D spritePort = ModularSynth.content.Load<Texture2D>(spriteString);
                     
 
-                    
+                    moduleLocalPos = new Vector2(moduleLocalPos.X*modScale,moduleLocalPos.Y*modScale);
 
-                    components.Add(new Port(pos, ModuleId, moduleLocalPos, spritePort, col, parameterIDString, isInput, scale));
+                    components.Add(new Port(pos, ModuleId, moduleLocalPos, spritePort, col, parameterIDString, isInput, scale*modScale));
                 }
                 else if (ComponentType == "button")
                 {
@@ -156,8 +169,9 @@ public class Module : Interactable
 
                     Texture2D spriteButton = ModularSynth.content.Load<Texture2D>(spriteString);
 
+                    moduleLocalPos = new Vector2(moduleLocalPos.X*modScale,moduleLocalPos.Y*modScale);
 
-                    components.Add(new ButtonComponent(pos, ModuleId, moduleLocalPos, spriteButton, col, parameterIDString, scale,minValueForServer,maxValueForServer));
+                    components.Add(new ButtonComponent(pos, ModuleId, moduleLocalPos, spriteButton, col, parameterIDString, scale*modScale,minValueForServer,maxValueForServer));
                 }            
                 else
                 {
@@ -166,10 +180,11 @@ public class Module : Interactable
             }
         }
 
-        if(canInteract){addToEtyMgr();}
-
-        API.API.createSection(this);
-        sendInitialComponentValsToServer();
+        if(canInteract){
+            addToEtyMgr();
+            API.API.createSection(this);
+            sendInitialComponentValsToServer();
+        }
     }
 
     public void addToEtyMgr(){

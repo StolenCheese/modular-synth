@@ -9,6 +9,9 @@ internal class Button : Interactable
     public Button(Texture2D sprite, Vector2 position) : base(sprite, position)
     {
     }
+    public Button(Vector2 position) : base(position)
+    {
+    }
 
     public override void Update()
     {}

@@ -13,7 +13,6 @@ internal class Slider : Component
     public static Texture2D rail1;
     public static Texture2D slider1;
     public static Texture2D slider2;
-    Component track;
     private bool dragging;
     private float clickOffset = 0;
     private float sliderOffset = 0;
@@ -22,25 +21,17 @@ internal class Slider : Component
     private int minSliderOffset=0;
     private InputManager input = InputManager.GetInstance();
 
-    public Slider(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, string ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false,double minValueForServer=0,double maxValueForServer=1) : base(modulePos, parentModuleId, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical)
+    public Slider(Vector2 modulePos, int parentModuleId, Vector2 moduleLocalPos, Texture2D trackSprite, Texture2D sliderSprite, Color col, string ParameterID,double trackScale=1,double sliderScale=1,bool vertical=false,double minValueForServer=0,double maxValueForServer=1,bool canInteract = true) : base(modulePos, parentModuleId, moduleLocalPos, sliderSprite, col, ParameterID,sliderScale,vertical,canInteract)
     { 
-        this.track = new Component(modulePos, parentModuleId, moduleLocalPos, trackSprite, col, ParameterID, trackScale,vertical);
-        if(vertical){
-            maxSliderOffset = track.height/2;
-            minSliderOffset = -track.height/2;
-        }else{
-            maxSliderOffset = track.width/2;
-            minSliderOffset = -track.width/2;
-        }
 
-         this.minValueForServer = minValueForServer;
-         this.maxValueForServer = maxValueForServer;
+        this.minValueForServer = minValueForServer;
+        this.maxValueForServer = maxValueForServer;
+        this.vertical = vertical;
         
     }
 
     //We want the module that this component belongs to to give the component its coordinates
     public override void UpdatePos(Vector2 modulePos){
-        track.UpdatePos(modulePos);
         this.modulePos = modulePos;
     }
 
@@ -60,9 +51,18 @@ internal class Slider : Component
         }
     }
 
+    public void setvaluesBasedOnTrack(Component track){
+        if(vertical){
+            maxSliderOffset = track.height/2;
+            minSliderOffset = -track.height/2;
+        }else{
+            maxSliderOffset = track.width/2;
+            minSliderOffset = -track.width/2;
+        }
+    }
+
     //order is important!
     public override void addComponentToEtyMgr(){
-        track.addComponentToEtyMgr();
         EntityManager.entities.Add(this);
     }
 

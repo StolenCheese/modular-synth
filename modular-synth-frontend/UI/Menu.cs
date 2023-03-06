@@ -82,13 +82,13 @@ internal class Menu : Interactable
         leftNav = new Button(leftArrowTexture, new Vector2(70, 280));
         rightNav = new Button(rightArrowTexture, new Vector2(1150, 280));
 
-        activeButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(120, 10),"TestModuleUI", "TestModuleSec"));
-        activeButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(120+moduleTexture.Width+GAPBETWEENMODULES, 10), "TestModuleUI2","TestModuleSec2"));
-        activeButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(120 + 2*(moduleTexture.Width + GAPBETWEENMODULES), 10), "PanUI", "PanSec"));
-        activeButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(120 + 3*(moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
-        activeButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(120, 10), "TestModuleUI2", "TestModuleSec2"));
-        activeButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(120 + (moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
-        activeButtons.Add(new ModuleSpawnButton(moduleTexture, new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 10),"TestModuleUI", "TestModuleSec"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120+moduleTexture.Width+GAPBETWEENMODULES, 10), "TestModuleUI2","TestModuleSec2"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2*(moduleTexture.Width + GAPBETWEENMODULES), 10), "PanUI", "PanSec"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 3*(moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 10), "TestModuleUI2", "TestModuleSec2"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + (moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
 
         if (activeButtons.Count > BUTTONSPERSCREEN)
         {

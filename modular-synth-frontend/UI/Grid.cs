@@ -11,6 +11,7 @@ internal class Grid
 {
 	private static Grid instance = new();
 
+	public static int SideScroll => instance.sideScroll;
 	public const int ROWS = 12;
 	int cols;
 
@@ -19,10 +20,12 @@ internal class Grid
 
 	Dictionary<Vector2, GridTile> gridTiles = new(); //where the vector 2 is world position
 
+	int sideScroll;
+	Vector2? mouseStart;
 
 	private Grid()
 	{
-		cols = ModularSynth.viewport.Width / gridSideLength;
+		cols = 30 * ModularSynth.viewport.Width / gridSideLength;
 		//railHeight = gridSideLength * ROWS;
 		railHeight = (ModularSynth.viewport.Height - ModularSynth.menuBarHeight) / ModularSynth.RAILNUM;
 
@@ -44,11 +47,47 @@ internal class Grid
 	{
 		return instance;
 	}
+	public void Update()
+	{
+		var p = InputManager.GetInstance().MousePosVector();
+		//Drag to scroll side to side
+		if (!EntityManager.isMouseOverEntity)
+		{
+			//Drag side to side
+			if (InputManager.GetInstance().LeftMouseClickDown())
+			{
+				mouseStart = p - new Vector2(sideScroll, 0);
+			}
+			else if (InputManager.GetInstance().LeftMousePressed() && mouseStart is Vector2 ms)
+			{
+				sideScroll = (int)(p.X - ms.X);
+			}
+			else
+			{
+				mouseStart = null;
+			}
+		}
+		else
+		{
+			if (InputManager.GetInstance().LeftMousePressed())
+			{
+				//Most likely dragging while trying to move something
+				// if on the edge of the screen, we wanna move the view to allow this
+				if (p.X < 20 || p.X > 1260)
+				{
+					sideScroll += Math.Sign(500 - p.X) * 20;
+
+				}
+			}
+		}
+	}
 
 	public void Draw(SpriteBatch spriteBatch, Texture2D gridTexture)
 	{
 		//TODO: introudce a mask over this to only show it in the area around the section you're hovering a module over
 		//TODO: Just honestly anything about moving the screen
+
+
 
 		for (int k = 0; k < ModularSynth.RAILNUM; k++)
 		{
@@ -56,7 +95,8 @@ internal class Grid
 			{
 				for (int j = 0; j < cols; j++)
 				{
-					Rectangle rect = new(gridSideLength * j, (gridSideLength * i) + ModularSynth.menuBarHeight + (k * railHeight), gridSideLength, gridSideLength);
+
+					var rect = new Rectangle(gridSideLength * j + sideScroll, (gridSideLength * i) + ModularSynth.menuBarHeight + (k * railHeight), gridSideLength, gridSideLength);
 
 					if (gridTiles[new Vector2(j, i + ROWS * k)].occupied)
 					{
@@ -91,6 +131,9 @@ internal class Grid
 	public Vector2 GetNearestTileEdgeSnap(Vector2 pos)
 	{
 		int x = (int)Math.Round(pos.X / gridSideLength, 0);
+
+		x = Math.Clamp(x, 0, cols);
+
 		x *= gridSideLength;
 
 		int rail = (int)Math.Round((pos.Y - ModularSynth.menuBarHeight) / railHeight, 0);
@@ -154,7 +197,9 @@ internal class Grid
 	public void DeOccupyTiles(int width, Vector2 topLeftCorner)
 	{
 		int x = (int)Math.Floor(topLeftCorner.X / gridSideLength);
+		x = Math.Clamp(x, 0, cols);
 		int rail = (int)Math.Round((topLeftCorner.Y - ModularSynth.menuBarHeight) / railHeight, 0);
+		rail = Math.Clamp(rail, 0, 1);
 
 		for (int i = 0; i < ROWS; i++)
 		{
@@ -169,7 +214,7 @@ internal class Grid
 	{
 		//TODO: Add some knowledge of offset from base screen pos from Modular Synth script
 
-		int x = (int)Math.Round(screenCoords.X / gridSideLength);
+		int x = (int)Math.Round(screenCoords.X / gridSideLength - sideScroll);
 
 		int rail = (int)Math.Round((screenCoords.Y - ModularSynth.menuBarHeight) / railHeight);
 

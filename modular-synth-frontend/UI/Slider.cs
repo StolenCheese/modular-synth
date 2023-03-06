@@ -80,40 +80,42 @@ internal class Slider : Component
 	private float SliderOffset
 	{
 		get { return sliderOffset; }
-		set { this.sliderOffset = MathHelper.Clamp(value, minSliderOffset, maxSliderOffset); }
+		set { sliderOffset = MathHelper.Clamp(value, minSliderOffset, maxSliderOffset); }
 	}
 
 	public override void Update()
 	{
+		SetWorldCenter(modulePos + moduleLocalPos);
 		//Console.WriteLine($"SliderOffset: {SliderOffset}");  
 		if (canInteract)
 		{
-			if (boundingBox.Contains(input.MousePosition()))
+			if (screenSpaceBoundingBox.Contains(input.MousePosition()))
 			{
-				this.isInteracting = true;
+				EntityManager.isMouseOverEntity = true;
+				isInteracting = true;
 				if (input.LeftMouseClickDown())
 				{
 					dragging = true;
-					clickOffset = position.X - input.MousePosVector().X;
+					clickOffset = worldSpacePosition.X - input.MousePosVector().X;
 				}
 			}
 			else
 			{
-				this.isInteracting = false;
+				isInteracting = false;
 			}
 			if (dragging)
 			{
-				this.isInteracting = true;
+				isInteracting = true;
 				if (vertical)
 				{
 					//minus used here to make sliding up increase the value and sliding down decrease
 					SliderOffset = -(input.MousePosVector().Y + clickOffset - modulePos.Y - moduleLocalPos.Y);
-					this.position.Y = -SliderOffset + modulePos.Y + moduleLocalPos.Y;
+					worldSpacePosition.Y = -SliderOffset + modulePos.Y + moduleLocalPos.Y;
 				}
 				else
 				{
 					SliderOffset = input.MousePosVector().X + clickOffset - modulePos.X - moduleLocalPos.X;
-					this.position.X = SliderOffset + modulePos.X + moduleLocalPos.X;
+					worldSpacePosition.X = SliderOffset + modulePos.X + moduleLocalPos.X;
 				}
 
 				if (input.LeftMouseClickUp())
@@ -124,20 +126,20 @@ internal class Slider : Component
 			}
 			else
 			{
-				this.position = modulePos + moduleLocalPos;
+				worldSpacePosition = modulePos + moduleLocalPos;
 				if (vertical)
 				{
-					this.position.Y -= SliderOffset;
+					worldSpacePosition.Y -= SliderOffset;
 				}
 				else
 				{
-					this.position.X += SliderOffset;
+					worldSpacePosition.X += SliderOffset;
 				}
 			}
 		}
 		else
 		{
-			this.position = modulePos + moduleLocalPos;
+			worldSpacePosition = modulePos + moduleLocalPos;
 		}
 	}
 }

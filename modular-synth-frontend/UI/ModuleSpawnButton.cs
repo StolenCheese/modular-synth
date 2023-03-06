@@ -28,8 +28,10 @@ internal class ModuleSpawnButton : Button
 		buttonImage = new Module(position, def, false, (float)scale);
 		this.width = (int)(scale * buttonImage.sprite.Width);
 		this.height = (int)(scale * buttonImage.sprite.Height);
+		fixedOnScreen = true;
+		buttonImage.fixedOnScreen = true;
 
-		boundingBox = new Rectangle((int)position.X, (int)position.Y, width, height);
+		worldSpaceBoundingBox = new Rectangle((int)position.X, (int)position.Y, width, height);
 	}
 
 	public Module Spawn()
@@ -48,7 +50,7 @@ internal class ModuleSpawnButton : Button
 
 	public override void Update()
 	{
-		if (boundingBox.Contains(input.MousePosition()))
+		if (screenSpaceBoundingBox.Contains(input.MousePosition()))
 		{
 			if (input.LeftMouseClickDown() && !Menu.justOpen)
 			{

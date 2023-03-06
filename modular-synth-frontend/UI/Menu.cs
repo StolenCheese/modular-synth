@@ -39,6 +39,7 @@ internal class Menu : Interactable
 		this.boxSprite = boxSprite;
 		open = false;
 		activeButtonListIndex = 0;
+		fixedOnScreen = true;
 
 		MenuOpened += EntityManager.DisableEntities;
 		MenuClosed += EntityManager.EnableEntities;
@@ -104,7 +105,7 @@ internal class Menu : Interactable
 
 	public override void Update()
 	{
-		if ((boundingBox.Contains(input.MousePosition()) && input.LeftMouseClickDown()) || input.KeyDown(Microsoft.Xna.Framework.Input.Keys.E))
+		if ((screenSpaceBoundingBox.Contains(input.MousePosition()) && input.LeftMouseClickDown()) || input.KeyDown(Microsoft.Xna.Framework.Input.Keys.E))
 		{
 			ChangeState();
 		}

@@ -85,6 +85,8 @@ public class Component : Interactable
 	public virtual void UpdatePos(Vector2 modulePos)
 	{
 		this.modulePos = modulePos;
+		worldSpacePosition = modulePos + moduleLocalPos;
+		SetWorldCenter(worldSpacePosition);
 	}
 
 	//override this for subclasses with itneraction with the sc server who need to sync values (dials, sliders)
@@ -96,17 +98,17 @@ public class Component : Interactable
 	}
 	public override void Draw(SpriteBatch spriteBatch)
 	{
-		boundingBox = new Rectangle((int)position.X - width / 2, (int)position.Y - height / 2, width, height);
+		//boundingBox = new Rectangle((int)position.X - width / 2, (int)position.Y - height / 2, width, height);
 
 		//For reding hitbox
 		//spriteBatch.Draw(Slider.slider1, boundingBox,colour);
 
 		//Using position instead of rect due to strange behaviour when rotating sliders to be vertical
-		spriteBatch.Draw(sprite, position, null, colour, (float)rotation, new Vector2(this.sprite.Width / 2, this.sprite.Height / 2), (float)this.scale, SpriteEffects.None, 1.0f);
+		spriteBatch.Draw(sprite, screenSpacePosition, null, colour, (float)rotation, new Vector2(this.sprite.Width / 2, this.sprite.Height / 2), (float)this.scale, SpriteEffects.None, 1.0f);
 	}
 	public override void Update()
 	{
-		this.position = modulePos + moduleLocalPos;
+		this.worldSpacePosition = modulePos + moduleLocalPos;
 	}
 
 }

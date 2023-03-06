@@ -8,121 +8,122 @@ namespace modular_synth_frontend.Core;
 
 public class ModularSynth : Game
 {
-    public static ModularSynth instance { get; private set; }
-    public static Viewport viewport { get { return instance.GraphicsDevice.Viewport; } }
-    public static Vector2 screenSize { get { return new Vector2(viewport.Height, viewport.Height); } }
-    public static GameTime gameTime { get; private set; }
+	public static ModularSynth instance { get; private set; }
+	public static Viewport viewport { get { return instance.GraphicsDevice.Viewport; } }
+	public static Vector2 screenSize { get { return new Vector2(viewport.Height, viewport.Height); } }
+	public static GameTime gameTime { get; private set; }
 
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private InputManager input;
-    private Grid grid;
-    private Menu menu;
-    public static GraphicsDevice graphicsDevice;
-    public static Microsoft.Xna.Framework.Content.ContentManager content;
+	private GraphicsDeviceManager _graphics;
+	private SpriteBatch _spriteBatch;
+	private InputManager input;
+	private Grid grid;
+	private Menu menu;
+	public static GraphicsDevice graphicsDevice;
+	public static Microsoft.Xna.Framework.Content.ContentManager content;
 
-    public const int menuBarHeight = 42;
-    public const int dividerHeight = 9;
-    public const int RAILNUM = 2;
+	public const int menuBarHeight = 42;
+	public const int dividerHeight = 9;
+	public const int RAILNUM = 2;
 
-    Texture2D gridTexture;
-    Texture2D handleTexture;
-    Texture2D boxTexture;
+	Texture2D gridTexture;
+	Texture2D handleTexture;
+	Texture2D boxTexture;
 
-    public Texture2D slider;
+	public Texture2D slider;
 
-    public ModularSynth()
-    {
-        instance = this;
-        _graphics = new GraphicsDeviceManager(this);
+	public ModularSynth()
+	{
+		instance = this;
+		_graphics = new GraphicsDeviceManager(this);
 
-        _graphics.PreferredBackBufferWidth = 1280;
-        _graphics.PreferredBackBufferHeight = 720;
+		_graphics.PreferredBackBufferWidth = 1280;
+		_graphics.PreferredBackBufferHeight = 720;
 
-        _graphics.ApplyChanges();
+		_graphics.ApplyChanges();
 
-        input = InputManager.GetInstance();
-        grid = Grid.GetInstance();
+		input = InputManager.GetInstance();
+		grid = Grid.GetInstance();
 
-        Content.RootDirectory = "Content";
-        IsMouseVisible = true;
-    }
+		Content.RootDirectory = "Content";
+		IsMouseVisible = true;
+	}
 
-    protected override void Initialize()
-    {
-        // TODO: Add your initialization logic here
-        graphicsDevice = this.GraphicsDevice;
-        content = this.Content;
+	protected override void Initialize()
+	{
+		// TODO: Add your initialization logic here
+		graphicsDevice = this.GraphicsDevice;
+		content = this.Content;
 
-        Debug.WriteLine(grid.GetGridSideLength());
-        base.Initialize();
-    }
+		Debug.WriteLine(grid.GetGridSideLength());
+		base.Initialize();
+	}
 
-    protected override void LoadContent()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+	protected override void LoadContent()
+	{
+		_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // TODO: use this.Content to load your game content here
-        gridTexture = Content.Load<Texture2D>("gridtile");
-        handleTexture = Content.Load<Texture2D>("handletemp");
-        boxTexture = Content.Load<Texture2D>("menubox");
+		// TODO: use this.Content to load your game content here
+		gridTexture = Content.Load<Texture2D>("gridtile");
+		handleTexture = Content.Load<Texture2D>("handletemp");
+		boxTexture = Content.Load<Texture2D>("menubox");
 
-        Slider.rail1 = Content.Load<Texture2D>("Rail1");
-        Slider.slider1 = Content.Load<Texture2D>("Slider1");
-        Slider.slider2 = Content.Load<Texture2D>("Slider2");
-        Dial.dial1 = Content.Load<Texture2D>("dial1");
-        Dial.indicator1 = Content.Load<Texture2D>("indicator1");
-        Port.port1 = Content.Load<Texture2D>("port1");
+		Slider.rail1 = Content.Load<Texture2D>("Rail1");
+		Slider.slider1 = Content.Load<Texture2D>("Slider1");
+		Slider.slider2 = Content.Load<Texture2D>("Slider2");
+		Dial.dial1 = Content.Load<Texture2D>("dial1");
+		Dial.indicator1 = Content.Load<Texture2D>("indicator1");
+		Port.port1 = Content.Load<Texture2D>("port1");
 
-        Wire.orangewire = Content.Load<Texture2D>("orangewire");
-        Wire.wireCols.Add(Wire.orangewire);
-        Wire.wireCols.Add(Content.Load<Texture2D>("redwire"));
-        Wire.wireCols.Add(Content.Load<Texture2D>("bluewire"));
-        Wire.wireCols.Add(Content.Load<Texture2D>("greenwire"));
+		Wire.orangewire = Content.Load<Texture2D>("orangewire");
+		Wire.wireCols.Add(Wire.orangewire);
+		Wire.wireCols.Add(Content.Load<Texture2D>("redwire"));
+		Wire.wireCols.Add(Content.Load<Texture2D>("bluewire"));
+		Wire.wireCols.Add(Content.Load<Texture2D>("greenwire"));
 
-        menu = Menu.CreateInstance(boxTexture,handleTexture, new Vector2(viewport.Width / 2 - handleTexture.Width/2, 0));
-        menu.LoadContent();
-    }
+		menu = Menu.CreateInstance(boxTexture, handleTexture, new Vector2(viewport.Width / 2 - handleTexture.Width / 2, 0));
+		menu.LoadContent();
+	}
 
-    protected override void Update(GameTime gameTime)
-    {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+	protected override void Update(GameTime gameTime)
+	{
+		if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+			Exit();
 
-        input.Update();
-        EntityManager.Update();
-        menu.Update();
+		input.Update();
+		EntityManager.Update();
+		grid.Update();
+		menu.Update();
 
-        base.Update(gameTime);
-    }
+		base.Update(gameTime);
+	}
 
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(Color.Gray);
+	protected override void Draw(GameTime gameTime)
+	{
+		GraphicsDevice.Clear(Color.Gray);
 
-        _spriteBatch.Begin();
+		_spriteBatch.Begin();
 
-        //Drawing Static UI
-        /*
+		//Drawing Static UI
+		/*
         for (int i = 1; i <= RAILNUM; i++)
         {
             _spriteBatch.Draw(gridTexture, new Rectangle(0, (((viewport.Height - menuBarHeight) / RAILNUM) * i + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
         }
         */
 
-        //Drawing Grid (Furthest Back Dynamic UI)
-        grid.Draw(_spriteBatch, gridTexture);
+		//Drawing Grid (Furthest Back Dynamic UI)
+		grid.Draw(_spriteBatch, gridTexture);
 
-        //Drawing all Entities: Modules -> Components -> Wires
-        EntityManager.Draw(_spriteBatch);
+		//Drawing all Entities: Modules -> Components -> Wires
+		EntityManager.Draw(_spriteBatch);
 
-        //Drawing the Menu (needs to cover Entities so it is drawn last)
-        menu.Draw(_spriteBatch);
+		//Drawing the Menu (needs to cover Entities so it is drawn last)
+		menu.Draw(_spriteBatch);
 
-        //TODO: Maybe in Entity Manager? Add concept of active entity, i.e: one currently being dragged that is drawn over everything else
+		//TODO: Maybe in Entity Manager? Add concept of active entity, i.e: one currently being dragged that is drawn over everything else
 
-        _spriteBatch.End();
+		_spriteBatch.End();
 
-        base.Draw(gameTime);
-    }
+		base.Draw(gameTime);
+	}
 }

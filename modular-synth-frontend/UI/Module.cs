@@ -159,6 +159,7 @@ public class Module : Interactable
 		{
 			foreach (Component c in components)
 			{
+				c.fixedOnScreen = fixedOnScreen;
 				c.Draw(spriteBatch);
 			}
 		}
@@ -168,7 +169,7 @@ public class Module : Interactable
 	{
 		foreach (Component c in components)
 		{
-			c.UpdatePos(position);
+			c.UpdatePos(worldSpacePosition);
 		}
 	}
 
@@ -258,14 +259,15 @@ public class Module : Interactable
 		if (!isInteractingWithComponent())
 		{
 
-			if (boundingBox.Contains(input.MousePosition()))
+			if (screenSpaceBoundingBox.Contains(input.MousePosition()))
 			{
+				EntityManager.isMouseOverEntity = true;
 				if (input.LeftMouseClickDown())
 				{
 					dragging = true;
-					grid.DeOccupyTiles(width, GetPosition());
-					originalPosition = GetPosition();
-					clickOffset = GetPosition() - input.MousePosVector();
+					grid.DeOccupyTiles(width, worldSpacePosition);
+					originalPosition = worldSpacePosition;
+					clickOffset = screenSpacePosition - input.MousePosVector();
 				}
 
 				if (input.RightMouseClickDown())
@@ -279,9 +281,10 @@ public class Module : Interactable
 
 		if (dragging)
 		{
-			SetPosition(input.MousePosVector() + clickOffset);
+			EntityManager.isMouseOverEntity = true;
+			SetScreenTopLeft(input.MousePosVector() + clickOffset);
 
-			Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(boundingBox.Left, boundingBox.Top));
+			Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));
 
 			if (grid.AreTilesOccupied(TopLeftCorner, width))
 			{
@@ -324,7 +327,7 @@ public class Module : Interactable
 
 					else
 					{
-						SetPosition(originalPosition);
+						SetWorldTopLeft(originalPosition);
 						grid.OccupyTiles(width, GetPosition());
 						colour = Color.White;
 						invalidPos = false;
@@ -335,7 +338,7 @@ public class Module : Interactable
 					//Vector2 TopRightCorner = grid.GetNearestLeftEdgeTileSnap(new Vector2(boundingBox.Right, boundingBox.Top));
 					//if (Math.Abs((position - TopLeftCorner).X) < Math.Abs((new Vector2(boundingBox.Right,position.Y) - TopRightCorner).X)) //TODO: either remove or fix this :(
 
-					SetPosition(TopLeftCorner);
+					SetWorldTopLeft(TopLeftCorner);
 					grid.OccupyTiles(width, GetPosition());
 
 					if (!placed)
@@ -376,7 +379,7 @@ public class Module : Interactable
 	public void Drag()
 	{
 		dragging = true;
-		originalPosition = GetPosition();
-		clickOffset = GetPosition() - input.MousePosVector();
+		originalPosition = worldSpacePosition;
+		clickOffset = new Vector2();
 	}
 }

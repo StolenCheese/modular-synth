@@ -248,6 +248,11 @@ public class Module : Interactable
         }
     }
 
+    public void AddComponent(Component c)
+    {
+        components.Add(c);
+    }
+
     static private Texture2D LoadSprite(string uidefFilePath)
     {
         var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
@@ -347,17 +352,17 @@ public class Module : Interactable
                 }
                 else
                 {
-                    if (!placed)
-                    {
-                        placed = true;
-                        Menu.GetInstance().ChangeState();
-                    }
                     //Vector2 TopRightCorner = grid.GetNearestLeftEdgeTileSnap(new Vector2(boundingBox.Right, boundingBox.Top));
                     //if (Math.Abs((position - TopLeftCorner).X) < Math.Abs((new Vector2(boundingBox.Right,position.Y) - TopRightCorner).X)) //TODO: either remove or fix this :(
 
                     SetPosition(TopLeftCorner);
                     grid.OccupyTiles(width,GetPosition());
 
+                    if (!placed)
+                    {
+                        placed = true;
+                        //Menu.GetInstance().ChangeState(); //TODO: Make this work and not look scuffed
+                    }
                 }
             }
         }

@@ -22,6 +22,7 @@ internal class Menu : Interactable
     private List<Button> visibleButtons;
     private int activeButtonListIndex;
     private bool open;
+    public static bool justOpen=true;
 
     private Texture2D moduleTexture;
     private Texture2D leftArrowTexture;
@@ -174,6 +175,9 @@ internal class Menu : Interactable
                 //TODO: do that 
                 button.Draw(spriteBatch);
             }
+            if(justOpen){
+                justOpen = false;
+            }
         }
     }
 
@@ -184,6 +188,7 @@ internal class Menu : Interactable
             ShiftPosition(0, -ModularSynth.viewport.Height/2);
             MenuClosed.Invoke();
             open = false;
+            justOpen = true;
         }
         else
         {

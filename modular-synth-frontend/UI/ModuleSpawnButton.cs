@@ -52,7 +52,7 @@ internal class ModuleSpawnButton : Button
     {
         if (boundingBox.Contains(input.MousePosition()))
         {
-            if (input.LeftMouseClickDown())
+            if (input.LeftMouseClickDown()&&!Menu.justOpen)
             {
                 Module newModule = Spawn();
                 newModule.Drag();

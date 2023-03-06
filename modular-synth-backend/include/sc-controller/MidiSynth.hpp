@@ -13,6 +13,6 @@ private:
     [[noreturn]] void ControlLoop(std::string const& source);
 
 public:
-    std::array<std::array<Bus, 2>, 16> channels {};
+    std::array<std::array<std::string, 2>, 16> channels {};
     MidiSynth(std::string const& source);
 };

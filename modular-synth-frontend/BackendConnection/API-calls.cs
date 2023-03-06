@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+
 namespace modular_synth_frontend.API;
 
 public static class API
@@ -143,15 +146,38 @@ public static class API
 
 	public static void CreateSection(Module m)
 	{
-		if (!connected)
-			throw new Exception("Not connected to server");
 
 		if (enableAPI)
 		{
 			if (m.scSection == null)
 			{
 				Debug.WriteLine("attempting section creation");
-				m.scSection = SCSection.FromSynthdef(absPathToSynthDefs + m.function + ".scsyndef", null);
+				if (m.def.type == Core.SectionType.Midi)
+				{
+					string midi = null;
+					while (midi == null || !File.Exists(midi))
+					{
+						using OpenFileDialog openFileDialog = new();
+
+						openFileDialog.InitialDirectory = AppContext.BaseDirectory;
+						openFileDialog.Filter = "Midi (*.mid)|*.mid";
+						openFileDialog.RestoreDirectory = true;
+						if (openFileDialog.ShowDialog() == DialogResult.OK)
+						{
+							midi = openFileDialog.FileName;
+						}
+					}
+
+					m.scSection = SCSection.FromMidi(midi);
+				}
+				else
+				{
+					var a = m.def.audio_synth == null ? null : absPathToSynthDefs + m.def.audio_synth + ".scsyndef";
+					var c = m.def.control_synth == null ? null : absPathToSynthDefs + m.def.control_synth + ".scsyndef";
+
+					m.scSection = SCSection.FromSynthdef(a, c);
+				}
+
 
 				synths[m.ModuleId] = m.scSection;
 
@@ -169,7 +195,15 @@ public static class API
 		if (!connected)
 			throw new Exception("Not connected to server");
 
-		Debug.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID},portTo: {portTo.parentModuleId}.{portTo.parameterID}");
+		Debug.WriteLine($"portFrom: {portFrom.parentModuleId}.{portFrom.parameterID}, portTo: {portTo.parentModuleId}.{portTo.parameterID}");
+
+		if (!synths[portFrom.parentModuleId].controls.Contains(portFrom.parameterID))
+			throw new Exception($"Input port with param {portFrom.parameterID} does not exist in section! Available is [{string.Join(',', synths[portFrom.parentModuleId].controls)}]");
+
+		if (!synths[portTo.parentModuleId].controls.Contains(portTo.parameterID))
+			throw new Exception($"Output port with param {portTo.parameterID} does not exist in section! Available is [{string.Join(',', synths[portTo.parentModuleId].controls)}]");
+
+
 		try
 		{
 			synths[portFrom.parentModuleId].getPortFor(portFrom.parameterID).linkTo(synths[portTo.parentModuleId].getPortFor(portTo.parameterID));

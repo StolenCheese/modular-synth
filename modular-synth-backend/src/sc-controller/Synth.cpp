@@ -120,6 +120,8 @@ void Synth::set(const std::string& param,  Bus const& v)
     if (param.substr(0, 3) == "out" || param.substr(0, 2) == "in") {
 		//std::cout << param << " is in/out, so using ID and not MAP" << std::endl;
         set(param, v.index);
+
+        controls[param] = v;
         return;
     }
 

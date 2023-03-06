@@ -66,6 +66,7 @@ void MidiSynth::ControlLoop(std::string const& source)
 			playing = {};
 			tick = 0; 
 			bps = r.startingTempo / 60.0;
+
 			continue;
 		}
 
@@ -128,11 +129,11 @@ void MidiSynth::ControlLoop(std::string const& source)
 
 				if (playing[next][0] == 0) {
 					playing[next][0] = note;
-					channels[next][0].set(from_midi_note(note));
+					std::get<Bus>(controls[channels[next][0]]).set(from_midi_note(note));
 				}
 				else if (playing[next][1] == 0) {
 					playing[next][1] = note;
-					channels[next][1].set(from_midi_note(note));
+					std::get<Bus>(controls[channels[next][1]]).set(from_midi_note(note));
 				}
 				else {
 					//std::cout << "- Missed the note!";
@@ -149,10 +150,10 @@ void MidiSynth::ControlLoop(std::string const& source)
 
 				if (playing[next][0] == note) {
 					playing[next][0] = 0;
-					channels[next][0].set(0);
+					std::get<Bus>(controls[channels[next][0]]).set(0);
 				}else if (playing[next][1] == note) {
 					playing[next][1] = 0;
-					channels[next][1].set(0);
+					std::get<Bus>(controls[channels[next][1]]).set(0);
 				}
 
 				break;
@@ -195,6 +196,8 @@ void MidiSynth::ControlLoop(std::string const& source)
 
 MidiSynth::MidiSynth(std::string const& source) : control(&MidiSynth::ControlLoop, this, source), Synth(-1, "", "")
 {
+	outputRate = BusRate::CONTROL;
+	
 	// Create a new thread to handle midi enable/disable commands
 	// Can't wait to cause every race condition
 	// I love c++
@@ -203,9 +206,10 @@ MidiSynth::MidiSynth(std::string const& source) : control(&MidiSynth::ControlLoo
 	{
 		for (size_t j = 0; j < 2; j++)
 		{
-			channels[i][j] = SuperColliderController::get().InstantiateBus();
-			//cheese
-			controls["out" + std::to_string(i) + "_" + std::to_string(j)] = channels[i][j];
+			auto c = "out" + std::to_string(i) + "_" + std::to_string(j);
+
+			channels[i][j] = c;
+			controls[c] = SuperColliderController::get().InstantiateBus(); 
 		}
 
 	}

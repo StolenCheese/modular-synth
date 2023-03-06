@@ -13,6 +13,12 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace modular_synth_frontend.Core;
 
+public enum SectionType
+{
+	Synth = 0,
+	Midi = 1,
+}
+
 [Serializable]
 public record ComponentDef(
 	string type, string parameterID, string xPos, string yPos,
@@ -117,7 +123,7 @@ public record ButtonDef(string type, string parameterID, string xPos, string yPo
 
 
 [Serializable]
-public record SectionDef(string audio_synth, string control_synth, string backgroundImage, int width)
+public record SectionDef(string audio_synth, string control_synth, SectionType type, string backgroundImage, int width)
 {
 	[NonSerialized]
 	public readonly Dictionary<string, ComponentDef> components = new();

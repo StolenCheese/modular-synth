@@ -27,9 +27,10 @@ while (true)
 			Console.WriteLine($"Created new synth i={s.index} with controls [{System.String.Join(',', s.controls)}]");
 			synths[s.index] = s;
 
-			var instPath = "D:\\REPOS\\modular-synth\\modular-synth-backend\\synthdefs\\" + inst + ".scsyndef";
+			var instPath = "A:\\Documents\\synth\\modular-synth\\modular-synth-backend\\synthdefs\\" + inst + ".scsyndef";
 			foreach (var p in s.controls)
 			{
+				Console.WriteLine($"Loading for {p}");
 				var i = SCSection.FromSynthdef(instPath, null);
 				synths[i.index] = i;
 
@@ -68,7 +69,7 @@ while (true)
 			break;
 
 		case ["disconnect", String sidSrc, String sidDst, String srcParam, String dstParam]:
-            synths[int.Parse(sidSrc)].getPortFor(srcParam).removeLink(synths[int.Parse(sidDst)].getPortFor(dstParam));
+			synths[int.Parse(sidSrc)].getPortFor(srcParam).removeLink(synths[int.Parse(sidDst)].getPortFor(dstParam));
 			break;
-    };
+	};
 }

@@ -40,7 +40,6 @@ void midi_test() {
     }
 
 
-
     std::string s;
     std::cin >> s;
 
@@ -50,6 +49,7 @@ void midi_test() {
 void midi_section_test() { 
 
    synth_api::Section s3{ "A:\\Documents\\synth\\midi\\Bonetrousle.mid" };
+
 
 
     for (size_t i = 0; i < 16; i++)
@@ -64,7 +64,11 @@ void midi_section_test() {
         s3.getPortFor("out" + std::to_string(i) + "_1")->linkTo(s2->getPortFor("freq"));
 
     }
-      
+
+    auto& server = SuperColliderController::get();
+    server.g_dumpTree({ {0,1} 
+        });
+  //  server.dumpOSC(0);
     std::string s;
     std::cin >> s;
 }
@@ -141,7 +145,7 @@ int main(int argc, char* argv[])
     (void)argc; // suppress unused parameter warnings
     (void)argv; // suppress unused parameter warnings
 
-    auto endpoint = IpEndpointName(ADDRESS, PORT);
+    auto endpoint = IpEndpointName("127.0.0.1", 58000);
       
     SuperColliderController::Connect(endpoint);
     auto& server = SuperColliderController::get();
@@ -153,7 +157,8 @@ int main(int argc, char* argv[])
     // reset everything
     server.g_deepFree({ 0 });
 
-    server.root.syncTree();
+    std::cout << "Syncing tree" << std::endl;
+    //server.root.syncTree();
 
     std::cout << "Version:" << std::endl;
     std::cout << server.version().AddressPattern() << std::endl;

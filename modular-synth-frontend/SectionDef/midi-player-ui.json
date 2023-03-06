@@ -1,0 +1,280 @@
+{
+  "type": "midi",
+  "width": 32,
+
+  "backgroundImage": "module_midi",
+  "components": {
+    "out0_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "1",
+      "yPos": "b-3.5",
+      "parameterID": "out0_0"
+    },
+    "out0_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "1",
+      "yPos": "b-2",
+      "parameterID": "out0_1"
+    },
+
+    "out1_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "3",
+      "yPos": "b-3.5",
+      "parameterID": "out1_0"
+    },
+    "out1_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "3",
+      "yPos": "b-2",
+      "parameterID": "out1_1"
+    },
+
+    "out2_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "5",
+      "yPos": "b-3.5",
+      "parameterID": "out2_0"
+    },
+    "out2_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "5",
+      "yPos": "b-2",
+      "parameterID": "out2_1"
+    },
+
+    "out3_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "7",
+      "yPos": "b-3.5",
+      "parameterID": "out3_0"
+    },
+    "out3_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "7",
+      "yPos": "b-2",
+      "parameterID": "out3_1"
+    },
+
+    "out4_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "9",
+      "yPos": "b-3.5",
+      "parameterID": "out4_0"
+    },
+    "out4_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "9",
+      "yPos": "b-2",
+      "parameterID": "out4_1"
+    },
+
+    "out5_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "11",
+      "yPos": "b-3.5",
+      "parameterID": "out5_0"
+    },
+    "out5_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "11",
+      "yPos": "b-2",
+      "parameterID": "out5_1"
+    },
+
+    "out6_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "13",
+      "yPos": "b-3.5",
+      "parameterID": "out6_0"
+    },
+    "out6_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "13",
+      "yPos": "b-2",
+      "parameterID": "out6_1"
+    },
+
+    "out7_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "15",
+      "yPos": "b-3.5",
+      "parameterID": "out7_0"
+    },
+    "out7_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "15",
+      "yPos": "b-2",
+      "parameterID": "out7_1"
+    },
+
+    "out8_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "17",
+      "yPos": "b-3.5",
+      "parameterID": "out8_0"
+    },
+    "out8_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "17",
+      "yPos": "b-2",
+      "parameterID": "out8_1"
+    },
+
+    "out9_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "19",
+      "yPos": "b-3.5",
+      "parameterID": "out9_0"
+    },
+    "out9_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "19",
+      "yPos": "b-2",
+      "parameterID": "out9_1"
+    },
+
+    "out10_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "21",
+      "yPos": "b-3.5",
+      "parameterID": "out10_0"
+    },
+    "out10_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "21",
+      "yPos": "b-2",
+      "parameterID": "out10_1"
+    },
+
+    "out11_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "23",
+      "yPos": "b-3.5",
+      "parameterID": "out11_0"
+    },
+    "out11_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "23",
+      "yPos": "b-2",
+      "parameterID": "out11_1"
+    },
+
+    "out12_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "25",
+      "yPos": "b-3.5",
+      "parameterID": "out12_0"
+    },
+    "out12_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "25",
+      "yPos": "b-2",
+      "parameterID": "out12_1"
+    },
+
+    "out13_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "27",
+      "yPos": "b-3.5",
+      "parameterID": "out13_0"
+    },
+    "out13_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "27",
+      "yPos": "b-2",
+      "parameterID": "out13_1"
+    },
+
+    "out14_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "29",
+      "yPos": "b-3.5",
+      "parameterID": "out14_0"
+    },
+    "out14_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "29",
+      "yPos": "b-2",
+      "parameterID": "out14_1"
+    },
+
+    "out15_0": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "31",
+      "yPos": "b-3.5",
+      "parameterID": "out15_0"
+    },
+    "out15_1": {
+      "type": "port",
+      "scale": 0.5,
+      "isInput": false,
+      "xPos": "31",
+      "yPos": "b-2",
+      "parameterID": "out15_1"
+    }
+
+  }
+}

@@ -32,10 +32,10 @@ public class Module : Interactable
 
 	public SCSection scSection;
 
-	public string function;
 
 	private bool canInteract;
 
+	public readonly SectionDef def;
 
 	public Module(Texture2D sprite) : base(sprite)
 	{
@@ -45,11 +45,7 @@ public class Module : Interactable
 	{
 		this.canInteract = canInteract;
 		this.ModuleId = modules++;
-
-		//TODO: support control synths also
-		function = def.audio_synth;
-		if (function == null)
-			Console.WriteLine("Error parsing function type");
+		this.def = def;
 
 		width = def.width;
 

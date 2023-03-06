@@ -13,6 +13,7 @@ public class Wire : Component
     //This is required by ports to get the wire that is about to be connected to them
 
     public static Texture2D orangewire;
+    public static List<Texture2D> wireCols = new List<Texture2D>();
     public static List<Wire> wires = new List<Wire>();
     public Vector2 endPosition;
     public Vector2 Position {private get{return position;} set {this.position = value;}}
@@ -21,7 +22,6 @@ public class Wire : Component
     Rectangle node;
     public bool animate;
     public int nodesToDraw = 0;
-    private int delay = 0;
 
 
     public Wire(Vector2 modulePos,int parentModuleId, Vector2 moduleLocalPos, Texture2D sprite, Color col, String ParameterID, double scale=1,bool animate = false) : base(modulePos, parentModuleId, moduleLocalPos, sprite, col, ParameterID,scale,true)
@@ -33,6 +33,10 @@ public class Wire : Component
         Wire.wires.Add(this);
 
         this.animate = animate;
+        if(animate){
+            Random rand = new Random();
+            this.sprite = wireCols[rand.Next(0,wireCols.Count)];
+        }
         
     }
 

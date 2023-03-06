@@ -73,7 +73,12 @@ public class ModularSynth : Game
         Dial.dial1 = Content.Load<Texture2D>("dial1");
         Dial.indicator1 = Content.Load<Texture2D>("indicator1");
         Port.port1 = Content.Load<Texture2D>("port1");
+
         Wire.orangewire = Content.Load<Texture2D>("orangewire");
+        Wire.wireCols.Add(Wire.orangewire);
+        Wire.wireCols.Add(Content.Load<Texture2D>("redwire"));
+        Wire.wireCols.Add(Content.Load<Texture2D>("bluewire"));
+        Wire.wireCols.Add(Content.Load<Texture2D>("greenwire"));
 
         menu = Menu.CreateInstance(boxTexture,handleTexture, new Vector2(viewport.Width / 2 - handleTexture.Width/2, 0));
         menu.LoadContent();

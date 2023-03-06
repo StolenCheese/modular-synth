@@ -86,7 +86,7 @@ internal class Menu : Interactable
         activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 10),"TestModuleUI", "TestModuleSec"));
         activeButtons.Add(new ModuleSpawnButton(new Vector2(120+moduleTexture.Width+GAPBETWEENMODULES, 10), "TestModuleUI2","TestModuleSec2"));
         activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2*(moduleTexture.Width + GAPBETWEENMODULES), 10), "PanUI", "PanSec"));
-        activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 3*(moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
+        activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 3*(moduleTexture.Width + GAPBETWEENMODULES), 10), "SpeakerUI", "SpeakerSec"));
         activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 10), "TestModuleUI2", "TestModuleSec2"));
         activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + (moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));
         activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 10), "TestModuleUI2", "TestModuleSec2"));

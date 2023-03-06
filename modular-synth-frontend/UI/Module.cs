@@ -140,14 +140,21 @@ public class Module : Interactable
                     if(!isInput){
                         parameterIDString="out";
                     }
-
+                    
                     if (xPosString == "error" || yPosString == "error" || colString == "error" || parameterIDString == "error" || spriteString == "error")
                     {
                         Console.WriteLine("error making port");
                         //TODO: Handle error
                     }
+                    Texture2D spritePort;
+                    if(spriteString=="error"){
+                        spritePort = isInput ? ModularSynth.content.Load<Texture2D>("portblue") : ModularSynth.content.Load<Texture2D>("portred");
+                    }else{
+                        spritePort = ModularSynth.content.Load<Texture2D>(spriteString);
+                    }
+
                     
-                    Texture2D spritePort = ModularSynth.content.Load<Texture2D>(spriteString);
+                    
                     
 
                     moduleLocalPos = new Vector2(moduleLocalPos.X*modScale,moduleLocalPos.Y*modScale);
@@ -173,8 +180,20 @@ public class Module : Interactable
 
                     components.Add(new ButtonComponent(pos, ModuleId, moduleLocalPos, spriteButton, col, parameterIDString, scale*modScale,minValueForServer,maxValueForServer));
                 }            
-                else
-                {
+                else if(ComponentType == "sprite"){
+                    
+                    string spriteString = newComp.TryGetValue("sprite", out string compSprite) ? compSprite : "error";
+                    Texture2D sprite = ModularSynth.content.Load<Texture2D>(spriteString);
+
+                    string scaleString = newComp.TryGetValue("scale", out string compScale) ? compScale : "1";
+                    double scale = double.Parse(scaleString);
+
+                    moduleLocalPos = new Vector2(moduleLocalPos.X*modScale,moduleLocalPos.Y*modScale);
+
+                    components.Add(new Component(pos, ModuleId, moduleLocalPos,sprite, col,"",scale*modScale,false));
+                    
+
+                }else {
                     Console.WriteLine("Error, do not know component type");
                 }
             }

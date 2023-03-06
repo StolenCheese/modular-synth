@@ -38,7 +38,7 @@ public class Port : Component
 
         this.isInput = isInput;
 
-        this.draggingWire = new Wire(modulePos,parentModuleId,moduleLocalPos,sprite,Color.White,"",0.2);
+        this.draggingWire = new Wire(modulePos,parentModuleId,moduleLocalPos,port1,Color.White,"",0.2);
 
         ports.Add(this);
         

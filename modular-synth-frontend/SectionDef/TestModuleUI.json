@@ -35,14 +35,12 @@
         "type" : "port",
         "xPos" : "l+50",
         "yPos" : "b-50",
-        "sprite" : "port1",
         "isInput" : "true"
     },
     "0/p port": {
         "type" : "port",
         "xPos" : "r-50",
         "yPos" : "b-50",
-        "sprite" : "port1",
         "isInput" : "false"
     }
 

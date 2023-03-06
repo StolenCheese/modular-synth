@@ -8,7 +8,6 @@
         "type" : "port",
         "xPos" : "m",
         "yPos" : "m",
-        "sprite" : "port1"
     },
     "volume dial": {
         "type" : "dial",
@@ -23,12 +22,10 @@
         "type" : "port",
         "xPos" : "l+50",
         "yPos" : "b-50",
-        "sprite" : "port1"
     },
     "o/p right": {
         "type" : "port",
         "xPos" : "r-50",
         "yPos" : "b-50",
-        "sprite" : "port1"
     }
 }

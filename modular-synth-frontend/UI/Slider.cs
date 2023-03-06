@@ -45,7 +45,7 @@ internal class Slider : Component
             //Console.WriteLine($"SliderOffset:{SliderOffset},svRange:{svRange},thisRange:{thisRange},minValueForServer:{minValueForServer},minSliderOffset:{minSliderOffset}");
             float val = (float)((SliderOffset-minSliderOffset)*svRange/thisRange+minValueForServer);
             if(val!=lastSentVal){
-                API.API.setValue(this.parentModuleId, this.parameterID, val);
+                API.API.SetValue(this.parentModuleId, this.parameterID, val);
                 lastSentVal=val;
             }
         }

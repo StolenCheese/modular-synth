@@ -37,7 +37,7 @@ internal class ButtonComponent : Component
         }
         if (val != lastSentVal)
         {
-            API.API.setValue(this.parentModuleId, this.parameterID, (float)val);
+            API.API.SetValue(this.parentModuleId, this.parameterID, (float)val);
             lastSentVal = val;
         }
     }

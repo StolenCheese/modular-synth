@@ -201,7 +201,7 @@ public class Module : Interactable
 
         if(canInteract){
             addToEtyMgr();
-            API.API.createSection(this);
+            API.API.CreateSection(this);
             sendInitialComponentValsToServer();
         }
     }

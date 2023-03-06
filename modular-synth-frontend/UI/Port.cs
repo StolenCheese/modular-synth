@@ -95,7 +95,7 @@ public class Port : Component
         portFrom = this.portConnectedFrom;
     }
     if(portFrom!=null){
-        if(portFrom.portsConnectedTo.Count!=0&&portConnectedFrom==portFrom&&API.API.unlinkPorts(portFrom,this)){
+        if(portFrom.portsConnectedTo.Count!=0&&portConnectedFrom==portFrom&&API.API.UnlinkPorts(portFrom,this)){
             portConnectedFrom = null;
             portFrom.portsConnectedTo.Remove(this);
             return true;
@@ -111,7 +111,7 @@ public class Port : Component
         //random. Not the last port
         portTo = portsConnectedTo.ElementAt(portsConnectedTo.Count-1).Key;
         }
-        if(portsConnectedTo.Count!=0&&portTo.portConnectedFrom==this&&API.API.unlinkPorts(this,portTo)){
+        if(portsConnectedTo.Count!=0&&portTo.portConnectedFrom==this&&API.API.UnlinkPorts(this,portTo)){
             portTo.portConnectedFrom = null;
             portsConnectedTo.Remove(portTo);
             return true;
@@ -123,7 +123,7 @@ public class Port : Component
 
     private bool connectTo(Port portTo=null){
         if(portTo!=null&&!portsConnectedTo.ContainsKey(portTo)){
-            if(API.API.linkPorts(this,portTo)){
+            if(API.API.LinkPorts(this,portTo)){
                 portsConnectedTo[portTo] = new Wire(portTo.modulePos,portTo.parentModuleId,portTo.moduleLocalPos,Wire.orangewire,Color.White,"",0.2,true);
                 portTo.portConnectedFrom = this;
                 return true;
@@ -133,7 +133,7 @@ public class Port : Component
     }
     private bool connectFrom(Port portFrom=null){
         if(portFrom!=null&&!portFrom.portsConnectedTo.ContainsKey(this)){
-            if(API.API.linkPorts(portFrom,this)){
+            if(API.API.LinkPorts(portFrom,this)){
                 portFrom.portsConnectedTo[this] = new Wire(modulePos,parentModuleId,moduleLocalPos,Wire.orangewire,Color.White,"",0.2,true);
                 portConnectedFrom = portFrom;
                 return true;

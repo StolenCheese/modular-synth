@@ -1,6 +1,7 @@
 {
   "width": 8,
   "audio_synth": "organ",
+  "backgroundImage": "module_pale_thin",
 
   "components": {
     "FreqDial": {

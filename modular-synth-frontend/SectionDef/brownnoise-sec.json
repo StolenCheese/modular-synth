@@ -5,8 +5,8 @@
       "parameterID": "mul"
     },
     "i/p add port": {
+      "parameterID": "add",
       "isInput": true,
-      "parameterID": "add"
     },
     "0/p port": {
       "parameterID": "out",

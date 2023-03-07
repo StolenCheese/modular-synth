@@ -166,6 +166,7 @@ public class Port : Component
 			{
 				portFrom.portsConnectedTo[this] = new Wire(modulePos, parentModuleId, moduleLocalPos, Wire.orangewire, Color.White, "", 0.2, true);
 				portConnectedFrom = portFrom;
+                portFrom.isInteracting = false;
 				return true;
 			}
 		}
@@ -243,6 +244,7 @@ public class Port : Component
 				if (input.LeftMouseClickUp() && getInteractingPort() == null)
 				{
 					dragging = false;
+                    this.isInteracting = false;
 				}
 			}
 

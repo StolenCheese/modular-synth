@@ -1,28 +1,23 @@
 {
   "inherits": "speaker-sec",
-  "width": 6,
-  "backgroundImage": "module_pale_thin",
+  "width": 4,
+  "backgroundImage": "speaker_3D",
   "components": {
     "i/p left ear": {
       "type": "port",
-      "xPos": "l+2",
-      "yPos": "b-4",
-      "isInput": true
+      "xPos": "l+1",
+      "yPos": "b-3.5",
+      "isInput": true,
+      "sprite" : "portblue",
+      "scale": "0.8"
     },
     "i/p right ear": {
       "type": "port",
-      "xPos": "r-2",
-      "yPos": "b-4",
+      "xPos": "r-1",
+      "yPos": "b-3.55",
       "isInput": true,
-      "parameterID": "inr"
+      "sprite" : "portblue",
+      "scale": "0.8"
     },
-    "speaker sprite": {
-      "type": "sprite",
-      "xPos": "m",
-      "yPos": "m-2",
-      "sprite": "port1",
-      "scale": 2
-
-    }
   }
 }

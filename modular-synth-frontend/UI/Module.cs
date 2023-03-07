@@ -279,6 +279,7 @@ public class Module : Interactable
 
     public override void Update()
 	{
+        System.Diagnostics.Debug.WriteLine(isInteractingWithComponent());
 		if (!isInteractingWithComponent())
 		{
 
@@ -302,83 +303,83 @@ public class Module : Interactable
 					Delete();
 				}
 			}
-		}
+		
+            if (dragging)
+            {
+                EntityManager.isMouseOverEntity = true;
+                SetScreenTopLeft(input.MousePosVector() + clickOffset);
 
-		if (dragging)
-		{
-			EntityManager.isMouseOverEntity = true;
-			SetScreenTopLeft(input.MousePosVector() + clickOffset);
+                Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));
 
-			Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));
-
-			if (grid.AreTilesOccupied(TopLeftCorner, width))
-			{
-				invalidPos = true;
-			}
-			else
-			{
-				invalidPos = false;
-			}
-
+                if (grid.AreTilesOccupied(TopLeftCorner, width))
+                {
+                    invalidPos = true;
+                }
+                else
+                {
+                    invalidPos = false;
+                }
 
 
-			if (invalidPos)
-			{
-				colour = Color.Red;
-			}
-			else
-			{
-				colour = Color.White;
-			}
 
-			if (input.LeftMouseClickUp())
-			{
-				dragging = false;
-				if (invalidPos)
-				{
-					if (!placed)
-					{
-						//TODO: Actually delete don't just deactivate - we're gonna get a memory leak currently
+                if (invalidPos)
+                {
+                    colour = Color.Red;
+                }
+                else
+                {
+                    colour = Color.White;
+                }
 
-						Delete();
+                if (input.LeftMouseClickUp())
+                {
+                    dragging = false;
+                    if (invalidPos)
+                    {
+                        if (!placed)
+                        {
+                            //TODO: Actually delete don't just deactivate - we're gonna get a memory leak currently
 
-						/*
-						foreach (Component component in components)
-						{
-							component.enabled = false;
-							component.visible = false;
-						}
+                            Delete();
 
-						visible = false;
-						enabled = false;
-						*/
-					}
+                            /*
+                            foreach (Component component in components)
+                            {
+                                component.enabled = false;
+                                component.visible = false;
+                            }
 
-					else
-					{
-						SetWorldTopLeft(originalPosition);
-						grid.OccupyTiles(width, GetPosition());
-						colour = Color.White;
-						invalidPos = false;
-					}
-				}
-				else
-				{
-					//Vector2 TopRightCorner = grid.GetNearestLeftEdgeTileSnap(new Vector2(boundingBox.Right, boundingBox.Top));
-					//if (Math.Abs((position - TopLeftCorner).X) < Math.Abs((new Vector2(boundingBox.Right,position.Y) - TopRightCorner).X)) //TODO: either remove or fix this :(
+                            visible = false;
+                            enabled = false;
+                            */
+                        }
 
-					SetWorldTopLeft(TopLeftCorner);
-					grid.OccupyTiles(width, GetPosition());
+                        else
+                        {
+                            SetWorldTopLeft(originalPosition);
+                            grid.OccupyTiles(width, GetPosition());
+                            colour = Color.White;
+                            invalidPos = false;
+                        }
+                    }
+                    else
+                    {
+                        //Vector2 TopRightCorner = grid.GetNearestLeftEdgeTileSnap(new Vector2(boundingBox.Right, boundingBox.Top));
+                        //if (Math.Abs((position - TopLeftCorner).X) < Math.Abs((new Vector2(boundingBox.Right,position.Y) - TopRightCorner).X)) //TODO: either remove or fix this :(
 
-					if (!placed)
-					{
-						placed = true;
-						//Menu.GetInstance().ChangeState(); //TODO: Make this work and not look scuffed
-					}
-				}
-			}
-		}
-		updateComponentPositions();
+                        SetWorldTopLeft(TopLeftCorner);
+                        grid.OccupyTiles(width, GetPosition());
+
+                        if (!placed)
+                        {
+                            placed = true;
+                            //Menu.GetInstance().ChangeState(); //TODO: Make this work and not look scuffed
+                        }
+                    }
+                }
+            }
+        }
+	    updateComponentPositions();
 	}
 
     public override void Draw(SpriteBatch spriteBatch)

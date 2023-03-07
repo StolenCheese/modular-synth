@@ -16,14 +16,18 @@
       "sliderSprite": "slider2"
     },
     "i/p add port": {
+      "sprite" : "portblue",
       "type": "port",
-      "xPos": "l+2.5",
-      "yPos": "b-2.5", 
+      "xPos": "l+1.7",
+      "yPos": "b-2.15", 
+      "scale": 0.8
     },
     "0/p port": {
+      "sprite" : "portred",
       "type": "port",
-      "xPos": "r-2.5",
-      "yPos": "b-2.5", 
+      "xPos": "r-1.7",
+      "yPos": "b-2.15", 
+      "scale": 0.8
     }
   }
 

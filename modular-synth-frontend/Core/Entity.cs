@@ -20,33 +20,11 @@ public abstract class Entity
     // </summary>
     public bool visible = true;
 
+    public bool deleted = false;
+
     protected Entity() {}
 
     public abstract void Update();
-    //public abstract void Destroy();
     public abstract void Draw(SpriteBatch spriteBatch);
     //public abstract void Draw(SpriteBatch spriteBatch, int width, int height);
 }
-
-
-//List of components the entity holds
-//protected List<Component> componentList;
-
-/*
-protected void AddComponent(Component component){
-    componentList.Add(component);
-}
-
-public void Update(){
-    foreach(Component component in componentList){
-        component.Update();
-        Debug.WriteLine("aheem heem wheemper");
-    }
-}
-
-public void FixedUpdate(){
-    foreach(Component component in componentList){
-        component.FixedUpdate();
-    }
-}
-*/

@@ -152,19 +152,6 @@ public class Module : Interactable
 		}
 	}
 
-	public override void Draw(SpriteBatch spriteBatch)
-	{
-		base.Draw(spriteBatch);
-		if (!canInteract)
-		{
-			foreach (Component c in components)
-			{
-				c.fixedOnScreen = fixedOnScreen;
-				c.Draw(spriteBatch);
-			}
-		}
-	}
-
 	private void updateComponentPositions()
 	{
 		foreach (Component c in components)
@@ -243,18 +230,54 @@ public class Module : Interactable
 		return offset;
 	}
 
-	public void AddComponent(Component c)
-	{
-		components.Add(c);
-	}
-
 	private static Texture2D LoadSprite(SectionDef sectionDef)
 	{
 		return ModularSynth.content.Load<Texture2D>(sectionDef.backgroundImage ?? "module");
 	}
 
+    public int GetWidth()
+    {
+        return width;
+    }
 
-	public override void Update()
+    public static int GetWidth(string uiDef)
+    {
+        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
+        string jsonCombinedFile = File.ReadAllText(path + uiDef + ".json");
+        Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
+
+        if (UIDefDict.ContainsKey("moduleArgs"))
+        {
+            if (UIDefDict["moduleArgs"].ContainsKey("width"))
+            {
+                return (int.Parse(UIDefDict["moduleArgs"]["width"]));
+            }
+        }
+
+        return 8;
+    }
+
+    //set on spawn
+    public void Drag()
+    {
+        dragging = true;
+        originalPosition = worldSpacePosition;
+        clickOffset = new Vector2();
+    }
+
+	public void Delete()
+	{
+		foreach(Component c in components)
+		{
+			c.deleted = true;
+		}
+		grid.DeOccupyTiles(width, worldSpacePosition);
+
+		deleted = true;
+	}
+
+
+    public override void Update()
 	{
 		if (!isInteractingWithComponent())
 		{
@@ -275,6 +298,8 @@ public class Module : Interactable
 					//EntityManager.entities.Remove(this);
 					//God I hope that makes this garbage collect and we don't have a memory leak TODO: Check that lol
 					//TODO: once merged update how entity manager actually works such that can alter list
+
+					Delete();
 				}
 			}
 		}
@@ -315,6 +340,9 @@ public class Module : Interactable
 					{
 						//TODO: Actually delete don't just deactivate - we're gonna get a memory leak currently
 
+						Delete();
+
+						/*
 						foreach (Component component in components)
 						{
 							component.enabled = false;
@@ -323,6 +351,7 @@ public class Module : Interactable
 
 						visible = false;
 						enabled = false;
+						*/
 					}
 
 					else
@@ -352,34 +381,16 @@ public class Module : Interactable
 		updateComponentPositions();
 	}
 
-
-	public int GetWidth()
-	{
-		return width;
-	}
-
-	public static int GetWidth(string uiDef)
-	{
-		var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
-		string jsonCombinedFile = File.ReadAllText(path + uiDef + ".json");
-		Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
-
-		if (UIDefDict.ContainsKey("moduleArgs"))
-		{
-			if (UIDefDict["moduleArgs"].ContainsKey("width"))
-			{
-				return (int.Parse(UIDefDict["moduleArgs"]["width"]));
-			}
-		}
-
-		return 8;
-	}
-
-	//set on spawn
-	public void Drag()
-	{
-		dragging = true;
-		originalPosition = worldSpacePosition;
-		clickOffset = new Vector2();
-	}
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        base.Draw(spriteBatch);
+        if (!canInteract)
+        {
+            foreach (Component c in components)
+            {
+                c.fixedOnScreen = fixedOnScreen;
+                c.Draw(spriteBatch);
+            }
+        }
+    }
 }

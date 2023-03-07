@@ -167,3 +167,15 @@ SynthDef("mic-ar", { arg outl=0, outr=1;
 	Out.ar(outr, SoundIn.ar(1));
 }).writeDefFile(x);
 )
+
+(
+SynthDef("math-ar", { arg in = 2, mul= 1, add= 0 ,out=0;
+	Out.ar(out, (In.ar(in) * mul) + add);
+}).writeDefFile(x);
+)
+
+(
+SynthDef("math-kr", { arg in = 2, mul= 1, add= 0 ,out=0;
+	Out.kr(out, (In.kr(in) * mul) + add);
+}).writeDefFile(x);
+)

@@ -1,0 +1,27 @@
+{
+    "width": 4,
+    "backgroundImage": "module_thin",
+    "audio_synth": "mic-ar",
+
+  
+    "components": {
+      "o/p right port": {
+        "parameterID": "outr",
+        "sprite" : "portblue",
+        "type": "port",
+        "xPos": "m+1.7",
+        "yPos": "b-2.15", 
+        "scale": 0.8,
+        "isInput": true,
+        },
+      "0/p left port": {
+        "parameterID": "outl",
+        "sprite" : "portred",
+        "type": "port",
+        "xPos": "m-1.7",
+        "yPos": "b-2.15", 
+        "scale": 0.8,
+        "isInput": false,
+      }
+    }
+}

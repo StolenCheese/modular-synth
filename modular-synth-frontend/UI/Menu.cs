@@ -93,6 +93,7 @@ internal class Menu : Interactable
         activeButtons.Add(new ModuleSpawnButton(new Vector2(-1000,-1000), SectionDefManager.LoadSectionDef("speaker-ui")));//temp padding
         activeButtons.Add(new ModuleSpawnButton(new Vector2(-1000,-1000), SectionDefManager.LoadSectionDef("speaker-ui")));//temp padding
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 40), SectionDefManager.LoadSectionDef("math")));
+		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + moduleTexture.Width + GAPBETWEENMODULES, 40), SectionDefManager.LoadSectionDef("mic")));
 
 		if (activeButtons.Count > BUTTONSPERSCREEN)
 		{

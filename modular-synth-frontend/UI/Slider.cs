@@ -85,7 +85,7 @@ internal class Slider : Component
 
 	public override void Update()
 	{
-		SetWorldCenter(modulePos + moduleLocalPos);
+		SetWorldCenter(worldSpacePosition);
 		//Console.WriteLine($"SliderOffset: {SliderOffset}");  
 		if (canInteract)
 		{

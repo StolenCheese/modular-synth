@@ -167,7 +167,8 @@ internal class Grid
 	public bool AreTilesOccupied(Vector2 corner, int width)
 	{
 		//Assumes that tiles are going from top of rail (correct if used correctly)
-		corner = ScreenToWorldCoords(corner);
+		corner = WorldtoGridCoords(corner);
+		Debug.WriteLine("World Co-ords: " + corner + "\n"); //okay these are being calculated incredibly incorrectly
 
 		for (int i = 0; i < width; i++)
 		{
@@ -210,13 +211,12 @@ internal class Grid
 		}
 	}
 
-	public Vector2 ScreenToWorldCoords(Vector2 screenCoords)
+	public Vector2 WorldtoGridCoords(Vector2 worldCoords)
 	{
-		//TODO: Add some knowledge of offset from base screen pos from Modular Synth script
+		int x = (int)Math.Round((worldCoords.X) / gridSideLength );
+		Debug.WriteLine("x is : " + x);
 
-		int x = (int)Math.Round(screenCoords.X / gridSideLength - sideScroll);
-
-		int rail = (int)Math.Round((screenCoords.Y - ModularSynth.menuBarHeight) / railHeight);
+		int rail = (int)Math.Round((worldCoords.Y - ModularSynth.menuBarHeight) / railHeight);
 
 		if (rail < 0)
 		{
@@ -228,7 +228,7 @@ internal class Grid
 		}
 
 		int railOffset = rail * (railHeight) + ModularSynth.menuBarHeight;
-		int y = (int)Math.Round((screenCoords.Y - railOffset) / gridSideLength) + rail * ROWS;
+		int y = (int)Math.Round((worldCoords.Y - railOffset) / gridSideLength) + rail * ROWS;
 
 		return new Vector2(x, y);
 	}

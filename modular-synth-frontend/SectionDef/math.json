@@ -1,0 +1,57 @@
+{
+    "width": 4,
+    "backgroundImage": "module_thin",
+    "audio_synth": "math-ar",
+
+  
+    "components": {
+      "MulSlider": {
+        "parameterID": "mul",
+        "type": "slider",
+        "minValueForServer": 0.1,
+        "maxValueForServer": 10,
+        "xPos": "m+0.5",
+        "yPos": "m+1.2",
+        "vertical": true,
+        "trackScale": 1.2,
+        "sliderScale": 0.3,
+        "trackSprite": "rail2",
+        "sliderSprite": "slider3"
+      },
+      
+      "AddSlider": {
+        "parameterID": "add",
+        "type": "slider",
+        "minValueForServer": -100,
+        "maxValueForServer": 100,
+        "xPos": "m-0.5",
+        "yPos": "m+1.2",
+        "vertical": true,
+        "trackScale": 1.2,
+        "sliderScale": 0.3,
+        "trackSprite": "rail2",
+        "sliderSprite": "slider3"
+      },
+      "i/p add port": {
+        "parameterID": "in",
+        "sprite" : "portblue",
+        "type": "port",
+        "xPos": "l+1.7",
+        "yPos": "b-2.15", 
+        "scale": 0.8,
+        "isInput": true,
+
+      },
+      "0/p port": {
+        "parameterID": "out",
+        "sprite" : "portred",
+        "type": "port",
+        "xPos": "r-1.7",
+        "yPos": "b-2.15", 
+        "scale": 0.8,
+        "isInput": false,
+
+      }
+    }
+  
+  }

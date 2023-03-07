@@ -15,13 +15,9 @@ internal class ModuleSpawnButton : Button
 
 	private readonly SectionDef def;
 
-	public static event Action ModuleSpawned;
-
 	public ModuleSpawnButton(Vector2 position, SectionDef def, double scale = 0.7) : base(position)
 	{ 
 		this.def = def;
-
-		ModuleSpawned += Menu.GetInstance().ChangeState;
 
 		buttonImage = new Module(position, def, false, (float)scale);
 		this.width = (int)(scale * buttonImage.sprite.Width);
@@ -34,7 +30,7 @@ internal class ModuleSpawnButton : Button
 
 	public Module Spawn()
 	{
-		ModuleSpawned.Invoke();
+		Menu.GetInstance().ChangeState();
 
 		int offset = def.width * grid.GetGridSideLength() / 2;
 		Vector2 pos = new(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS / 2));

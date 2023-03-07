@@ -2,16 +2,12 @@
   "inherits" :  "sin-control-ui",
   "backgroundImage": "module_sin_pale",
   "components": {
-    "FreqDial": {
-      "minValueForServer": 20,
-      "maxValueForServer": 1000
-    },
-    "Add": {
+    "I/P Port": {
 
       "minValueForServer": 0,
       "maxValueForServer": 1
     },
-    "Mul": {
+    "mulport": {
 
       "minValueForServer": 0,
       "maxValueForServer": 1

@@ -57,27 +57,12 @@ public class Component : Interactable
 		this.parameterID = paramID;
 		this.canInteract = canInteract;
 
-
-		setSCLimitsBasedOnParamID();
-
 		if (vertical)
 		{
 			this.rotation = Math.PI / 2;
 			int temp = this.height;
 			this.height = this.width;
 			this.width = temp;
-		}
-	}
-
-	void setSCLimitsBasedOnParamID()
-	{
-		switch (this.parameterID)
-		{
-			case "freq":
-				//suitable Hz range
-				this.maxValueForServer = 10000;
-				this.minValueForServer = 200;
-				break;
 		}
 	}
 

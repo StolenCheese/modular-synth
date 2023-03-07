@@ -1,53 +1,38 @@
 {
   "inherits": "sin-sec",
   "width": 8,
-  "backgroundImage": "module_sincontrol_pale",
+  "backgroundImage": "oscillator_3D",
 
   "components": {
-    "Add": {
-      "type": "slider",
-      "xPos": "m",
-      "yPos": "5.5",
-      "trackScale": 1.4,
-      "sliderScale": 0.7,
+    "Freqslider": {
+      "xPos": "m+1",
+      "yPos": "m",
+      "vertical": true,
+      "trackScale": 1,
+      "sliderScale": 0.3,
       "trackSprite": "rail2",
-      "sliderSprite": "slider2",
-
-      "maxValueForServer": 1000
+      "sliderSprite": "slider3",
     },
-    "Mul": {
-      "type": "slider",
-      "xPos": "m",
-      "yPos": "8",
-      "vertical": false,
-      "trackScale": 1.4,
-      "sliderScale": 0.7,
-      "trackSprite": "rail2",
-      "sliderSprite": "slider2",
+    "mulport" : {
+      "xPos": "m-2.4",
+      "yPos": "m-0.5",
+      "isInput": true,
+      "scale": 0.7
 
-      "maxValueForServer": 100
     },
-    "FreqDial": {
-      "type": "dial",
-      "xPos": "l+3.7",
-      "yPos": "t+3.3",
-      "staticPartScale": 0.3,
-      "dialScale": 0.3,
-      "staticPartSprite": "indicator1",
-      "dialSprite": "dial1",
+    "I/P Port": {
+      "xPos": "m-2.4",
+      "yPos": "b-2.1",
+      "isInput": true,
+      "scale": 0.9
 
-      "minValueForServer": 0,
-      "maxValueForServer": 20
-    },
-    "FreqPort": {
-      "xPos": "l+1.2",
-      "yPos": "t+3.3"
     },
     "0/p port": {
-      "type": "port",
-      "xPos": "r-1.5",
-      "yPos": "b-1.5",
-      "isInput": false
+      "xPos": "m+2.4",
+      "yPos": "b-2.1",
+      "isInput": false,
+      "scale": 0.9
+
     }
 
   }

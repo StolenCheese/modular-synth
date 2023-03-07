@@ -84,13 +84,13 @@ internal class Menu : Interactable
 		leftNav = new Button(leftArrowTexture, new Vector2(70, 280));
 		rightNav = new Button(rightArrowTexture, new Vector2(1150, 280));
 
-		activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 40), SectionDefManager.LoadSectionDef("sin-ui")));
+		activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 40), SectionDefManager.LoadSectionDef("sin-control-ui")));
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + moduleTexture.Width + GAPBETWEENMODULES, 40), SectionDefManager.LoadSectionDef("brownnoise-ui")));
-		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 40), SectionDefManager.LoadSectionDef("pan-ui")));
+		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 40), SectionDefManager.LoadSectionDef("sin-freqip")));
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 3 * (moduleTexture.Width + GAPBETWEENMODULES), 40), SectionDefManager.LoadSectionDef("speaker-ui")));
 		activeButtons.Add(new ModuleSpawnButton(new Vector2(120, 40), SectionDefManager.LoadSectionDef("organ-ui")));
-		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + (moduleTexture.Width + GAPBETWEENMODULES), 40), SectionDefManager.LoadSectionDef("sin-control-ui")));
-		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 40), SectionDefManager.LoadSectionDef("midi-player-ui")));
+		activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + (moduleTexture.Width + GAPBETWEENMODULES), 40), SectionDefManager.LoadSectionDef("midi-player-ui")));
+		//activeButtons.Add(new ModuleSpawnButton(new Vector2(120 + 2 * (moduleTexture.Width + GAPBETWEENMODULES), 40), SectionDefManager.LoadSectionDef("midi-player-ui")));
 
 		if (activeButtons.Count > BUTTONSPERSCREEN)
 		{

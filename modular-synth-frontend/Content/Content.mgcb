@@ -253,6 +253,18 @@
 /processorParam:TextureFormat=Color
 /build:module.png
 
+#begin neondial.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:neondial.png
+
 #begin Neutral Card Smol.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -277,6 +289,18 @@
 /processorParam:TextureFormat=Color
 /build:noise_module_3D.png
 
+#begin noise_module_3D.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:noise_module_3D.png
+
 #begin orangewire.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -288,6 +312,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:orangewire.png
+
+#begin oscillator_2_3D.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:oscillator_2_3D.png
+
+#begin oscillator_3D.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:oscillator_3D.png
 
 #begin port1.png
 /importer:TextureImporter
@@ -396,6 +444,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:slider2.png
+
+#begin slider3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:slider3.png
+
+#begin slider3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:slider3.png
 
 #begin speaker_3D.png
 /importer:TextureImporter

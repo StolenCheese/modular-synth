@@ -284,7 +284,6 @@ public class Module : Interactable
 
     public override void Update()
 	{
-        System.Diagnostics.Debug.WriteLine(isInteractingWithComponent());
 		if (!isInteractingWithComponent())
 		{
 

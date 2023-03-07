@@ -1,0 +1,47 @@
+{
+    "width": 8,
+    "backgroundImage": "oscillator_2_3D",
+    "audio_synth": "sin-ar",
+  
+    "components": {
+      "AmpDial": {
+        "parameterID": "mul",
+        "type": "dial",
+        "minValueForServer": 0,
+        "maxValueForServer": 1,
+        "xPos": "m+1.9",
+        "yPos": "m+0.3",
+        "staticPartScale": 0,
+        "dialScale": 0.5,
+        "staticPartSprite": "indicator1",
+        "dialSprite": "neondial"
+      },
+      "freqport" : {
+        "type": "port",
+        "parameterID": "freq",
+        "xPos": "m-2.4",
+        "yPos": "m-0.5",
+        "isInput": true,
+        "scale": 0.7
+      },
+      "I/P Port": {
+        "type": "port",
+        "parameterID": "add",
+        "xPos": "m-2.4",
+        "yPos": "b-2.1",
+        "isInput": true,
+        "scale": 0.9
+  
+      },
+      "0/p port": {
+        "type": "port",
+        "parameterID": "out",
+        "xPos": "m+2.4",
+        "yPos": "b-2.1",
+        "isInput": false,
+        "scale": 0.9
+
+      }
+  
+    }
+  }

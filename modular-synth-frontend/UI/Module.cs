@@ -269,6 +269,11 @@ public class Module : Interactable
 	{
 		foreach(Component c in components)
 		{
+			if(c is Port)
+			{ 
+				Port p = (Port)c;
+				Port.ports.Remove(p);
+			}
 			c.deleted = true;
 		}
 		grid.DeOccupyTiles(width, worldSpacePosition);
@@ -296,10 +301,6 @@ public class Module : Interactable
 
 				if (input.RightMouseClickDown())
 				{
-					//EntityManager.entities.Remove(this);
-					//God I hope that makes this garbage collect and we don't have a memory leak TODO: Check that lol
-					//TODO: once merged update how entity manager actually works such that can alter list
-
 					Delete();
 				}
 			}

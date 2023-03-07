@@ -13,19 +13,23 @@ internal class Grid
 
 	public static int SideScroll => instance.sideScroll;
 	public const int ROWS = 12;
-	int cols;
+
+	int minGeneratedCol;
+	int maxGeneratedCol;
+	int minVisibleCol = 0;
+	int maxVisibleCol;
 
 	int gridSideLength = ((ModularSynth.viewport.Height - ModularSynth.menuBarHeight) / ModularSynth.RAILNUM - ModularSynth.dividerHeight) / ROWS;
 	int railHeight;
 
-	Dictionary<Vector2, GridTile> gridTiles = new(); //where the vector 2 is world position
+	Dictionary<Vector2, GridTile> gridTiles = new(); //vector 2 is grid index
 
 	int sideScroll;
 	Vector2? mouseStart;
 
 	private Grid()
 	{
-		cols = ModularSynth.viewport.Width / gridSideLength + 1;
+		maxVisibleCol = ModularSynth.viewport.Width / gridSideLength + 1;
 		//railHeight = gridSideLength * ROWS;
 		railHeight = (ModularSynth.viewport.Height - ModularSynth.menuBarHeight) / ModularSynth.RAILNUM;
 
@@ -33,10 +37,10 @@ internal class Grid
 		{
 			for (int i = 0; i < ROWS; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = 0; j < maxVisibleCol; j++)
 				{
 					Vector2 worldPosCoords = new(j, i + k * ROWS);
-					gridTiles.Add(worldPosCoords, new GridTile());
+					AddNewTile(worldPosCoords);
 				}
 			}
 		}
@@ -48,10 +52,22 @@ internal class Grid
 		return instance;
 	}
 	public void Update()
-	{
+	{ 
 		var p = InputManager.GetInstance().MousePosVector();
-		//Drag to scroll side to side
-		if (!EntityManager.isMouseOverEntity)
+        //Drag to scroll side to side
+
+        if (-sideScroll + ModularSynth.viewport.Width > maxVisibleCol * gridSideLength)
+        {
+            maxVisibleCol++;
+            minVisibleCol++;
+        }
+        else if (-sideScroll < minVisibleCol * gridSideLength)
+        {
+            minVisibleCol--;
+            maxVisibleCol--;
+        }
+
+        if (!EntityManager.isMouseOverEntity)
 		{
 			//Drag side to side
 			if (InputManager.GetInstance().LeftMouseClickDown())
@@ -61,6 +77,7 @@ internal class Grid
 			else if (InputManager.GetInstance().LeftMousePressed() && mouseStart is Vector2 ms)
 			{
 				sideScroll = (int)(p.X - ms.X);
+				sideScroll = Math.Clamp(sideScroll, -((maxGeneratedCol + 5) * gridSideLength - ModularSynth.viewport.Width) , -((minGeneratedCol - 5) * gridSideLength));
 			}
 			else
 			{
@@ -78,7 +95,7 @@ internal class Grid
 					sideScroll += Math.Sign(500 - p.X) * 20;
 
 				}
-			}
+            }
 		}
 	}
 
@@ -87,25 +104,26 @@ internal class Grid
 		//TODO: introudce a mask over this to only show it in the area around the section you're hovering a module over
 		//TODO: Just honestly anything about moving the screen
 
-
-
 		for (int k = 0; k < ModularSynth.RAILNUM; k++)
 		{
 			for (int i = 0; i < ROWS; i++)
 			{
-				for (int j = 0; j < cols; j++)
+				for (int j = minVisibleCol - 2; j < maxVisibleCol + 2; j++)
 				{
-
 					var rect = new Rectangle(gridSideLength * j + sideScroll, (gridSideLength * i) + ModularSynth.menuBarHeight + (k * railHeight), gridSideLength, gridSideLength);
+					Vector2 vec = new Vector2(j, i + ROWS + k);
 
-					if (gridTiles[new Vector2(j, i + ROWS * k)].occupied)
+					if (gridTiles.ContainsKey(vec))
 					{
-						spriteBatch.Draw(gridTexture, rect, Color.Red);
+						if (!gridTiles[new Vector2(j, i + ROWS * k)].occupied)
+						{
+							spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+						}
 					}
 					else
 					{
-						spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
-					}
+                        spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+                    }
 				}
 			}
 		}
@@ -115,6 +133,19 @@ internal class Grid
 	{
 		return gridSideLength;
 	}
+
+	public void AddNewTile(Vector2 gridCoords)
+	{
+        gridTiles.Add(gridCoords, new GridTile());
+		if(gridCoords.X > maxGeneratedCol)
+		{
+			maxGeneratedCol = (int)gridCoords.X;
+		}
+		else if(gridCoords.X < minGeneratedCol)
+		{
+			minGeneratedCol = (int)gridCoords.X;
+		}
+    }
 
 	//<summary>
 	//use this to get the tile the mouse is currently in not worrying about closeness
@@ -131,8 +162,6 @@ internal class Grid
 	public Vector2 GetNearestTileEdgeSnap(Vector2 pos)
 	{
 		int x = (int)Math.Round(pos.X / gridSideLength, 0);
-
-		//x = Math.Clamp(x, 0, cols);
 
 		x *= gridSideLength;
 
@@ -157,7 +186,7 @@ internal class Grid
 		{
 			for (int i = 0; i < ROWS; i++)
 			{
-				gridTiles.Add(new Vector2(x, y + i), new GridTile());
+				AddNewTile(new Vector2(x, y + i));
 				Debug.WriteLine("Adding new tile at: ", x + "," + (y + i));
 			}
 		}
@@ -184,8 +213,9 @@ internal class Grid
 	{
 		int x = (int)Math.Floor(topLeftCorner.X / gridSideLength);
 		int rail = (int)Math.Round((topLeftCorner.Y - ModularSynth.menuBarHeight) / railHeight, 0);
+        rail = Math.Clamp(rail, 0, ModularSynth.RAILNUM - 1);
 
-		for (int i = 0; i < ROWS; i++)
+        for (int i = 0; i < ROWS; i++)
 		{
 			for (int j = 0; j < width; j++)
 			{
@@ -197,9 +227,8 @@ internal class Grid
 	public void DeOccupyTiles(int width, Vector2 topLeftCorner)
 	{
 		int x = (int)Math.Floor(topLeftCorner.X / gridSideLength);
-		//x = Math.Clamp(x, 0, cols);
 		int rail = (int)Math.Round((topLeftCorner.Y - ModularSynth.menuBarHeight) / railHeight, 0);
-		rail = Math.Clamp(rail, 0, 1);
+		rail = Math.Clamp(rail, 0, ModularSynth.RAILNUM - 1);
 
 		for (int i = 0; i < ROWS; i++)
 		{
@@ -215,15 +244,7 @@ internal class Grid
 		int x = (int)Math.Round((worldCoords.X) / gridSideLength );
 
 		int rail = (int)Math.Round((worldCoords.Y - ModularSynth.menuBarHeight) / railHeight);
-
-		if (rail < 0)
-		{
-			rail = 0;
-		}
-		else if (rail > ModularSynth.RAILNUM - 1)
-		{
-			rail = ModularSynth.RAILNUM - 1;
-		}
+		rail = Math.Clamp(rail, 0, ModularSynth.RAILNUM - 1);
 
 		int railOffset = rail * (railHeight) + ModularSynth.menuBarHeight;
 		int y = (int)Math.Round((worldCoords.Y - railOffset) / gridSideLength) + rail * ROWS;

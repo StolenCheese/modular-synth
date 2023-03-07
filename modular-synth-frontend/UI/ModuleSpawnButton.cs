@@ -8,7 +8,6 @@ namespace modular_synth_frontend.UI;
 
 internal class ModuleSpawnButton : Button
 {
-	private readonly Texture2D _texture;
 	private readonly Module buttonImage;
 
 	private readonly InputManager input = InputManager.GetInstance();
@@ -18,9 +17,8 @@ internal class ModuleSpawnButton : Button
 
 	public static event Action ModuleSpawned;
 
-	public ModuleSpawnButton(Vector2 position, SectionDef def, double scale = 0.5) : base(position)
-	{
-		//_texture = sprite; 
+	public ModuleSpawnButton(Vector2 position, SectionDef def, double scale = 0.7) : base(position)
+	{ 
 		this.def = def;
 
 		ModuleSpawned += Menu.GetInstance().ChangeState;
@@ -56,8 +54,6 @@ internal class ModuleSpawnButton : Button
 			{
 				Module newModule = Spawn();
 				newModule.Drag();
-
-				//need to create a dragging event i think because we need to have "on drag stop if not moved out of region then delete newModule
 			}
 		}
 	}

@@ -25,7 +25,7 @@ internal class Grid
 
 	private Grid()
 	{
-		cols = 30 * ModularSynth.viewport.Width / gridSideLength;
+		cols = ModularSynth.viewport.Width / gridSideLength + 1;
 		//railHeight = gridSideLength * ROWS;
 		railHeight = (ModularSynth.viewport.Height - ModularSynth.menuBarHeight) / ModularSynth.RAILNUM;
 
@@ -132,7 +132,7 @@ internal class Grid
 	{
 		int x = (int)Math.Round(pos.X / gridSideLength, 0);
 
-		x = Math.Clamp(x, 0, cols);
+		//x = Math.Clamp(x, 0, cols);
 
 		x *= gridSideLength;
 
@@ -168,7 +168,6 @@ internal class Grid
 	{
 		//Assumes that tiles are going from top of rail (correct if used correctly)
 		corner = WorldtoGridCoords(corner);
-		Debug.WriteLine("World Co-ords: " + corner + "\n"); //okay these are being calculated incredibly incorrectly
 
 		for (int i = 0; i < width; i++)
 		{
@@ -198,7 +197,7 @@ internal class Grid
 	public void DeOccupyTiles(int width, Vector2 topLeftCorner)
 	{
 		int x = (int)Math.Floor(topLeftCorner.X / gridSideLength);
-		x = Math.Clamp(x, 0, cols);
+		//x = Math.Clamp(x, 0, cols);
 		int rail = (int)Math.Round((topLeftCorner.Y - ModularSynth.menuBarHeight) / railHeight, 0);
 		rail = Math.Clamp(rail, 0, 1);
 
@@ -214,7 +213,6 @@ internal class Grid
 	public Vector2 WorldtoGridCoords(Vector2 worldCoords)
 	{
 		int x = (int)Math.Round((worldCoords.X) / gridSideLength );
-		Debug.WriteLine("x is : " + x);
 
 		int rail = (int)Math.Round((worldCoords.Y - ModularSynth.menuBarHeight) / railHeight);
 

@@ -285,7 +285,6 @@ public class Module : Interactable
 			SetScreenTopLeft(input.MousePosVector() + clickOffset);
 
 			Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));
-			Debug.WriteLine("Screen Coords: " + TopLeftCorner); 
 
 			if (grid.AreTilesOccupied(TopLeftCorner, width))
 			{

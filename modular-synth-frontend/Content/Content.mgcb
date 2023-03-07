@@ -121,18 +121,6 @@
 /processorParam:TextureFormat=Color
 /build:module Spawner.png
 
-#begin module.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:module.png
-
 #begin module_18.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -169,18 +157,6 @@
 /processorParam:TextureFormat=Color
 /build:module_organ.png
 
-#begin module_pale.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:module_pale.png
-
 #begin module_pale_thin.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -193,7 +169,7 @@
 /processorParam:TextureFormat=Color
 /build:module_pale_thin.png
 
-#begin module_red.png
+#begin module_pale.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -203,7 +179,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:module_red.png
+/build:module_pale.png
 
 #begin module_red_thin.png
 /importer:TextureImporter
@@ -216,6 +192,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:module_red_thin.png
+
+#begin module_red.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:module_red.png
 
 #begin module_sin_pale.png
 /importer:TextureImporter
@@ -253,6 +241,18 @@
 /processorParam:TextureFormat=Color
 /build:module_thin.png
 
+#begin module.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:module.png
+
 #begin Neutral Card Smol.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -264,6 +264,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Neutral Card Smol.png
+
+#begin noise_module_3D.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:noise_module_3D.png
 
 #begin orangewire.png
 /importer:TextureImporter
@@ -324,6 +336,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Rail1.png
+
+#begin Rail2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Rail2.png
 
 #begin redwire.png
 /importer:TextureImporter

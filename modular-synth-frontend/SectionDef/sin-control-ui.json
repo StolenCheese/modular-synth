@@ -8,9 +8,9 @@
       "type": "slider",
       "xPos": "m",
       "yPos": "5.5",
-      "trackScale": 0.7,
+      "trackScale": 1.4,
       "sliderScale": 0.7,
-      "trackSprite": "rail1",
+      "trackSprite": "rail2",
       "sliderSprite": "slider2",
 
       "maxValueForServer": 1000
@@ -20,9 +20,9 @@
       "xPos": "m",
       "yPos": "8",
       "vertical": false,
-      "trackScale": 0.7,
+      "trackScale": 1.4,
       "sliderScale": 0.7,
-      "trackSprite": "rail1",
+      "trackSprite": "rail2",
       "sliderSprite": "slider2",
 
       "maxValueForServer": 100

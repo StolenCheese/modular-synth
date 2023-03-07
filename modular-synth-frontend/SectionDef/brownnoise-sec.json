@@ -1,12 +1,6 @@
 {
   "audio_synth": "brownnoise-ar",
   "components": {
-    "MulDial": {
-      "parameterID": "mul"
-    },
-    "AddDial": {
-      "parameterID": "add"
-    },
     "MulSlider": {
       "parameterID": "mul"
     },

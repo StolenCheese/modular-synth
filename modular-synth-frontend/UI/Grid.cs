@@ -54,8 +54,20 @@ internal class Grid
 	public void Update()
 	{ 
 		var p = InputManager.GetInstance().MousePosVector();
-		//Drag to scroll side to side
-		if (!EntityManager.isMouseOverEntity)
+        //Drag to scroll side to side
+
+        if (-sideScroll + ModularSynth.viewport.Width > maxVisibleCol * gridSideLength)
+        {
+            maxVisibleCol++;
+            minVisibleCol++;
+        }
+        else if (-sideScroll < minVisibleCol * gridSideLength)
+        {
+            minVisibleCol--;
+            maxVisibleCol--;
+        }
+
+        if (!EntityManager.isMouseOverEntity)
 		{
 			//Drag side to side
 			if (InputManager.GetInstance().LeftMouseClickDown())
@@ -66,17 +78,6 @@ internal class Grid
 			{
 				sideScroll = (int)(p.X - ms.X);
 				sideScroll = Math.Clamp(sideScroll, -((maxGeneratedCol + 5) * gridSideLength - ModularSynth.viewport.Width) , -((minGeneratedCol - 5) * gridSideLength));
-				
-				if(-sideScroll + ModularSynth.viewport.Width > maxVisibleCol * gridSideLength)
-				{
-					maxVisibleCol++;
-					minVisibleCol++;
-				}
-				else if(-sideScroll < minVisibleCol * gridSideLength)
-				{
-					minVisibleCol--;
-					maxVisibleCol--;
-				}
 			}
 			else
 			{
@@ -94,16 +95,6 @@ internal class Grid
 					sideScroll += Math.Sign(500 - p.X) * 20;
 
 				}
-                if (-sideScroll + ModularSynth.viewport.Width > maxVisibleCol * gridSideLength)
-                {
-                    maxVisibleCol++;
-                    minVisibleCol++;
-                }
-                else if (-sideScroll < minVisibleCol * gridSideLength)
-                {
-                    minVisibleCol--;
-                    maxVisibleCol--;
-                }
             }
 		}
 	}
@@ -117,7 +108,7 @@ internal class Grid
 		{
 			for (int i = 0; i < ROWS; i++)
 			{
-				for (int j = minVisibleCol; j < maxVisibleCol; j++)
+				for (int j = minVisibleCol - 2; j < maxVisibleCol + 2; j++)
 				{
 					var rect = new Rectangle(gridSideLength * j + sideScroll, (gridSideLength * i) + ModularSynth.menuBarHeight + (k * railHeight), gridSideLength, gridSideLength);
 					Vector2 vec = new Vector2(j, i + ROWS + k);

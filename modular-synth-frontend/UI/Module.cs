@@ -269,6 +269,11 @@ public class Module : Interactable
 	{
 		foreach(Component c in components)
 		{
+			if(c is Port)
+			{ 
+				Port p = (Port)c;
+				Port.ports.Remove(p);
+			}
 			c.deleted = true;
 		}
 		grid.DeOccupyTiles(width, worldSpacePosition);

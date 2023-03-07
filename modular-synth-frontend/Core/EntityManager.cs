@@ -3,15 +3,22 @@ using Microsoft.Xna.Framework.Graphics;
 using modular_synth_frontend.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
 namespace modular_synth_frontend.Core;
 public class EntityManager
 {
 
 	public static List<Entity> entities = new();
+
 	public static bool isMouseOverEntity;
+	public static bool isUpdating;
+
 	public static void Update()
 	{
 		isMouseOverEntity = false;
+		isUpdating = true;
 
 		foreach (Entity entity in entities)
 		{
@@ -20,7 +27,11 @@ public class EntityManager
 				entity.Update();
 			}
 		}
-	}
+
+		isUpdating= false;
+
+        entities = entities.Where(x => !x.deleted).ToList();
+    }
 
 	public static void Draw(SpriteBatch spriteBatch)
 	{

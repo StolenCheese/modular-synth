@@ -22,7 +22,7 @@ internal class Grid
 	int gridSideLength = ((ModularSynth.viewport.Height - ModularSynth.menuBarHeight) / ModularSynth.RAILNUM - ModularSynth.dividerHeight) / ROWS;
 	int railHeight;
 
-	Dictionary<Vector2, GridTile> gridTiles = new(); //where the vector 2 is world position
+	Dictionary<Vector2, GridTile> gridTiles = new(); //vector 2 is grid index
 
 	int sideScroll;
 	Vector2? mouseStart;
@@ -52,10 +52,7 @@ internal class Grid
 		return instance;
 	}
 	public void Update()
-	{
-		Debug.WriteLine("Minimum Generated Column: " + minGeneratedCol);
-		Debug.WriteLine("Maximium Generated Column: " + maxGeneratedCol);
-
+	{ 
 		var p = InputManager.GetInstance().MousePosVector();
 		//Drag to scroll side to side
 		if (!EntityManager.isMouseOverEntity)

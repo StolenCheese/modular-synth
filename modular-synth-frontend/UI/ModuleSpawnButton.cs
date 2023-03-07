@@ -17,7 +17,7 @@ internal class ModuleSpawnButton : Button
 
 	public static event Action ModuleSpawned;
 
-	public ModuleSpawnButton(Vector2 position, SectionDef def, double scale = 0.5) : base(position)
+	public ModuleSpawnButton(Vector2 position, SectionDef def, double scale = 0.7) : base(position)
 	{ 
 		this.def = def;
 

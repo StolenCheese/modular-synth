@@ -19,6 +19,7 @@
 			"parameterID": "freq",
 			"type": "port",
 			"xPos": "m",
+			"scale":  0.5,
 			"yPos": "b-3",
 			"isInput": true
 		}

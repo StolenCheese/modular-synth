@@ -1,27 +1,27 @@
 {
-  "width": 6,
-  "audio_synth": "organ",
-  "backgroundImage": "module_pale_thin",
-
-  "components": {
-    "FreqDial": {
-      "parameterID": "freq",
-      "type": "dial",
-      "minValueForServer": 20,
-      "maxValueForServer": 800,
-      "xPos": "m",
-      "yPos": "m",
-      "staticPartScale": 0.5,
-      "dialScale": 0.5,
-      "staticPartSprite": "indicator1",
-      "dialSprite": "dial1"
-    },
-    "FreqPort": {
-      "parameterID": "freq",
-      "type": "port",
-      "xPos": "m",
-      "yPos": "m-3",
-      "isInput": true
-    }
-  }
+	"width": 2,
+	"audio_synth": "organ",
+	"backgroundImage": "module_organ",
+	"components": {
+		"FreqDial": {
+			"parameterID": "freq",
+			"type": "dial",
+			"minValueForServer": 20,
+			"maxValueForServer": 800,
+			"xPos": "m",
+			"yPos": "b-1",
+			"staticPartScale": 0,
+			"dialScale": 0.5,
+			"staticPartSprite": "indicator1",
+			"dialSprite": "dial1"
+		},
+		"FreqPort": {
+			"parameterID": "freq",
+			"type": "port",
+			"xPos": "m",
+			"scale":  0.5,
+			"yPos": "b-3",
+			"isInput": true
+		}
+	}
 }

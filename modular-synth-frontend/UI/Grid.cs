@@ -110,11 +110,11 @@ internal class Grid
 				for (int j = minVisibleCol - 2; j < maxVisibleCol + 2; j++)
 				{
 					var rect = new Rectangle(gridSideLength * j + sideScroll, (gridSideLength * i) + ModularSynth.menuBarHeight + (k * railHeight), gridSideLength, gridSideLength);
-					Vector2 vec = new Vector2(j, i + ROWS + k);
+					Vector2 vec = new Vector2(j, i + ROWS * k);
 
 					if (gridTiles.ContainsKey(vec))
 					{
-						if (!gridTiles[new Vector2(j, i + ROWS * k)].occupied)
+						if (!gridTiles[vec].occupied)
 						{
 							spriteBatch.Draw(gridTexture, rect, Color.WhiteSmoke);
 						}

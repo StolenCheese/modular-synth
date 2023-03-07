@@ -272,7 +272,14 @@ public class Module : Interactable
 			if(c is Port)
 			{ 
 				Port p = (Port)c;
-				Port.ports.Remove(p);
+                if (!p.removeConnectionFrom())
+                {
+                    if (!p.removeConnectionTo())
+                    {
+                        Console.WriteLine("no connection to remove");
+                    }
+                }
+                Port.ports.Remove(p);
 			}
 			c.deleted = true;
 		}
@@ -338,20 +345,7 @@ public class Module : Interactable
                     {
                         if (!placed)
                         {
-                            //TODO: Actually delete don't just deactivate - we're gonna get a memory leak currently
-
                             Delete();
-
-                            /*
-                            foreach (Component component in components)
-                            {
-                                component.enabled = false;
-                                component.visible = false;
-                            }
-
-                            visible = false;
-                            enabled = false;
-                            */
                         }
 
                         else

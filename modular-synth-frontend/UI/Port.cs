@@ -103,7 +103,7 @@ public class Port : Component
 		}
 	}
 
-	private bool removeConnectionFrom(Port portFrom = null)
+	public bool removeConnectionFrom(Port portFrom = null)
 	{
 		//remove portConnectedFrom if we arent given specific
 		if (portFrom == null)
@@ -125,7 +125,7 @@ public class Port : Component
 			return false;
 		}
 	}
-	private bool removeConnectionTo(Port portTo = null)
+	public bool removeConnectionTo(Port portTo = null)
 	{
 		if (portsConnectedTo.Count != 0)
 		{

@@ -65,7 +65,18 @@ internal class Grid
 			else if (InputManager.GetInstance().LeftMousePressed() && mouseStart is Vector2 ms)
 			{
 				sideScroll = (int)(p.X - ms.X);
-				sideScroll = Math.Clamp(sideScroll, -((maxGeneratedCol + 10) * gridSideLength - ModularSynth.viewport.Width) , -((minGeneratedCol - 10) * gridSideLength));
+				sideScroll = Math.Clamp(sideScroll, -((maxGeneratedCol + 5) * gridSideLength - ModularSynth.viewport.Width) , -((minGeneratedCol - 5) * gridSideLength));
+				
+				if(-sideScroll + ModularSynth.viewport.Width > maxVisibleCol * gridSideLength)
+				{
+					maxVisibleCol++;
+					minVisibleCol++;
+				}
+				else if(-sideScroll < minVisibleCol * gridSideLength)
+				{
+					minVisibleCol--;
+					maxVisibleCol--;
+				}
 			}
 			else
 			{
@@ -83,7 +94,17 @@ internal class Grid
 					sideScroll += Math.Sign(500 - p.X) * 20;
 
 				}
-			}
+                if (-sideScroll + ModularSynth.viewport.Width > maxVisibleCol * gridSideLength)
+                {
+                    maxVisibleCol++;
+                    minVisibleCol++;
+                }
+                else if (-sideScroll < minVisibleCol * gridSideLength)
+                {
+                    minVisibleCol--;
+                    maxVisibleCol--;
+                }
+            }
 		}
 	}
 
@@ -99,11 +120,19 @@ internal class Grid
 				for (int j = minVisibleCol; j < maxVisibleCol; j++)
 				{
 					var rect = new Rectangle(gridSideLength * j + sideScroll, (gridSideLength * i) + ModularSynth.menuBarHeight + (k * railHeight), gridSideLength, gridSideLength);
+					Vector2 vec = new Vector2(j, i + ROWS + k);
 
-					if (!gridTiles[new Vector2(j, i + ROWS * k)].occupied)
+					if (gridTiles.ContainsKey(vec))
 					{
-						spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+						if (!gridTiles[new Vector2(j, i + ROWS * k)].occupied)
+						{
+							spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+						}
 					}
+					else
+					{
+                        spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+                    }
 				}
 			}
 		}

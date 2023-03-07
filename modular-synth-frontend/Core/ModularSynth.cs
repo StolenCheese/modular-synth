@@ -50,7 +50,6 @@ public class ModularSynth : Game
 
 	protected override void Initialize()
 	{
-		// TODO: Add your initialization logic here
 		graphicsDevice = this.GraphicsDevice;
 		content = this.Content;
 
@@ -62,7 +61,6 @@ public class ModularSynth : Game
 	{
 		_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-		// TODO: use this.Content to load your game content here
 		gridTexture = Content.Load<Texture2D>("gridtile");
 		handleTexture = Content.Load<Texture2D>("handletemp");
 		boxTexture = Content.Load<Texture2D>("menubox");
@@ -101,15 +99,7 @@ public class ModularSynth : Game
 	{
 		GraphicsDevice.Clear(Color.Gray);
 
-		_spriteBatch.Begin();
-
-		//Drawing Static UI
-		/*
-        for (int i = 1; i <= RAILNUM; i++)
-        {
-            _spriteBatch.Draw(gridTexture, new Rectangle(0, (((viewport.Height - menuBarHeight) / RAILNUM) * i + menuBarHeight - dividerHeight), viewport.Width, dividerHeight), Color.White);
-        }
-        */
+		_spriteBatch.Begin();	
 
 		//Drawing Grid (Furthest Back Dynamic UI)
 		grid.Draw(_spriteBatch, gridTexture);

@@ -30,7 +30,7 @@ internal class ModuleSpawnButton : Button
 
 	public Module Spawn()
 	{
-		Menu.GetInstance().ChangeState();
+		Menu.GetInstance().ChangeState(); //closes menu on spawn
 
 		int offset = def.width * grid.GetGridSideLength() / 2;
 		Vector2 pos = new(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS / 2));

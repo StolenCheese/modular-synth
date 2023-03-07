@@ -10,7 +10,6 @@ namespace modular_synth_frontend.UI;
 internal class GridTile
 {
     public bool occupied;
-    private Rectangle tile;
 
     public GridTile()
     {

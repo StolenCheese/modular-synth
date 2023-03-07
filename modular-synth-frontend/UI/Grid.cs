@@ -30,7 +30,6 @@ internal class Grid
 	private Grid()
 	{
 		maxVisibleCol = ModularSynth.viewport.Width / gridSideLength + 1;
-		//railHeight = gridSideLength * ROWS;
 		railHeight = (ModularSynth.viewport.Height - ModularSynth.menuBarHeight) / ModularSynth.RAILNUM;
 
 		for (int k = 0; k < ModularSynth.RAILNUM; k++)
@@ -56,6 +55,7 @@ internal class Grid
 		var p = InputManager.GetInstance().MousePosVector();
         //Drag to scroll side to side
 
+		//Updates which grid tiles to render based on current scroll distance
         if (-sideScroll + ModularSynth.viewport.Width > maxVisibleCol * gridSideLength)
         {
             maxVisibleCol++;
@@ -101,8 +101,7 @@ internal class Grid
 
 	public void Draw(SpriteBatch spriteBatch, Texture2D gridTexture)
 	{
-		//TODO: introudce a mask over this to only show it in the area around the section you're hovering a module over
-		//TODO: Just honestly anything about moving the screen
+		//Renders visible grid tiles (plus a few extra so scrolling pop-in is less aggressive)
 
 		for (int k = 0; k < ModularSynth.RAILNUM; k++)
 		{
@@ -117,12 +116,12 @@ internal class Grid
 					{
 						if (!gridTiles[new Vector2(j, i + ROWS * k)].occupied)
 						{
-							spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+							spriteBatch.Draw(gridTexture, rect, Color.WhiteSmoke);
 						}
 					}
 					else
 					{
-                        spriteBatch.Draw(gridTexture, rect, Color.LightYellow);
+                        spriteBatch.Draw(gridTexture, rect, Color.WhiteSmoke);
                     }
 				}
 			}
@@ -147,34 +146,15 @@ internal class Grid
 		}
     }
 
-	//<summary>
-	//use this to get the tile the mouse is currently in not worrying about closeness
-	//</summary>
-	public GridTile GetCurrentTile(Vector2 pos)
-	{
-		int x = (int)Math.Floor(pos.X / gridSideLength);
-		//Change this:
-		int y = (int)pos.Y; //TODO: make this right lol
-		return gridTiles[new Vector2(x, y)];
-	}
-
-	//The two following functions are useful for dragging as whether you want to assume left or right will depend on where the majority of the shape is currently covering.
+	//Gets snap position on grid (goes to left-most corner snapping position)
 	public Vector2 GetNearestTileEdgeSnap(Vector2 pos)
 	{
-		int x = (int)Math.Round(pos.X / gridSideLength, 0);
+		int x = (int)Math.Round(pos.X / gridSideLength, 0); //converts x to a grid number
 
-		x *= gridSideLength;
+		x *= gridSideLength; //then multiplies that by pixels needed on screen
 
 		int rail = (int)Math.Round((pos.Y - ModularSynth.menuBarHeight) / railHeight, 0);
-
-		if (rail < 0)
-		{
-			rail = 0;
-		}
-		else if (rail > ModularSynth.RAILNUM - 1)
-		{
-			rail = ModularSynth.RAILNUM - 1;
-		}
+        rail = Math.Clamp(rail, 0, ModularSynth.RAILNUM - 1);
 
 		int y = rail * (railHeight) + ModularSynth.menuBarHeight;
 		return new Vector2(x, y);
@@ -193,6 +173,7 @@ internal class Grid
 		return gridTiles[new Vector2(x, y)].occupied;
 	}
 
+	//Function that checks if any of the tiles a module is covering are occupied
 	public bool AreTilesOccupied(Vector2 corner, int width)
 	{
 		//Assumes that tiles are going from top of rail (correct if used correctly)
@@ -239,6 +220,7 @@ internal class Grid
 		}
 	}
 
+	//Converts from world coordinates to grid-square index for the gridlist
 	public Vector2 WorldtoGridCoords(Vector2 worldCoords)
 	{
 		int x = (int)Math.Round((worldCoords.X) / gridSideLength );

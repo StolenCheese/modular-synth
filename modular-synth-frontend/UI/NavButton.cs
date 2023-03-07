@@ -2,12 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace modular_synth_frontend.UI;
 
+//unused class, rip - was gonna be used when we thought we'd separate modules into categories
 internal class NavButton : Button
 {
     private List<Button> NavigatesTo;

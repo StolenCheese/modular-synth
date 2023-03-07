@@ -1,12 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using modular_synth_frontend.API;
 using modular_synth_frontend.Core;
-using Newtonsoft.Json;
 using SynthAPI;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 
@@ -41,6 +38,7 @@ public class Module : Interactable
 	{
 		width = sprite.Width / Grid.GetInstance().GetGridSideLength();
 	}
+
 	public Module(Vector2 pos, SectionDef def, bool canInteract = true, float modScale = 1) : base(LoadSprite(def), pos, Color.White, modScale)
 	{
 		this.canInteract = canInteract;
@@ -240,23 +238,6 @@ public class Module : Interactable
         return width;
     }
 
-    public static int GetWidth(string uiDef)
-    {
-        var path = Path.GetFullPath("..\\..\\..\\..\\modular-synth-frontend\\SectionDef\\");
-        string jsonCombinedFile = File.ReadAllText(path + uiDef + ".json");
-        Dictionary<string, Dictionary<string, string>> UIDefDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(jsonCombinedFile);
-
-        if (UIDefDict.ContainsKey("moduleArgs"))
-        {
-            if (UIDefDict["moduleArgs"].ContainsKey("width"))
-            {
-                return (int.Parse(UIDefDict["moduleArgs"]["width"]));
-            }
-        }
-
-        return 8;
-    }
-
     //set on spawn
     public void Drag()
     {
@@ -318,16 +299,7 @@ public class Module : Interactable
 
                 Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));
 
-                if (grid.AreTilesOccupied(TopLeftCorner, width))
-                {
-                    invalidPos = true;
-                }
-                else
-                {
-                    invalidPos = false;
-                }
-
-
+                invalidPos = grid.AreTilesOccupied(TopLeftCorner, width); //if grid tiles occupied then placement is invalid
 
                 if (invalidPos)
                 {
@@ -358,9 +330,6 @@ public class Module : Interactable
                     }
                     else
                     {
-                        //Vector2 TopRightCorner = grid.GetNearestLeftEdgeTileSnap(new Vector2(boundingBox.Right, boundingBox.Top));
-                        //if (Math.Abs((position - TopLeftCorner).X) < Math.Abs((new Vector2(boundingBox.Right,position.Y) - TopRightCorner).X)) //TODO: either remove or fix this :(
-
                         SetWorldTopLeft(TopLeftCorner);
                         grid.OccupyTiles(width, GetPosition());
 

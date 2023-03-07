@@ -1,7 +1,7 @@
 {
 
   "inherits":  "pan-sec",
-    "width": 8,
+    "width": 6,
     "backgroundImage": "module_pale_thin",
  
   "components": {

@@ -86,8 +86,8 @@ internal class Slider : Component
 	public override void Update()
 	{
 		SetWorldCenter(worldSpacePosition);
-		System.Diagnostics.Debug.WriteLine($"SliderOffset: {SliderOffset}");
-		if (canInteract)
+
+        if (canInteract)
 		{
 			if (screenSpaceBoundingBox.Contains(input.MousePosition()))
 			{
@@ -97,7 +97,7 @@ internal class Slider : Component
 				if (input.LeftMouseClickDown())
 				{
 					dragging = true;
-					clickOffset = worldSpacePosition.X - input.MousePosVector().X;
+					clickOffset = screenSpacePosition.X - input.MousePosVector().X;
 				}
 			}
 			else
@@ -117,7 +117,7 @@ internal class Slider : Component
 				{
 					SliderOffset = input.MousePosVector().X + clickOffset - modulePos.X - moduleLocalPos.X;
 					worldSpacePosition.X = SliderOffset + modulePos.X + moduleLocalPos.X;
-				}
+                }
 
 				if (input.LeftMouseClickUp())
 				{

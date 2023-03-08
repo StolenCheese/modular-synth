@@ -4,7 +4,7 @@ Team: Lima
 A Cambridge CS Part 1B Project
 
 ## Dependencies
-Make sure to have SuperCollider from https://supercollider.github.io/downloads.html installed, or the program will not run! The program is built off of there excellent platform.
+Make sure to have SuperCollider from https://supercollider.github.io/downloads.html installed, or the program will not run! The program is built off of their excellent platform.
 
 ## Description
 A visual "old-school synth" style graphical interface for the SuperCollider language.

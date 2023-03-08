@@ -96,7 +96,7 @@ internal class Slider : Component
 				if (input.LeftMouseClickDown())
 				{
 					dragging = true;
-					clickOffset = worldSpacePosition.X - input.MousePosVector().X;
+					clickOffset = screenSpacePosition.X - input.MousePosVector().X;
 				}
 			}
 			else

@@ -61,6 +61,14 @@ public class EntityManager
 			}
 		}
 
+        
+        //error messages
+        if(Menu.warningDuration > 0){
+                spriteBatch.Draw(Menu.cycleWarningTexture,new Vector2((ModularSynth.viewport.Width-Menu.cycleWarningTexture.Width)/ 2, ModularSynth.viewport.Height / 2+200), Color.White);
+
+                Menu.warningDuration--;
+        }
+
 	}
 
 	public static void DisableEntities()

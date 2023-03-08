@@ -86,7 +86,7 @@ internal class Slider : Component
 	public override void Update()
 	{
 		SetWorldCenter(worldSpacePosition);
-		//Console.WriteLine($"SliderOffset: {SliderOffset}");  
+		System.Diagnostics.Debug.WriteLine($"SliderOffset: {SliderOffset}");  
 		if (canInteract)
 		{
 			if (screenSpaceBoundingBox.Contains(input.MousePosition()))

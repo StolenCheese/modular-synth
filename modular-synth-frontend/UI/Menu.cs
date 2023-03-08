@@ -28,6 +28,9 @@ internal class Menu : Interactable
 	private Texture2D leftArrowTexture;
 	private Texture2D rightArrowTexture;
 
+    public static Texture2D cycleWarningTexture;
+    public static int warningDuration = 0;
+
 	public static event Action MenuOpened;
 	public static event Action MenuClosed;
 
@@ -36,6 +39,7 @@ internal class Menu : Interactable
 
 	private Menu(Texture2D boxSprite, Texture2D handleSprite, Vector2 position) : base(handleSprite, position)
 	{
+        
 		this.boxSprite = boxSprite;
 		open = false;
 		activeButtonListIndex = 0;
@@ -202,5 +206,4 @@ internal class Menu : Interactable
 			open = true;
 		}
 	}
-
 }

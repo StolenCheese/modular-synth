@@ -213,6 +213,7 @@ public static class API
 		catch (CyclicLinksException_t e)
 		{
 			Debug.WriteLine(e.Message);
+            Menu.warningDuration = 100;
 			return false;
 		}
 		catch (LinkException_t e)

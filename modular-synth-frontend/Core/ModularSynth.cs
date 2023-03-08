@@ -78,6 +78,8 @@ public class ModularSynth : Game
 		Wire.wireCols.Add(Content.Load<Texture2D>("bluewire"));
 		Wire.wireCols.Add(Content.Load<Texture2D>("greenwire"));
 
+        Menu.cycleWarningTexture = Content.Load<Texture2D>("cyclewarning");
+
 		menu = Menu.CreateInstance(boxTexture, handleTexture, new Vector2(viewport.Width / 2 - handleTexture.Width / 2, 0));
 		menu.LoadContent();
 	}

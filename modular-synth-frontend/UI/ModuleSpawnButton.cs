@@ -16,7 +16,7 @@ internal class ModuleSpawnButton : Button
 	private readonly SectionDef def;
 
 	public ModuleSpawnButton(Vector2 position, SectionDef def, double scale = 0.7) : base(position)
-	{ 
+	{
 		this.def = def;
 
 		buttonImage = new Module(position, def, false, (float)scale);
@@ -34,7 +34,8 @@ internal class ModuleSpawnButton : Button
 
 		int offset = def.width * grid.GetGridSideLength() / 2;
 		Vector2 pos = new(input.MousePosVector().X - offset, input.MousePosVector().Y - (grid.GetGridSideLength() * Grid.ROWS / 2));
-		return new Module(pos, def);
+		var m = new Module(pos, def);
+		return m.Valid ? m : null;
 	}
 
 	public override void Draw(SpriteBatch spriteBatch)
@@ -49,7 +50,7 @@ internal class ModuleSpawnButton : Button
 			if (input.LeftMouseClickDown() && !Menu.justOpen)
 			{
 				Module newModule = Spawn();
-				newModule.Drag();
+				newModule?.Drag();
 			}
 		}
 	}

@@ -155,17 +155,21 @@ public static class API
 				if (m.def.type == Core.SectionType.Midi)
 				{
 					string midi = null;
-					while (midi == null || !File.Exists(midi))
-					{
-						using OpenFileDialog openFileDialog = new();
 
-						openFileDialog.InitialDirectory = AppContext.BaseDirectory;
-						openFileDialog.Filter = "Midi (*.mid)|*.mid";
-						openFileDialog.RestoreDirectory = true;
-						if (openFileDialog.ShowDialog() == DialogResult.OK)
-						{
-							midi = openFileDialog.FileName;
-						}
+					using OpenFileDialog openFileDialog = new();
+
+					openFileDialog.InitialDirectory = AppContext.BaseDirectory;
+					openFileDialog.Filter = "Midi (*.mid)|*.mid";
+					openFileDialog.RestoreDirectory = true;
+					if (openFileDialog.ShowDialog() == DialogResult.OK)
+					{
+						midi = openFileDialog.FileName;
+					}
+
+					if (midi == null || !File.Exists(midi))
+					{
+						//Failed to load midi
+						return;
 					}
 
 					m.scSection = SCSection.FromMidi(midi);
@@ -213,7 +217,7 @@ public static class API
 		catch (CyclicLinksException_t e)
 		{
 			Debug.WriteLine(e.Message);
-            Menu.warningDuration = 100;
+			Menu.warningDuration = 100;
 			return false;
 		}
 		catch (LinkException_t e)

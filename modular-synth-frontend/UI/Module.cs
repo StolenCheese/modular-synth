@@ -269,9 +269,8 @@ public class Module : Interactable
 	{
 		foreach (Component c in components)
 		{
-			if (c is Port)
+			if (c is Port p)
 			{
-				Port p = (Port)c;
 				if (!p.removeConnectionFrom())
 				{
 					if (!p.removeConnectionTo())

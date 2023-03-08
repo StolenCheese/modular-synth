@@ -31,6 +31,7 @@ public class Module : Interactable
 
 
 	private bool canInteract;
+	public bool Valid { get; private set; }
 
 	public readonly SectionDef def;
 
@@ -46,6 +47,22 @@ public class Module : Interactable
 		this.def = def;
 
 		width = def.width;
+
+
+		if (canInteract)
+		{
+			//Test if section gets properly created right at the start
+			API.API.CreateSection(this);
+
+			if (scSection == null)
+			{
+				Valid = false;
+				return;
+			}
+
+		}
+
+
 
 		foreach ((string name, ComponentDef component) in def.components)
 		{
@@ -136,9 +153,11 @@ public class Module : Interactable
 		if (canInteract)
 		{
 			addToEtyMgr();
-			API.API.CreateSection(this);
 			sendInitialComponentValsToServer();
 		}
+
+
+		Valid = true;
 	}
 
 	public void addToEtyMgr()
@@ -233,44 +252,47 @@ public class Module : Interactable
 		return ModularSynth.content.Load<Texture2D>(sectionDef.backgroundImage ?? "module");
 	}
 
-    public int GetWidth()
-    {
-        return width;
-    }
+	public int GetWidth()
+	{
+		return width;
+	}
 
-    //set on spawn
-    public void Drag()
-    {
-        dragging = true;
-        originalPosition = worldSpacePosition;
-        clickOffset = new Vector2();
-    }
+	//set on spawn
+	public void Drag()
+	{
+		dragging = true;
+		originalPosition = worldSpacePosition;
+		clickOffset = new Vector2();
+	}
 
 	public void Delete()
 	{
-		foreach(Component c in components)
+		foreach (Component c in components)
 		{
-			if(c is Port)
-			{ 
-				Port p = (Port)c;
-                if (!p.removeConnectionFrom())
-                {
-                    if (!p.removeConnectionTo())
-                    {
-                        Console.WriteLine("no connection to remove");
-                    }
-                }
-                Port.ports.Remove(p);
+			if (c is Port p)
+			{
+				if (!p.removeConnectionFrom())
+				{
+					if (!p.removeConnectionTo())
+					{
+						Console.WriteLine("no connection to remove");
+					}
+				}
+				Port.ports.Remove(p);
 			}
 			c.deleted = true;
 		}
-		grid.DeOccupyTiles(width, worldSpacePosition);
+
+		if (placed)
+		{
+			grid.DeOccupyTiles(width, worldSpacePosition);
+		}
 
 		deleted = true;
 	}
 
 
-    public override void Update()
+	public override void Update()
 	{
 		if (!isInteractingWithComponent())
 		{
@@ -291,70 +313,70 @@ public class Module : Interactable
 					Delete();
 				}
 			}
-		
-            if (dragging)
-            {
-                EntityManager.isMouseOverEntity = true;
-                SetScreenTopLeft(input.MousePosVector() + clickOffset);
 
-                Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));
+			if (dragging)
+			{
+				EntityManager.isMouseOverEntity = true;
+				SetScreenTopLeft(input.MousePosVector() + clickOffset);
 
-                invalidPos = grid.AreTilesOccupied(TopLeftCorner, width); //if grid tiles occupied then placement is invalid
+				Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));
 
-                if (invalidPos)
-                {
-                    colour = Color.Red;
-                }
-                else
-                {
-                    colour = Color.White;
-                }
+				invalidPos = grid.AreTilesOccupied(TopLeftCorner, width); //if grid tiles occupied then placement is invalid
 
-                if (input.LeftMouseClickUp())
-                {
-                    dragging = false;
-                    if (invalidPos)
-                    {
-                        if (!placed)
-                        {
-                            Delete();
-                        }
+				if (invalidPos)
+				{
+					colour = Color.Red;
+				}
+				else
+				{
+					colour = Color.White;
+				}
 
-                        else
-                        {
-                            SetWorldTopLeft(originalPosition);
-                            grid.OccupyTiles(width, GetPosition());
-                            colour = Color.White;
-                            invalidPos = false;
-                        }
-                    }
-                    else
-                    {
-                        SetWorldTopLeft(TopLeftCorner);
-                        grid.OccupyTiles(width, GetPosition());
+				if (input.LeftMouseClickUp())
+				{
+					dragging = false;
+					if (invalidPos)
+					{
+						if (!placed)
+						{
+							Delete();
+						}
 
-                        if (!placed)
-                        {
-                            placed = true;
-                            //Menu.GetInstance().ChangeState(); //TODO: Make this work and not look scuffed
-                        }
-                    }
-                }
-            }
-        }
-	    updateComponentPositions();
+						else
+						{
+							SetWorldTopLeft(originalPosition);
+							grid.OccupyTiles(width, GetPosition());
+							colour = Color.White;
+							invalidPos = false;
+						}
+					}
+					else
+					{
+						SetWorldTopLeft(TopLeftCorner);
+						grid.OccupyTiles(width, GetPosition());
+
+						if (!placed)
+						{
+							placed = true;
+							//Menu.GetInstance().ChangeState(); //TODO: Make this work and not look scuffed
+						}
+					}
+				}
+			}
+		}
+		updateComponentPositions();
 	}
 
-    public override void Draw(SpriteBatch spriteBatch)
-    {
-        base.Draw(spriteBatch);
-        if (!canInteract)
-        {
-            foreach (Component c in components)
-            {
-                c.fixedOnScreen = fixedOnScreen;
-                c.Draw(spriteBatch);
-            }
-        }
-    }
+	public override void Draw(SpriteBatch spriteBatch)
+	{
+		base.Draw(spriteBatch);
+		if (!canInteract)
+		{
+			foreach (Component c in components)
+			{
+				c.fixedOnScreen = fixedOnScreen;
+				c.Draw(spriteBatch);
+			}
+		}
+	}
 }

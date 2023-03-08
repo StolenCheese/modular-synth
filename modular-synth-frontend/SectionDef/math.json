@@ -1,6 +1,6 @@
 {
     "width": 4,
-    "backgroundImage": "module_thin",
+    "backgroundImage": "math_3D",
     "audio_synth": "math-ar",
 
   
@@ -10,12 +10,12 @@
         "type": "slider",
         "minValueForServer": 0.1,
         "maxValueForServer": 10,
-        "xPos": "m+0.5",
-        "yPos": "m+1.2",
+        "xPos": "m+0.9",
+        "yPos": "m+0.5",
         "vertical": true,
-        "trackScale": 1.2,
+        "trackScale": 1.4,
         "sliderScale": 0.3,
-        "trackSprite": "rail2",
+        "trackSprite": "rail2-short",
         "sliderSprite": "slider3"
       },
       
@@ -24,20 +24,20 @@
         "type": "slider",
         "minValueForServer": -100,
         "maxValueForServer": 100,
-        "xPos": "m-0.5",
-        "yPos": "m+1.2",
+        "xPos": "m-0.9",
+        "yPos": "m+0.5",
         "vertical": true,
-        "trackScale": 1.2,
+        "trackScale": 1.4,
         "sliderScale": 0.3,
-        "trackSprite": "rail2",
+        "trackSprite": "rail2-short",
         "sliderSprite": "slider3"
       },
       "i/p add port": {
         "parameterID": "in",
         "sprite" : "portblue",
         "type": "port",
-        "xPos": "l+1.7",
-        "yPos": "b-2.15", 
+        "xPos": "l+1",
+        "yPos": "b-1.8", 
         "scale": 0.8,
         "isInput": true,
 
@@ -46,8 +46,8 @@
         "parameterID": "out",
         "sprite" : "portred",
         "type": "port",
-        "xPos": "r-1.7",
-        "yPos": "b-2.15", 
+        "xPos": "r-1",
+        "yPos": "b-1.8", 
         "scale": 0.8,
         "isInput": false,
 

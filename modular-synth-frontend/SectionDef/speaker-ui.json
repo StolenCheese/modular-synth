@@ -6,7 +6,7 @@
     "i/p left ear": {
       "type": "port",
       "xPos": "l+1",
-      "yPos": "b-3.5",
+      "yPos": "b-1.8",
       "isInput": true,
       "sprite" : "portblue",
       "scale": "0.8"
@@ -14,7 +14,7 @@
     "i/p right ear": {
       "type": "port",
       "xPos": "r-1",
-      "yPos": "b-3.55",
+      "yPos": "b-1.8",
       "isInput": true,
       "sprite" : "portblue",
       "scale": "0.8"

@@ -317,6 +317,9 @@ public class Module : Interactable
 			if (dragging)
 			{
 				EntityManager.isMouseOverEntity = true;
+				// Allow grabby hand while dragging
+				InputManager.IsMouseOverComponent = true;
+
 				SetScreenTopLeft(input.MousePosVector() + clickOffset);
 
 				Vector2 TopLeftCorner = grid.GetNearestTileEdgeSnap(new Vector2(worldSpaceBoundingBox.Left, worldSpaceBoundingBox.Top));

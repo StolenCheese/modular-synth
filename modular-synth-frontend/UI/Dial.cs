@@ -155,6 +155,7 @@ internal class Dial : Component
 			{
 				isInteracting = true;
 				EntityManager.isMouseOverEntity = true;
+				InputManager.IsMouseOverComponent = true;
 
 				if (input.LeftMouseClickDown())
 				{

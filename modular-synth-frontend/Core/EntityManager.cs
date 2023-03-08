@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using modular_synth_frontend.UI;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ public class EntityManager
 	public static bool isMouseOverEntity;
 	public static bool isUpdating;
 
+
+
 	public static void Update()
 	{
 		isMouseOverEntity = false;
@@ -28,10 +31,10 @@ public class EntityManager
 			}
 		}
 
-		isUpdating= false;
+		isUpdating = false;
 
-        entities = entities.Where(x => !x.deleted).ToList();
-    }
+		entities = entities.Where(x => !x.deleted).ToList();
+	}
 
 	public static void Draw(SpriteBatch spriteBatch)
 	{
@@ -61,13 +64,14 @@ public class EntityManager
 			}
 		}
 
-        
-        //error messages
-        if(Menu.warningDuration > 0){
-                spriteBatch.Draw(Menu.cycleWarningTexture,new Vector2((ModularSynth.viewport.Width-Menu.cycleWarningTexture.Width)/ 2, ModularSynth.viewport.Height / 2+200), Color.White);
 
-                Menu.warningDuration--;
-        }
+		//error messages
+		if (Menu.warningDuration > 0)
+		{
+			spriteBatch.Draw(Menu.cycleWarningTexture, new Vector2((ModularSynth.viewport.Width - Menu.cycleWarningTexture.Width) / 2, ModularSynth.viewport.Height / 2 + 200), Color.White);
+
+			Menu.warningDuration--;
+		}
 
 	}
 

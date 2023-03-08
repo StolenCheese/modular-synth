@@ -264,7 +264,11 @@ public class Module : Interactable
 			}
 			c.deleted = true;
 		}
-		grid.DeOccupyTiles(width, worldSpacePosition);
+
+		if (placed)
+		{
+			grid.DeOccupyTiles(width, worldSpacePosition);
+		}
 
 		deleted = true;
 	}
